@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import db from '../../../config/database.js';
+import db from '../../config/database.js';
 import { Op } from 'sequelize';
 
 const BarangLog = db.define('barang_log', {

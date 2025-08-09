@@ -8,7 +8,7 @@ import {
 } from '.,/model/pengaturanstruk.js';
 import { calculatePagination } from '../helpers/paginate.js';
 import { createSuccessResponse, createErrorResponse } from '../helpers/response.js';
-import db from '../../../config/database.js';
+import db from '../../config/database.js';
 
 ipcMain.handle('pengaturanstrukIpc:getList', async (event, { pagination = {}, filter = {} }) => {
     try {
