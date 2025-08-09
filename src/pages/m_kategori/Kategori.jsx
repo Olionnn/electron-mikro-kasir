@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Modal from "../../component/Modal";
+
 
 
 export default function KategoriPage() {

@@ -18,6 +18,15 @@ import PembeliSuplier from './pages/m_pembelisupplier/PembeliSupplier'
 import BarangAtwJasa from './pages/barang/BarangAtwJasa'
 import AddEditBarang from './pages/barang/AddEditBarang'
 import Kategori from './pages/m_kategori/Kategori'
+import PelangganPage from './pages/m_pelanggan/Pelanggan'
+import SupplierPage from './pages/m_supplier/Supplier'
+import PajakPage from './pages/m_pajak/Pajak'
+import DiskonPage from './pages/m_diskon/Diskon'
+import BiayaPage from './pages/m_Biaya/Biaya'
+
+
+
+
 
 
 
@@ -47,6 +56,13 @@ function App() {
           <Route element={<AdminLayout/>}>
             <Route path='/management' element={ <Management />   } />
             <Route path='/pembelian-supplier' element={<PembeliSuplier/>} />
+          <Route path='/pelanggan' element={<PelangganPage/>} />
+          <Route path='/supplier' element={<SupplierPage/>} />
+          <Route path='/pajak' element={<PajakPage/>} />
+           <Route path='/diskon' element={<DiskonPage/>} />
+          <Route path='/biaya' element={<BiayaPage/>} />
+          
+
           </Route>
 
 
@@ -58,11 +74,10 @@ function App() {
           <Route path='/kategori-barang' element={<Kategori />} />
 
 
-          <Route path='/pelanggan' element={} />
-          <Route path='/supplier' element={<div>Supplier</div>} />
-          <Route path='/diskon' element={<div>Diskon</div>} />
-          <Route path='/pajak' element={<div>Pajak</div>} />
-          <Route path='/biaya' element={<div>Biaya</div>} />
+         
+         
+          
+          
           <Route path='/marketing' element={<div>Marketing</div>} /> 
 
 

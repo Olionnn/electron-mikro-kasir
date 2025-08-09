@@ -1,8 +1,8 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import initDatabase from '../../backend/ipc/bootstrap.js';
-import '../../backend/ipc/barangIpc.js';
+// import initDatabase from '../../backend/ipc/bootstrap.js';
+// import '../../backend/ipc/barangIpc.js';
 
 
 
@@ -30,8 +30,8 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(async () => {
-  await initDatabase(); // Initialize the database
+app.whenReady().then( () => {
+  // await initDatabase(); // Initialize the database
 
   createWindow();
 
