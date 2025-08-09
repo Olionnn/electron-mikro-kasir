@@ -24,7 +24,23 @@ import PajakPage from './pages/m_pajak/Pajak'
 import DiskonPage from './pages/m_diskon/Diskon'
 import BiayaPage from './pages/m_Biaya/Biaya'
 // import Pembelian from './pages/m_keuangan/Pembelian'
-import Bantuan from './pages/a/Bantuan'
+import Bantuan from './pages/m_setting/Bantuan'
+import InformasiToko from './pages/m_setting/InformasiToko'
+import CountStruk from './pages/m_setting/CountStruk' 
+import CountPrint from './pages/m_setting/CountPrint'
+import SingkronasiDon from './pages/m_setting/SingkronasiDon'
+import SingkronasiUp from './pages/m_setting/SingkronasiUp'
+import EDC from './pages/m_setting/EDC'
+import PengaturanApk from './pages/m_setting/PengaturanApk'
+import EditProfil from './pages/m_setting/EditProfil'
+import EditToko from './pages/m_setting/EditToko'
+import MetPem from './pages/m_setting/MetPem'
+import TokoOnline from './pages/m_setting/TokoOnline'
+import Profil from './pages/m_setting/Profil'
+import Lainnya from './pages/m_setting/Lainnya'
+import Setting from './pages/m_setting/Setting'
+import ManajemenStaf from './pages/m_setting/ManajemenStaf'
+
 
 
 
@@ -39,7 +55,7 @@ function App() {
     <div >
       <main className="h-screen w-screen">
         <Routes>
-          <Route path="/" element={<Bantuan/>} />
+          <Route path="/" element={<Login/>} />
 
           <Route path="/register" element={<Register />} />
           <Route element={<PosLayout />}>
@@ -76,19 +92,23 @@ function App() {
 
 
 
-          <Route path='/pengaturan' element={<div>Pengaturan APK</div>} />
-          <Route path='/pengaturan/sinkronisasi' element={<div>Sinkronisasi</div>} />
-          <Route path='/pengaturan/printer' element={<div>Printer</div>} />
-          <Route path='/pengaturan/manajemen-staff' element={<div>Manajemen Staff</div>} />
-          <Route path='/pengaturan/metode-pembayaran' element={<div>Metode Pembayaran</div>} />
-          <Route path='/pengaturan/perangkat-edc' element={<div>Perangkat EDC</div>} />
-          <Route path='/pengaturan/pengaturan-transaksi' element={<div>Pengaturan Transaksi</div>} />
-          <Route path='/pengaturan/rating-apps' element={<div>Rating Apps</div>} />
-          <Route path='/pengaturan/lainnya' element={<div>Lainnya</div>} />
-          <Route path='/pengaturan/backup' element={<div>Backup</div>} />
-          <Route path='/pengaturan/restore' element={<div>Restore</div>} />
-          <Route path='/pengaturan/akun' element={<div>Akun</div>} />
-          <Route path='/pengaturan/akun/edit' element={<div>Edit Akun</div>} />
+          <Route path='/pengaturan/bantuan' element={< Bantuan/>} />
+          <Route path='/pengaturan/informasitoko' element={<InformasiToko/>} />
+          <Route path='/pengaturan/counstruk' element={<CountStruk/>} />
+          <Route path='/pengaturan/countprint' element={<CountPrint/>} />
+          <Route path='/pengaturan/singkronasidon' element={<SingkronasiDon/>} />
+          <Route path='/pengaturan/singkronasiup' element={<SingkronasiUp/>} />
+          <Route path='/pengaturan/edc' element={<EDC/>} />
+          <Route path='/pengaturan/pengaturanapk' element={<PengaturanApk/>} />
+          <Route path='/pengaturan/editprofil' element={<EditProfil/>} />
+          <Route path='/pengaturan/edittoko' element={<EditToko/>} />
+          <Route path='/pengaturan/metpem' element={<MetPem/>} />
+          <Route path='/pengaturan/tokoonline' element={<TokoOnline/>} />
+          <Route path='/pengaturan/profil' element={<Profil/>} />
+          <Route path='/pengaturan/lainnnya' element={<Lainnya/>} />
+          <Route path='/pengaturan/setting' element={<Setting/>} /> 
+          <Route path='/pengaturan/manajemenstaf' element={<ManajemenStaf/>} />
+
 
 
 
