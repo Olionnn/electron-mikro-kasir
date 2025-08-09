@@ -14,6 +14,12 @@ import Transaksi from './pages/pos/Trx'
 import Struk from './pages/preview/StruckPesanan'
 import Management from './pages/m_management/Management'
 import AdminLayout from './layouts/admin/adminlayout'
+import PembeliSuplier from './pages/m_pembelisupplier/PembeliSupplier'
+import BarangAtwJasa from './pages/barang/BarangAtwJasa'
+import AddEditBarang from './pages/barang/AddEditBarang'
+import Kategori from './pages/m_kategori/Kategori'
+
+
 
 
 function App() {
@@ -25,6 +31,7 @@ function App() {
       <main className="h-screen w-screen">
         <Routes>
           <Route path="/" element={<Login/>} />
+
           <Route path="/register" element={<Register />} />
           <Route element={<PosLayout />}>
             <Route path="/pos" element={<Pos />} />
@@ -39,24 +46,24 @@ function App() {
 
           <Route element={<AdminLayout/>}>
             <Route path='/management' element={ <Management />   } />
-            {/* <Route path='/pembelian-supplier' element={<PembeliSuplier/>} /> */}
+            <Route path='/pembelian-supplier' element={<PembeliSuplier/>} />
           </Route>
 
 
-{/* 
-          <Route path='/barang-jasa' element={<BarangJasa/>} />
-          <Route path='/barang/tambah' element={<TambahEditBarang />} />
-          <Route path='/barang/edit/:id' element={<TambahEditBarang />} />
+
+          <Route path='/barang-jasa' element={<BarangAtwJasa />} />
+          <Route path='/barang/tambah' element={<AddEditBarang />} />
+          <Route path='/barang/edit/:id' element={<AddEditBarang />} />
           
-          <Route path='/kategori-barang' element={<KategoriPage />} />
+          <Route path='/kategori-barang' element={<Kategori />} />
 
 
-          <Route path='/management/pelanggan' element={<div>Pelanggan</div>} />
-          <Route path='/management/supplier' element={<div>Supplier</div>} />
-          <Route path='/management/diskon' element={<div>Diskon</div>} />
-          <Route path='/management/pajak' element={<div>Pajak</div>} />
-          <Route path='/management/biaya' element={<div>Biaya</div>} />
-          <Route path='/management/marketing' element={<div>Marketing</div>} /> */}
+          <Route path='/pelanggan' element={} />
+          <Route path='/supplier' element={<div>Supplier</div>} />
+          <Route path='/diskon' element={<div>Diskon</div>} />
+          <Route path='/pajak' element={<div>Pajak</div>} />
+          <Route path='/biaya' element={<div>Biaya</div>} />
+          <Route path='/marketing' element={<div>Marketing</div>} /> 
 
 
 

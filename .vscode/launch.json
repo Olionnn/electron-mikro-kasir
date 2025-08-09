@@ -10,8 +10,7 @@
             "name": "Debug Electron:Dev",
             "command": "npm run electron:dev",
             "cwd": "${workspaceFolder}",
-            "console": "integratedTerminal",
-            
+
         }
     ]
 }
