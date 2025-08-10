@@ -3,7 +3,6 @@ import Modal from "../../component/Modal";
 import { useNavbar } from "../../hooks/useNavbar";
 import { MdAdd, MdRefresh, MdSearch, MdClose, MdEdit, MdToggleOn, MdToggleOff } from "react-icons/md";
 
-/* ===== Dummy data selaras model Kategori ===== */
 const nowIso = () => new Date().toISOString();
 const DUMMY = [
   { id: 1, toko_id: 1, nama: "Elektronik", created_by: 1, updated_by: 1, sync_at: null, status: true,  created_at: nowIso(), updated_at: nowIso() },
@@ -13,7 +12,6 @@ const DUMMY = [
   { id: 5, toko_id: 1, nama: "Minuman",    created_by: 3, updated_by: 3, sync_at: null, status: true,  created_at: nowIso(), updated_at: nowIso() },
 ];
 
-/* ===== Utils ===== */
 function formatDate(v) {
   if (!v) return "-";
   try {
@@ -43,7 +41,6 @@ function Highlighted({ text = "", query = "" }) {
   );
 }
 
-/* ===== Page ===== */
 export default function KategoriBarangPage() {
   const [categories, setCategories] = useState(DUMMY);
   const [selectedId, setSelectedId] = useState(DUMMY[0]?.id ?? null);
