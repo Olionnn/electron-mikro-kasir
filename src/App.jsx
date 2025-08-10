@@ -43,7 +43,7 @@ function App() {
 
           <Route path="/register" element={<Register />} />
           
-          <Route element={<ShellLayout />}>
+          <Route element={<ShellLayout />} />
             <Route path="/pos" element={<Pos />} />
 
             {/* Barang  */}
