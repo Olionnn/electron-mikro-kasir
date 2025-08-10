@@ -1,10 +1,23 @@
 'use client';
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavbar } from '../../hooks/useNavbar';
+import { MdClose, MdSave } from 'react-icons/md';
 
-const TambahEditBarang = () => { // Remove async from component declaration
+const toInt = (v) => {
+  if (v === '' || v === null || v === undefined) return 0;
+  const n = Number(String(v).replace(/[^\d-]/g, ''));
+  return Number.isFinite(n) ? n : 0;
+};
+
+export default function TambahEditBarang() {
+  const navigate = useNavigate();
+  const { id } = useParams(); // /barang/edit/:id -> edit mode
+  const isEdit = Boolean(id);
+
+  // state form
   const [nama, setNama] = useState('');
-  const [tipe, setTipe] = useState('Default');
+  const [tipe, setTipe] = useState('Default'); // Default | Servis
   const [tampilkan, setTampilkan] = useState(true);
   const [pakaiStok, setPakaiStok] = useState(true);
   const [stok, setStok] = useState('0');
@@ -14,65 +27,138 @@ const TambahEditBarang = () => { // Remove async from component declaration
   const [kategori, setKategori] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
+  // Auto-set: jika tipe Servis, stok off
+  useEffect(() => {
+    if (tipe === 'Servis') {
+      setPakaiStok(false);
+      setStok('0');
+    }
+  }, [tipe]);
 
-  const handleSubmit = async (event) => { 
-    event.preventDefault();
+  // Preload saat edit
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      if (!isEdit) return;
+      try {
+        setLoading(true);
+        if (window.electronAPI?.getBarangById) {
+          const res = await window.electronAPI.getBarangById(Number(id));
+          if (mounted && res?.success && res.data) {
+            const b = res.data;
+            setNama(b.nama ?? '');
+            setTipe(b.use_stok === false ? 'Servis' : 'Default');
+            setTampilkan(Boolean(b.show_transaksi));
+            setPakaiStok(Boolean(b.use_stok));
+            setStok(String(b.stok ?? 0));
+            setKodeBarang(b.kode ?? '');
+            setHargaDasar(String(b.harga_dasar ?? ''));
+            setHargaJual(String(b.harga_jual ?? ''));
+            setKategori(String(b.kategori_id ?? ''));
+          }
+        } else {
+          console.warn('electronAPI.getBarangById tidak tersedia (dev fallback).');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Gagal memuat data barang.');
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, [isEdit, id]);
 
+  const onCancel = useCallback(() => {
+    navigate('/barang-jasa');
+  }, [navigate]);
+
+  const payload = useMemo(() => ({
+    nama,
+    stok: pakaiStok ? toInt(stok) : 0,
+    kode: kodeBarang || null,
+    harga_dasar: toInt(hargaDasar),
+    harga_jual: toInt(hargaJual),
+    show_transaksi: tampilkan,
+    use_stok: pakaiStok,
+    kategori_id: kategori ? toInt(kategori) : null,
+    toko_id: 1,
+    image: null,
+    status: true,
+    created_by: 1,
+    updated_by: 1,
+  }), [nama, pakaiStok, stok, kodeBarang, hargaDasar, hargaJual, tampilkan, kategori]);
+
+  const onSave = useCallback(async () => {
     if (!nama || !hargaJual) {
       alert('Nama dan Harga Jual wajib diisi.');
       return;
     }
-
     setLoading(true);
-
     try {
-      const barangData = {
-        nama: nama,
-        stok: parseInt(stok) || 0,
-        kode: kodeBarang || null,
-        harga_dasar: parseInt(hargaDasar) || 0,
-        harga_jual: parseInt(hargaJual) || 0,
-        show_transaksi: tampilkan,
-        use_stok: pakaiStok,
-        kategori_id: kategori ? parseInt(kategori) : null,
-        toko_id: 1, 
-        image: null,
-        status: true,
-        created_by: 1,
-        updated_by: 1
-      };
+      if (!window.electronAPI) {
+        console.warn('electronAPI tidak tersedia, mock save.');
+        alert('Tersimpan (mock).');
+        navigate('/barang-jasa');
+        return;
+      }
 
-      const result = await window.electronAPI.createBarang(barangData);
-
-      if (result.success) {
-        alert('Barang berhasil ditambahkan!');
-        navigate('/barang-jasa'); // Navigate to barang list
+      let result;
+      if (isEdit && window.electronAPI.updateBarang) {
+        result = await window.electronAPI.updateBarang(Number(id), payload);
+      } else if (window.electronAPI.createBarang) {
+        result = await window.electronAPI.createBarang(payload);
       } else {
-        alert('Gagal menambahkan barang: ' + result.error);
+        throw new Error('API create/update tidak tersedia');
+      }
+
+      if (result?.success) {
+        alert(isEdit ? 'Barang berhasil diperbarui!' : 'Barang berhasil ditambahkan!');
+        navigate('/barang-jasa');
+      } else {
+        alert('Gagal menyimpan barang: ' + (result?.error || 'Unknown error'));
       }
     } catch (error) {
-      console.error('Error creating barang:', error);
-      alert('Terjadi kesalahan saat menambahkan barang');
+      console.error('Error saving barang:', error);
+      alert('Terjadi kesalahan saat menyimpan barang.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [isEdit, id, payload, nama, hargaJual, navigate]);
+
+  // Navbar diatur per halaman
+  useNavbar(
+    {
+      variant: 'page',
+      title: isEdit ? 'Edit Barang' : 'Tambah Barang',
+      backTo: '/barang-jasa',
+      actions: [
+        {
+          type: 'button',
+          title: 'Batal',
+          onClick: onCancel,
+          className: 'inline-flex items-center gap-2 px-4 py-2 rounded-lg border text-gray-700 hover:bg-gray-100',
+          icon: <MdClose size={18} />,
+        },
+        {
+          type: 'button',
+          title: 'Simpan',
+          onClick: onSave,
+          className: 'inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-60',
+          icon: <MdSave size={18} />,
+        },
+      ],
+    },
+    [onCancel, onSave, isEdit]
+  );
+
+  const stokDisabled = !pakaiStok || tipe === 'Servis';
 
   return (
     <div className="w-screen h-screen bg-white flex">
       <div className="w-full h-full border-r border-gray-300 flex flex-col pt-10 px-10 pb-10 overflow-y-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-3">
-            <Link to="/barang-jasa" className="text-gray-600 hover:text-green-600 transition">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-              </svg>
-            </Link>
-            <h1 className="text-2xl font-semibold">Tambah Barang</h1>
-          </div>
-        </div>
 
+        {/* Thumbnail placeholder */}
         <div className="flex justify-center mb-8">
           <div className="w-20 h-20 bg-gray-100 border border-gray-300 rounded-md flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
@@ -81,51 +167,59 @@ const TambahEditBarang = () => { // Remove async from component declaration
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6 text-lg">
+        {/* Form */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSave();
+          }}
+          className="space-y-6 text-lg"
+        >
           <div>
             <label className="block font-medium text-gray-700 mb-2">Nama *</label>
-            <input 
-              type="text" 
-              value={nama} 
-              onChange={(e) => setNama(e.target.value)} 
-              className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" 
-              placeholder="Nama barang" 
+            <input
+              type="text"
+              value={nama}
+              onChange={(e) => setNama(e.target.value)}
+              className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Nama barang"
               required
               disabled={loading}
             />
           </div>
 
-          <div>
-            <label className="block font-medium text-gray-700 mb-2">Tipe Barang</label>
-            <select 
-              value={tipe} 
-              onChange={(e) => setTipe(e.target.value)} 
-              className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              disabled={loading}
-            >
-              <option value="Default">Default</option>
-              <option value="Servis">Servis</option>
-            </select>
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block font-medium text-gray-700 mb-2">Tipe Barang</label>
+              <select
+                value={tipe}
+                onChange={(e) => setTipe(e.target.value)}
+                className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                disabled={loading}
+              >
+                <option value="Default">Default</option>
+                <option value="Servis">Servis</option>
+              </select>
+            </div>
 
-          <div className="space-y-3 text-lg">
-            <label className="flex items-center space-x-3">
-              <input 
-                type="checkbox" 
-                checked={tampilkan} 
-                onChange={(e) => setTampilkan(e.target.checked)} 
+            <label className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                checked={tampilkan}
+                onChange={(e) => setTampilkan(e.target.checked)}
                 className="form-checkbox text-green-600 w-5 h-5"
                 disabled={loading}
               />
-              <span className="text-gray-800">Tampilkan Di Transaksi</span>
+              <span className="text-gray-800">Tampilkan di Transaksi</span>
             </label>
-            <label className="flex items-center space-x-3">
-              <input 
-                type="checkbox" 
-                checked={pakaiStok} 
-                onChange={(e) => setPakaiStok(e.target.checked)} 
+
+            <label className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                checked={pakaiStok}
+                onChange={(e) => setPakaiStok(e.target.checked)}
                 className="form-checkbox text-green-600 w-5 h-5"
-                disabled={loading}
+                disabled={loading || tipe === 'Servis'}
               />
               <span className="text-gray-800">Pakai Stok</span>
             </label>
@@ -134,21 +228,22 @@ const TambahEditBarang = () => { // Remove async from component declaration
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block font-medium text-gray-700 mb-2">Stok</label>
-              <input 
-                type="number" 
-                value={stok} 
-                onChange={(e) => setStok(e.target.value)} 
-                className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              <input
+                type="number"
+                value={stok}
+                onChange={(e) => setStok(e.target.value)}
+                className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-100"
                 min="0"
-                disabled={loading}
+                disabled={loading || stokDisabled}
+                placeholder={stokDisabled ? 'Tidak menggunakan stok' : '0'}
               />
             </div>
             <div>
               <label className="block font-medium text-gray-700 mb-2">Kode Barang</label>
-              <input 
-                type="text" 
-                value={kodeBarang} 
-                onChange={(e) => setKodeBarang(e.target.value)} 
+              <input
+                type="text"
+                value={kodeBarang}
+                onChange={(e) => setKodeBarang(e.target.value)}
                 className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Kode unik barang"
                 disabled={loading}
@@ -159,11 +254,11 @@ const TambahEditBarang = () => { // Remove async from component declaration
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block font-medium text-gray-700 mb-2">Harga Dasar</label>
-              <input 
-                type="number" 
-                value={hargaDasar} 
-                onChange={(e) => setHargaDasar(e.target.value)} 
-                placeholder="0" 
+              <input
+                type="number"
+                value={hargaDasar}
+                onChange={(e) => setHargaDasar(e.target.value)}
+                placeholder="0"
                 className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 min="0"
                 disabled={loading}
@@ -171,11 +266,11 @@ const TambahEditBarang = () => { // Remove async from component declaration
             </div>
             <div>
               <label className="block font-medium text-gray-700 mb-2">Harga Jual *</label>
-              <input 
-                type="number" 
-                value={hargaJual} 
-                onChange={(e) => setHargaJual(e.target.value)} 
-                placeholder="0" 
+              <input
+                type="number"
+                value={hargaJual}
+                onChange={(e) => setHargaJual(e.target.value)}
+                placeholder="0"
                 className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 min="0"
                 required
@@ -186,33 +281,32 @@ const TambahEditBarang = () => { // Remove async from component declaration
 
           <div>
             <label className="block font-medium text-gray-700 mb-2">Kategori</label>
-            <select 
-              value={kategori} 
-              onChange={(e) => setKategori(e.target.value)} 
+            <select
+              value={kategori}
+              onChange={(e) => setKategori(e.target.value)}
               className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               disabled={loading}
             >
               <option value="">Pilih Kategori</option>
-              {/* You can populate this with actual categories from your database */}
               <option value="1">Elektronik</option>
               <option value="2">Pakaian</option>
               <option value="3">Makanan</option>
             </select>
           </div>
 
+          {/* Tombol bawah opsional, karena aksi sudah ada di navbar.
+              Kalau mau satu sumber kebenaran, boleh dihapus. */}
           <div className="pt-6">
             <button
               type="submit"
               className="w-full bg-green-600 text-white font-bold py-4 rounded-full text-lg hover:bg-green-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
               disabled={loading}
             >
-              {loading ? 'MENYIMPAN...' : 'SIMPAN'}
+              {loading ? (isEdit ? 'MENYIMPAN...' : 'MENAMBAHKAN...') : (isEdit ? 'SIMPAN PERUBAHAN' : 'SIMPAN')}
             </button>
           </div>
         </form>
       </div>
     </div>
   );
-};
-
-export default TambahEditBarang;
+}

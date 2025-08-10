@@ -1,127 +1,55 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState, useCallback } from "react";
 import { MdFilterList, MdAdd, MdEdit, MdRefresh, MdSearch } from "react-icons/md";
 import { Link } from "react-router-dom";
-import Modal from "../../component/Modal"; 
+import Modal from "../../component/Modal";
+import { useNavbar } from "../../hooks/useNavbar";
 
 const rupiah = (v) =>
   new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(
     Number(v || 0)
   );
-
 const toNumber = (v) => (v === "" || v === null || v === undefined ? "" : Number(v));
-
-const emptyBarang = {
-  id: null,
-  toko_id: null,
-  kategori_id: null,
-  nama: "",
-  stok: 0,
-  kode: "",
-  harga_dasar: 0,
-  harga_jual: 0,
-  image: "",
-  show_transaksi: true,
-  use_stok: true,
-  status: true,
-};
+const emptyBarang = { id:null, toko_id:null, kategori_id:null, nama:"", stok:0, kode:"", harga_dasar:0, harga_jual:0, image:"", show_transaksi:true, use_stok:true, status:true };
 
 export default function BarangJasa() {
-  // --- demo data (ganti dengan fetch API nanti)
   const [items, setItems] = useState([
-    {
-      id: 1,
-      nama: "Beras",
-      kode: "132312",
-      stok: 9,
-      harga_dasar: 11000,
-      harga_jual: 13000,
-      image: "",
-      kategori_id: null,
-      show_transaksi: true,
-      use_stok: true,
-      status: true,
-      selected: true,
-    },
-    {
-      id: 2,
-      nama: "Kecap",
-      kode: "666",
-      stok: 10,
-      harga_dasar: 3000,
-      harga_jual: 4000,
-      image: "",
-      kategori_id: null,
-      show_transaksi: true,
-      use_stok: true,
-      status: true,
-      selected: false,
-    },
-    {
-      id: 3,
-      nama: "Beras 5KG",
-      kode: "1312",
-      stok: 5,
-      harga_dasar: 65000,
-      harga_jual: 70000,
-      image: "",
-      kategori_id: null,
-      show_transaksi: true,
-      use_stok: true,
-      status: true,
-      selected: false,
-    },
+    { id:1, nama:"Beras", kode:"132312", stok:9, harga_dasar:11000, harga_jual:13000, image:"", kategori_id:null, show_transaksi:true, use_stok:true, status:true, selected:true },
+    { id:2, nama:"Kecap", kode:"666", stok:10, harga_dasar:3000, harga_jual:4000, image:"", kategori_id:null, show_transaksi:true, use_stok:true, status:true, selected:false },
+    { id:3, nama:"Beras 5KG", kode:"1312", stok:5, harga_dasar:65000, harga_jual:70000, image:"", kategori_id:null, show_transaksi:true, use_stok:true, status:true, selected:false },
   ]);
 
   const [q, setQ] = useState("");
   const [selectedId, setSelectedId] = useState(items.find((i) => i.selected)?.id ?? items[0]?.id ?? null);
 
-  // --- state modal
+  // MODALS
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openFilter, setOpenFilter] = useState(false);
 
-  // --- form states
+  // FORMS
   const [formAdd, setFormAdd] = useState(emptyBarang);
   const [formEdit, setFormEdit] = useState(emptyBarang);
 
-  // --- filter state
-  const [filter, setFilter] = useState({
-    kategori_id: "",
-    stokMin: "",
-    stokMax: "",
-    status: "",
-    show_transaksi: "",
-    use_stok: "",
-  });
+  // FILTER
+  const [filter, setFilter] = useState({ kategori_id:"", stokMin:"", stokMax:"", status:"", show_transaksi:"", use_stok:"" });
 
-  // --- refs untuk auto focus modal
+  // REFS
   const addFocusRef = useRef(null);
   const editFocusRef = useRef(null);
   const filterFocusRef = useRef(null);
 
-  // --- computed list
+  // LIST
   const filteredItems = useMemo(() => {
     const term = q.trim().toLowerCase();
     return items
       .filter((it) => {
-        const matchText =
-          !term ||
-          it.nama.toLowerCase().includes(term) ||
-          (it.kode || "").toLowerCase().includes(term);
-
+        const matchText = !term || it.nama.toLowerCase().includes(term) || (it.kode || "").toLowerCase().includes(term);
         const inStokMin = filter.stokMin === "" || it.stok >= Number(filter.stokMin);
         const inStokMax = filter.stokMax === "" || it.stok <= Number(filter.stokMax);
-        const matchStatus =
-          filter.status === "" || String(it.status) === String(filter.status);
-        const matchShow =
-          filter.show_transaksi === "" ||
-          String(it.show_transaksi) === String(filter.show_transaksi);
-        const matchUse =
-          filter.use_stok === "" || String(it.use_stok) === String(filter.use_stok);
-        const matchKategori =
-          filter.kategori_id === "" ||
-          String(it.kategori_id || "") === String(filter.kategori_id);
-
+        const matchStatus = filter.status === "" || String(it.status) === String(filter.status);
+        const matchShow = filter.show_transaksi === "" || String(it.show_transaksi) === String(filter.show_transaksi);
+        const matchUse = filter.use_stok === "" || String(it.use_stok) === String(filter.use_stok);
+        const matchKategori = filter.kategori_id === "" || String(it.kategori_id || "") === String(filter.kategori_id);
         return matchText && inStokMin && inStokMax && matchStatus && matchShow && matchUse && matchKategori;
       })
       .sort((a, b) => a.nama.localeCompare(b.nama));
@@ -129,89 +57,77 @@ export default function BarangJasa() {
 
   const selected = useMemo(() => items.find((it) => it.id === selectedId) || null, [items, selectedId]);
 
-  // --- handlers
-  const handleSelect = (id) => setSelectedId(id);
+  // HANDLERS (dibikin stabil)
+  const handleSelect = useCallback((id) => setSelectedId(id), []);
 
-  const handleOpenEdit = () => {
+  const handleOpenEdit = useCallback(() => {
     if (!selected) return;
     setFormEdit({ ...emptyBarang, ...selected });
     setOpenEdit(true);
-  };
+  }, [selected]);
 
-  const handleSaveEdit = () => {
-    // TODO: ganti ke API PUT / PATCH
+  const handleSaveEdit = useCallback(() => {
     setItems((prev) => prev.map((i) => (i.id === formEdit.id ? { ...i, ...formEdit } : i)));
     setOpenEdit(false);
-  };
+  }, [formEdit]);
 
-  const handleOpenAdd = () => {
-    setFormAdd({ ...emptyBarang, id: Math.max(0, ...items.map((i) => i.id || 0)) + 1 });
+  const handleOpenAdd = useCallback(() => {
+    setFormAdd((prev) => ({ ...prev, id: Math.max(0, ...items.map((i) => i.id || 0)) + 1 }));
     setOpenAdd(true);
-  };
+  }, [items]);
 
-  const handleSaveAdd = () => {
-    // TODO: ganti ke API POST
+  const handleSaveAdd = useCallback(() => {
     setItems((prev) => [{ ...formAdd }, ...prev]);
     setSelectedId(formAdd.id);
     setOpenAdd(false);
-  };
+  }, [formAdd]);
 
-  const handleApplyFilter = () => {
-    setOpenFilter(false);
-  };
+  const handleApplyFilter = useCallback(() => setOpenFilter(false), []);
+  const handleResetFilter = useCallback(() => setFilter({ kategori_id:"", stokMin:"", stokMax:"", status:"", show_transaksi:"", use_stok:"" }), []);
+  const handleRefresh = useCallback(() => window.location.reload(), []);
 
-  const handleResetFilter = () =>
-    setFilter({ kategori_id: "", stokMin: "", stokMax: "", status: "", show_transaksi: "", use_stok: "" });
+  // === ACTIONS NAVBAR (fix: pakai handler yg benar & ter-memo) ===
+  const actions = useMemo(
+    () => [
+      {
+        type: "button",
+        title: "Filter Barang",
+        onClick: () => setOpenFilter(true), // ini fine krn wrapped di useMemo stabil
+        className:
+          "inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50",
+        icon: <MdFilterList size={20} />,
+      },
+      {
+        type: "button",
+        title: "Tambah Barang",
+        onClick: handleOpenAdd,
+        className:
+          "inline-flex items-center gap-2 bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600",
+        icon: <MdAdd size={20} />,
+      },
+      {
+        type: "button",
+        title: "Refresh",
+        onClick: handleRefresh,
+        className:
+          "inline-flex items-center gap-2 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-100",
+        icon: <MdRefresh size={20} />,
+      },
+    ],
+    [handleOpenAdd, handleRefresh]
+  );
 
-  const handleRefresh = () => {
-    // TODO: replace dengan refetch API
-    window.location.reload();
-  };
+  useNavbar(
+    { variant: "page", title: "Barang & Jasa", backTo: "/management", actions },
+    [actions] // cukup ini biar gak rerun tiap state modal berubah
+  );
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
-      {/* TOP BAR */}
-      <div className="bg-white px-4 lg:px-6 py-3 lg:py-4 flex justify-between items-center border-b shadow-sm sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <Link to="/management" className="text-2xl text-gray-700 hover:text-gray-900">←</Link>
-          <h1 className="text-xl lg:text-2xl font-bold">Barang atau Jasa</h1>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setOpenFilter(true)}
-            className="inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50"
-            title="Filter Barang"
-          >
-            <MdFilterList size={20} />
-            <span className="hidden sm:inline">Filter</span>
-          </button>
-
-          <button
-            onClick={handleOpenAdd}
-            className="inline-flex items-center gap-2 bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600"
-            title="Tambah Barang"
-          >
-            <MdAdd size={20} />
-            <span className="hidden sm:inline">Tambah</span>
-          </button>
-
-          <button
-            onClick={handleRefresh}
-            className="inline-flex items-center gap-2 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-100"
-            title="Refresh (F5)"
-          >
-            <MdRefresh size={20} />
-            <span className="hidden sm:inline">Refresh</span>
-          </button>
-        </div>
-      </div>
-
       {/* BODY */}
       <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
-        {/* LEFT: LIST */}
+        {/* LEFT */}
         <div className="w-full lg:w-[60%] flex flex-col overflow-hidden bg-white border-r">
-          {/* Search + chips */}
           <div className="p-4 lg:p-6 border-b bg-white">
             <div className="flex gap-3 mb-3">
               <div className="relative flex-1">
@@ -224,15 +140,11 @@ export default function BarangJasa() {
                 />
                 <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={22} />
               </div>
-              <button
-                className="bg-white text-gray-600 border border-green-400 px-4 rounded-lg hover:bg-green-50"
-                onClick={() => setQ("")}
-              >
+              <button className="bg-white text-gray-600 border border-green-400 px-4 rounded-lg hover:bg-green-50" onClick={() => setQ("")}>
                 Bersihkan
               </button>
             </div>
 
-            {/* contoh chip kategori (dummy) */}
             <div className="flex flex-wrap gap-2">
               {["Semua", "Sembako", "Minuman"].map((c, idx) => (
                 <button
@@ -247,7 +159,6 @@ export default function BarangJasa() {
             </div>
           </div>
 
-          {/* List */}
           <div className="overflow-y-auto p-4 lg:p-6 space-y-3">
             {filteredItems.length === 0 ? (
               <div className="text-center py-10 text-gray-500">Tidak ada barang yang cocok dengan filter/pencarian.</div>
@@ -257,19 +168,11 @@ export default function BarangJasa() {
                   key={item.id}
                   onClick={() => handleSelect(item.id)}
                   className={`p-4 rounded-xl flex justify-between items-center text-base lg:text-lg font-medium cursor-pointer border transition
-                    ${
-                      selectedId === item.id
-                        ? "bg-green-50 border-green-500 ring-1 ring-green-500"
-                        : "bg-white border-gray-200 hover:border-green-300"
-                    }`}
+                    ${selectedId === item.id ? "bg-green-50 border-green-500 ring-1 ring-green-500" : "bg-white border-gray-200 hover:border-green-300"}`}
                 >
                   <div className="flex items-center gap-4">
                     {item.image ? (
-                      <img
-                        src={item.image}
-                        alt={item.nama}
-                        className="w-12 h-12 object-cover rounded-lg"
-                      />
+                      <img src={item.image} alt={item.nama} className="w-12 h-12 object-cover rounded-lg" />
                     ) : (
                       <div className="bg-gray-100 border border-gray-200 w-12 h-12 rounded-lg flex items-center justify-center font-bold">
                         {item.nama.slice(0, 2).toUpperCase()}
@@ -289,22 +192,17 @@ export default function BarangJasa() {
             )}
           </div>
 
-          {/* CTA bawah */}
           <div className="p-4 bg-white border-t">
-            <button
-              onClick={handleOpenAdd}
-              className="w-full bg-green-500 text-white text-lg lg:text-xl py-3 lg:py-4 rounded-xl font-bold hover:bg-green-600"
-            >
+            <button onClick={handleOpenAdd} className="w-full bg-green-500 text-white text-lg lg:text-xl py-3 lg:py-4 rounded-xl font-bold hover:bg-green-600">
               TAMBAH BARANG
             </button>
           </div>
         </div>
 
-        {/* RIGHT: DETAIL */}
+        {/* RIGHT */}
         <div className="w-full lg:w-[40%] overflow-y-auto p-4 lg:p-6 bg-gray-50">
           <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 text-base lg:text-lg rounded-lg">
-            ✏️ Untuk mengubah data barang, silakan buka{" "}
-            <span className="text-blue-600 underline cursor-pointer">Kasir Pintar Dashboard</span>.
+            ✏️ Untuk mengubah data barang, silakan buka <span className="text-blue-600 underline cursor-pointer">Kasir Pintar Dashboard</span>.
           </div>
 
           {selected ? (
@@ -324,10 +222,7 @@ export default function BarangJasa() {
                   </div>
                 </div>
 
-                <button
-                  onClick={handleOpenEdit}
-                  className="inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50"
-                >
+                <button onClick={handleOpenEdit} className="inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50">
                   <MdEdit size={18} /> Edit
                 </button>
               </div>
@@ -356,6 +251,8 @@ export default function BarangJasa() {
           )}
         </div>
       </div>
+
+      {/* MODALS */}
 
       {/* MODAL: Tambah Barang */}
       <Modal open={openAdd} title="Tambah Barang" onClose={() => setOpenAdd(false)} initialFocusRef={addFocusRef}>
@@ -468,10 +365,11 @@ export default function BarangJasa() {
         </div>
       </Modal>
     </div>
+
   );
+
 }
 
-/* ---------------------- Sub Components ---------------------- */
 
 function Info({ label, value }) {
   return (

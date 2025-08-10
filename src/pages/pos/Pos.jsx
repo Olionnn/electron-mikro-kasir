@@ -1,11 +1,15 @@
 'use client'
-import React, {useState, useEffect} from "react";
-import { MdOutlineRefresh, MdOutlineSearch } from "react-icons/md";
+import React, {useState, useEffect, useCallback} from "react";
+import { MdOutlineRefresh, MdOutlineSearch,MdSettings } from "react-icons/md";
+import { FaConciergeBell } from "react-icons/fa";
+import { BsStarFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { HiOutlineQuestionMarkCircle } from "react-icons/hi2";
 import PosItemCard from "../../component/positemcard";
 import PosCartItem from "../../component/poscartitem";
 import { useNavigate } from "react-router-dom";
+import { useNavbar } from "../../hooks/useNavbar";
+
 
 const Pos = () => {
     const [items, setItems] = useState([]);
@@ -13,10 +17,50 @@ const Pos = () => {
     const [totalPrice, setTotalPrice] = useState(0); 
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //   const loadedItems = JSON.parse(localStorage.getItem('items')) || [];
-    //   setItems(loadedItems);
-    // }, []);
+
+
+    const onCancel = useCallback(() => {
+      navigate(-1);
+    }, [navigate]);
+  
+    useNavbar(
+      {
+        variant: "pos",
+        title: "Transaksi",
+        actions: [
+          {
+            type: "link",
+            to: "/pesanan",
+            title: "Pesanan",
+            className: "bg-orange-400 text-white rounded-full w-12 h-12",
+            icon: <FaConciergeBell size={22} />,
+          },
+          {
+            type: "button",
+            title: "Favorit",
+            onClick: () => console.log("favorit"),
+            className: "bg-green-600 text-white rounded-full w-12 h-12",
+            icon: <BsStarFill size={18} />,
+          },
+          {
+            type: "button",
+            title: "Batalkan",
+            onClick: onCancel,
+            label: "Batalkan",
+            className:
+              "border border-red-500 text-red-500 px-6 py-2 rounded-full font-semibold text-lg",
+          },
+          {
+            type: "button",
+            title: "Pengaturan",
+            onClick: () => navigate("/pos/settings"),
+            className: "rounded-full w-12 h-12 text-gray-700 hover:bg-gray-100",
+            icon: <MdSettings size={22} />,
+          },
+        ],
+      },
+      [onCancel, navigate]
+    );
 
     useEffect(() => {
       const fetchBarangList = async () => {
@@ -103,6 +147,7 @@ const Pos = () => {
     };
   return (
     <div className="flex h-full">
+      
       <div className="w-3/5 border-2 border-gray-100 bg-white p-8 flex flex-col gap-6 overflow-y-auto">
         <div className="flex items-center gap-4">
           <button className="bg-green-600 text-white p-3 rounded-full">

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
+import { useNavbar } from '../../hooks/useNavbar';
 const BuatPesanan = () => {
   const location = useLocation();
   const { cartItems, totalPrice } = location.state || { cartItems: [], totalPrice: 0 };
@@ -14,6 +14,35 @@ const BuatPesanan = () => {
   const [lihatReview, setLihatReview] = useState(false);
   
   const navigate = useNavigate();
+
+
+  useNavbar(
+    {
+      variant: "page",
+      title: "Buat Barang",
+      backTo: "/barang-jasa",
+      actions: [
+        {
+          type: "button",
+          title: "Batal",
+          onClick: onCancel,
+          className:
+            "inline-flex items-center gap-2 px-4 py-2 rounded-lg border text-gray-700 hover:bg-gray-100",
+          icon: <MdClose size={18} />,
+        },
+        {
+          type: "button",
+          title: "Simpan",
+          onClick: onSave,
+          className:
+            "inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700",
+          icon: <MdSave size={18} />,
+        },
+      ],
+    },
+    [onCancel, onSave]
+  );
+
 
   const handleSimpan = (event) => {
     event.preventDefault();
