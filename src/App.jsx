@@ -47,6 +47,10 @@ import AbsensiPage from "./pages/m_absensi/Absen";
 import ShiftPage from "./pages/m_shift/Shift";
 import OlsopinPage from "./pages/m_setting/TokoOnline";
 import BarangStokPage from "./pages/m_stok/stok";
+import LaporanPembelian from "./pages/m_laporan/laporanpembelian";
+import LaporanPenjualan from "./pages/m_laporan/laporanpenjualan";
+import LaporanKeuangan from "./pages/m_laporan/laporankeuangan";
+import LaporanKeuanganPage from "./pages/m_laporan/detailkeuangan";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -106,8 +110,15 @@ function App() {
               <Route path="/keuangan" element={<Keuangan />} />
 
 
+
               {/* Laporan */}
               <Route path="/laporan" element={<LaporanPage/>} />
+              <Route path="/laporan/laporan-pembelian" element={<LaporanPembelian />} />
+              <Route path="/laporan/laporan-penjualan" element={<LaporanPenjualan />} />
+              <Route path="/laporan/laporan-keuangan" element={<LaporanKeuangan />} />
+              <Route path="/laporan/laporan-keuangan/detail" element={<LaporanKeuanganPage />} />
+
+            
 
 
               {/* Absensi */}
