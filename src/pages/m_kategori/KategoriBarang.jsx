@@ -1,15 +1,73 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import Modal from "../../component/Modal";
 import { useNavbar } from "../../hooks/useNavbar";
-import { MdAdd, MdRefresh, MdSearch, MdClose, MdEdit, MdToggleOn, MdToggleOff } from "react-icons/md";
+import {
+  MdAdd,
+  MdRefresh,
+  MdSearch,
+  MdClose,
+  MdEdit,
+  MdToggleOn,
+  MdToggleOff,
+} from "react-icons/md";
 
 const nowIso = () => new Date().toISOString();
 const DUMMY = [
-  { id: 1, toko_id: 1, nama: "Elektronik", created_by: 1, updated_by: 1, sync_at: null, status: true,  created_at: nowIso(), updated_at: nowIso() },
-  { id: 2, toko_id: 1, nama: "Pakaian",    created_by: 2, updated_by: 2, sync_at: null, status: true,  created_at: nowIso(), updated_at: nowIso() },
-  { id: 3, toko_id: 1, nama: "Alat Tulis", created_by: 1, updated_by: 1, sync_at: null, status: true,  created_at: nowIso(), updated_at: nowIso() },
-  { id: 4, toko_id: 1, nama: "Makanan",    created_by: 3, updated_by: 3, sync_at: null, status: false, created_at: nowIso(), updated_at: nowIso() },
-  { id: 5, toko_id: 1, nama: "Minuman",    created_by: 3, updated_by: 3, sync_at: null, status: true,  created_at: nowIso(), updated_at: nowIso() },
+  {
+    id: 1,
+    toko_id: 1,
+    nama: "Elektronik",
+    created_by: 1,
+    updated_by: 1,
+    sync_at: null,
+    status: true,
+    created_at: nowIso(),
+    updated_at: nowIso(),
+  },
+  {
+    id: 2,
+    toko_id: 1,
+    nama: "Pakaian",
+    created_by: 2,
+    updated_by: 2,
+    sync_at: null,
+    status: true,
+    created_at: nowIso(),
+    updated_at: nowIso(),
+  },
+  {
+    id: 3,
+    toko_id: 1,
+    nama: "Alat Tulis",
+    created_by: 1,
+    updated_by: 1,
+    sync_at: null,
+    status: true,
+    created_at: nowIso(),
+    updated_at: nowIso(),
+  },
+  {
+    id: 4,
+    toko_id: 1,
+    nama: "Makanan",
+    created_by: 3,
+    updated_by: 3,
+    sync_at: null,
+    status: false,
+    created_at: nowIso(),
+    updated_at: nowIso(),
+  },
+  {
+    id: 5,
+    toko_id: 1,
+    nama: "Minuman",
+    created_by: 3,
+    updated_by: 3,
+    sync_at: null,
+    status: true,
+    created_at: nowIso(),
+    updated_at: nowIso(),
+  },
 ];
 
 function formatDate(v) {
@@ -32,7 +90,9 @@ function Highlighted({ text = "", query = "" }) {
     <>
       {parts.map((p, i) =>
         p.toLowerCase() === q.toLowerCase() ? (
-          <mark key={i} className="bg-yellow-100 text-gray-900 rounded px-0.5">{p}</mark>
+          <mark key={i} className="bg-yellow-100 text-gray-900 rounded px-0.5">
+            {p}
+          </mark>
         ) : (
           <span key={i}>{p}</span>
         )
@@ -56,7 +116,9 @@ export default function KategoriBarangPage() {
   const filtered = useMemo(() => {
     if (!q.trim()) return categories;
     const lower = q.trim().toLowerCase();
-    return categories.filter((c) => (c.nama || "").toLowerCase().includes(lower));
+    return categories.filter((c) =>
+      (c.nama || "").toLowerCase().includes(lower)
+    );
   }, [categories, q]);
 
   const selected = useMemo(
@@ -92,7 +154,15 @@ export default function KategoriBarangPage() {
     ],
     [openTambah, doRefresh]
   );
-  useNavbar({ variant: "page", title: "Kategori Barang", backTo: "/management", actions }, [actions]);
+  useNavbar(
+    {
+      variant: "page",
+      title: "Kategori Barang",
+      backTo: "/management",
+      actions,
+    },
+    [actions]
+  );
 
   // Modal tambah
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -127,101 +197,117 @@ export default function KategoriBarangPage() {
     if (!selected) return;
     setCategories((prev) =>
       prev.map((c) =>
-        c.id === selected.id ? { ...c, status: !c.status, updated_at: new Date().toISOString() } : c
+        c.id === selected.id
+          ? { ...c, status: !c.status, updated_at: new Date().toISOString() }
+          : c
       )
     );
   };
 
   return (
-    <div className="w-full h-screen flex overflow-hidden bg-white">
-      {/* LEFT: LIST (dengan search sticky) */}
-{/* LEFT: LIST */}
-<div className="flex flex-col w-1/2 h-full border-r border-gray-200">
-  
-  {/* Search bar sticky */}
-  <div className="shrink-0 sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
-    <div className="px-4 py-3">
-      <div className="relative">
-        <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Cari kategori…"
-          className="w-full pl-10 pr-10 h-11 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
-        {search && (
-          <button
-            onClick={() => setSearch("")}
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-gray-100 text-gray-500"
-            title="Bersihkan"
-          >
-            <MdClose size={18} />
-          </button>
-        )}
-      </div>
-      <div className="mt-2 text-xs text-gray-500">
-        Menampilkan <b>{filtered.length}</b> dari {categories.length} kategori
-      </div>
-    </div>
-  </div>
-
-  {/* Scroll hanya di bagian list */}
-  <div className="flex-1 overflow-y-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-    {filtered.length === 0 ? (
-      <div className="col-span-full flex flex-col items-center justify-center text-center text-gray-500">
-        <div className="mb-3 text-4xl">📁</div>
-        Tidak ada kategori yang cocok.
-      </div>
-    ) : (
-      filtered.map((c) => {
-        const active = c.id === selectedId;
-        return (
-          <button
-            key={c.id}
-            type="button"
-            onClick={() => setSelectedId(c.id)}
-            className={cn(
-              "text-left rounded-xl border transition focus:outline-none focus:ring-2",
-              active
-                ? "border-green-500 ring-1 ring-green-500 bg-green-50"
-                : "border-gray-200 bg-white hover:shadow-sm"
-            )}
-          >
-            <div className="flex items-stretch">
-              <div
-                className={cn(
-                  "w-1.5 rounded-l-xl",
-                  active ? "bg-green-500" : "bg-gradient-to-b from-green-400 to-emerald-500"
-                )}
+    <div className="w-full h-full  flex overflow-hidden bg-white">
+      <div className="flex flex-col w-1/2 h-full border-r border-gray-200">
+        <div className="shrink-0 sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
+          <div className="px-4 py-3">
+            <div className="relative">
+              <MdSearch
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                size={20}
               />
-              <div className="flex-1 flex items-center gap-3 p-4">
-                <div className="w-10 h-10 bg-green-100 rounded-md flex items-center justify-center">
-                  <span className="text-green-600 font-bold">
-                    {(c.nama || "K").charAt(0).toUpperCase()}
-                  </span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="font-semibold text-gray-800 truncate">
-                    <Highlighted text={c.nama || "-"} query={q} />
-                  </div>
-                  <div className="text-gray-500 text-xs">ID: {c.id}</div>
-                </div>
-                <span
-                  className={cn(
-                    "text-xs px-2 py-1 rounded-full",
-                    c.status ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"
-                  )}
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Cari kategori…"
+                className="w-full pl-10 pr-10 h-11 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-gray-100 text-gray-500"
+                  title="Bersihkan"
                 >
-                  {c.status ? "Aktif" : "Nonaktif"}
-                </span>
+                  <MdClose size={18} />
+                </button>
+              )}
+            </div>
+            <div className="mt-2 text-xs text-gray-500">
+              Menampilkan <b>{filtered.length}</b> dari {categories.length}{" "}
+              kategori
+            </div>
+          </div>
+        </div>
+
+          {/* Scroll hanya di bagian list */}
+          {filtered.length === 0 ? (
+            <div className="flex-1 overflow-y-auto p-4">
+              <div className="flex flex-col items-center justify-center text-center text-gray-500 h-full">
+                <div className="mb-3 text-4xl">📁</div>
+                Tidak ada kategori yang cocok.
+                <button
+                  onClick={openTambah}
+                  className="mt-4 inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  <MdAdd size={18} />
+                  Tambah Kategori Baru
+                </button>
               </div>
             </div>
-          </button>
-        );
-      })
-    )}
-  </div>
-</div>
+          ) : (
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {filtered.map((c) => {
+                const active = c.id === selectedId;
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => setSelectedId(c.id)}
+                    className={cn(
+                      "w-full text-left rounded-xl border transition focus:outline-none focus:ring-2",
+                      active
+                        ? "border-green-500 ring-1 ring-green-500 bg-green-50"
+                        : "border-gray-200 bg-white hover:shadow-sm"
+                    )}
+                  >
+                    <div className="flex items-stretch">
+                      <div
+                        className={cn(
+                          "w-1.5 rounded-l-xl",
+                          active
+                            ? "bg-green-500"
+                            : "bg-gradient-to-b from-green-400 to-emerald-500"
+                        )}
+                      />
+                      <div className="flex-1 flex items-center gap-3 p-4">
+                        <div className="w-10 h-10 bg-green-100 rounded-md flex items-center justify-center">
+                          <span className="text-green-600 font-bold">
+                            {(c.nama || "K").charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-semibold text-gray-800 truncate">
+                            <Highlighted text={c.nama || "-"} query={q} />
+                          </div>
+                          <div className="text-gray-500 text-xs">ID: {c.id}</div>
+                        </div>
+                        <span
+                          className={cn(
+                            "text-xs px-2 py-1 rounded-full",
+                            c.status
+                              ? "bg-green-100 text-green-700"
+                              : "bg-gray-100 text-gray-600"
+                          )}
+                        >
+                          {c.status ? "Aktif" : "Nonaktif"}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
 
       {/* RIGHT: PREVIEW */}
       <div className="w-1/2 h-full overflow-auto">
@@ -240,7 +326,9 @@ export default function KategoriBarangPage() {
                   </span>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold">{selected.nama || "-"}</div>
+                  <div className="text-2xl font-bold">
+                    {selected.nama || "-"}
+                  </div>
                   <div className="text-gray-500 text-sm">ID: {selected.id}</div>
                 </div>
               </div>
@@ -265,17 +353,43 @@ export default function KategoriBarangPage() {
                   )}
                   title="Toggle Status"
                 >
-                  {selected.status ? <><MdToggleOn size={20}/> Nonaktifkan</> : <><MdToggleOff size={20}/> Aktifkan</>}
+                  {selected.status ? (
+                    <>
+                      <MdToggleOn size={20} /> Nonaktifkan
+                    </>
+                  ) : (
+                    <>
+                      <MdToggleOff size={20} /> Aktifkan
+                    </>
+                  )}
                 </button>
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-red-600 hover:bg-red-50"
+                  onClick={() => alert("Hapus dummy")}
+                  title="Hapus (dummy)"
+                >
+                  <MdClose size={18} /> Hapus
+                </button>
+
               </div>
             </div>
 
             {/* Status badges */}
             <div className="flex flex-wrap items-center gap-2">
-              <span className={cn("px-2.5 py-1 rounded-full text-xs", selected.status ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700")}>
+              <span
+                className={cn(
+                  "px-2.5 py-1 rounded-full text-xs",
+                  selected.status
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-100 text-gray-700"
+                )}
+              >
                 {selected.status ? "Aktif" : "Nonaktif"}
               </span>
-              <span className="px-2.5 py-1 rounded-full text-xs bg-gray-100 text-gray-700">Toko #{selected.toko_id ?? "-"}</span>
+              <span className="px-2.5 py-1 rounded-full text-xs bg-gray-100 text-gray-700">
+                Toko #{selected.toko_id ?? "-"}
+              </span>
             </div>
 
             {/* Info grid */}
@@ -283,16 +397,26 @@ export default function KategoriBarangPage() {
               <Field label="Toko ID" value={selected.toko_id ?? "-"} />
               <Field label="Created By" value={selected.created_by ?? "-"} />
               <Field label="Updated By" value={selected.updated_by ?? "-"} />
-              <Field label="Sync At" value={selected.sync_at ? formatDate(selected.sync_at) : "-"} />
-              <Field label="Created At" value={formatDate(selected.created_at)} />
-              <Field label="Updated At" value={formatDate(selected.updated_at)} />
+              <Field
+                label="Sync At"
+                value={selected.sync_at ? formatDate(selected.sync_at) : "-"}
+              />
+              <Field
+                label="Created At"
+                value={formatDate(selected.created_at)}
+              />
+              <Field
+                label="Updated At"
+                value={formatDate(selected.updated_at)}
+              />
             </div>
 
             {/* Note */}
             <div className="p-4 bg-white rounded-xl border">
               <div className="text-xs text-gray-500 mb-1">Catatan</div>
               <div className="text-gray-700">
-                Ini preview detail kategori berdasarkan struktur model. Aksi edit/status masih dummy.
+                Ini preview detail kategori berdasarkan struktur model. Aksi
+                edit/status masih dummy.
               </div>
             </div>
           </div>
@@ -300,10 +424,17 @@ export default function KategoriBarangPage() {
       </div>
 
       {/* Modal Tambah */}
-      <Modal open={isModalOpen} title="Tambah Kategori" onClose={() => setIsModalOpen(false)}>
+      <Modal
+        open={isModalOpen}
+        title="Tambah Kategori"
+        onClose={() => setIsModalOpen(false)}
+      >
         <form onSubmit={addKategori} className="space-y-4">
           <div>
-            <label htmlFor="categoryName" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="categoryName"
+              className="block text-sm font-medium text-gray-700"
+            >
               Nama Kategori
             </label>
             <input

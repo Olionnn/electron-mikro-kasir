@@ -1,231 +1,594 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { MdAdd, MdRefresh, MdFilterList, MdEdit } from "react-icons/md";
+import { FiPercent, FiHash, FiCheckCircle, FiXCircle } from "react-icons/fi";
 import Modal from "../../component/Modal";
+import { useNavbar } from "../../hooks/useNavbar";
+
+// util kecil
+const cx = (...a) => a.filter(Boolean).join(" ");
+const toInt = (v) => (v === "" || v === null || v === undefined ? "" : Number(String(v).replace(/\D/g, "")));
+const today = () => new Date().toISOString().slice(0, 10);
+const fmtRp = (n) => new Intl.NumberFormat("id-ID").format(Number(n || 0));
+const labelJenis = (j) => (String(j) === "1" ? "Persentase" : "Nominal");
+const showJumlah = (j, val) => (String(j) === "1" ? `${val}%` : `Rp ${fmtRp(val)}`);
+
+const emptyDiskon = {
+  id: null,
+  toko_id: 1,
+  nama: "",
+  jumlah: "",
+  jenis_diskon: "1", // "1" persen | "2" nominal
+  created_by: 1,
+  updated_by: 1,
+  sync_at: "",
+  status: true,
+  created_at: today(),
+  updated_at: today(),
+};
 
 export default function DiskonPage() {
-  const [discounts, setDiscounts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  // --- data state
+  const [discounts, setDiscounts] = useState([
+    // dummy fallback (akan diganti fetch jika electronAPI tersedia)
+    {
+      id: 1,
+      toko_id: 10,
+      nama: "Promo Akhir Pekan",
+      jumlah: 10,
+      jenis_diskon: 1,
+      created_by: 1,
+      updated_by: 1,
+      sync_at: null,
+      status: true,
+      created_at: "2025-07-01",
+      updated_at: "2025-08-01",
+    },
+    {
+      id: 2,
+      toko_id: 10,
+      nama: "Voucher 50rb",
+      jumlah: 50000,
+      jenis_diskon: 2,
+      created_by: 1,
+      updated_by: 2,
+      sync_at: null,
+      status: false,
+      created_at: "2025-07-10",
+      updated_at: "2025-08-05",
+    },
+  ]);
+  const [selected, setSelected] = useState(null);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newDiscountName, setNewDiscountName] = useState("");
-  const [newDiscountAmount, setNewDiscountAmount] = useState("");
-  const [newDiscountType, setNewDiscountType] = useState("1"); // default persentase
-  const [saving, setSaving] = useState(false);
+  // --- search & filter
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState({
+    jenis_diskon: "", // "", "1", "2"
+    status: "", // "", "true", "false"
+    toko_id: "",
+  });
 
+  // --- modals
+  const [openAdd, setOpenAdd] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openFilter, setOpenFilter] = useState(false);
+
+  // --- forms
+  const [formAdd, setFormAdd] = useState(emptyDiskon);
+  const [formEdit, setFormEdit] = useState(emptyDiskon);
+
+  // --- fetch (jika electronAPI tersedia)
   const fetchDiscounts = useCallback(async () => {
+    if (!window.electronAPI?.getDiskonList) return; // pakai dummy
     try {
       const result = await window.electronAPI.getDiskonList({
-        pagination: { limit: 50, page: 1 },
-        filter: { search: searchTerm },
+        pagination: { limit: 200, page: 1 },
+        filter: { search },
       });
-      setDiscounts(result?.data?.items || []);
-    } catch (error) {
-      console.error("Error fetching discounts:", error);
+      const items = result?.data?.items || [];
+      if (items.length) {
+        setDiscounts(items);
+        setSelected((s) => (s ? items.find((i) => i.id === s.id) || items[0] : items[0] || null));
+      }
+    } catch (e) {
+      console.error("fetch discounts error", e);
     }
-  }, [searchTerm]);
+  }, [search]);
 
   useEffect(() => {
     fetchDiscounts();
   }, [fetchDiscounts]);
 
-  useEffect(() => {
-    const handler = (e) => {
-      if (e.key === "F5") {
-        e.preventDefault();
-        fetchDiscounts();
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+  // --- Navbar actions
+  const openTambah = useCallback(() => {
+    const nextId = Math.max(0, ...discounts.map((d) => d.id || 0)) + 1;
+    setFormAdd({ ...emptyDiskon, id: nextId });
+    setOpenAdd(true);
+  }, [discounts]);
+
+  const doRefresh = useCallback(() => {
+    setSelected(null);
+    fetchDiscounts();
   }, [fetchDiscounts]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const nama = newDiscountName.trim();
-    const jumlah = parseInt(newDiscountAmount, 10);
-    const jenis_diskon = parseInt(newDiscountType, 10);
+  const openFilterModal = useCallback(() => setOpenFilter(true), []);
 
-    if (!nama || isNaN(jumlah) || isNaN(jenis_diskon)) return;
+  const actions = useMemo(
+    () => [
+      {
+        type: "button",
+        title: "Filter",
+        onClick: openFilterModal,
+        className:
+          "inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50",
+        icon: <MdFilterList size={20} />,
+      },
+      {
+        type: "button",
+        title: "Tambah Diskon",
+        onClick: openTambah,
+        className:
+          "inline-flex items-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700",
+        icon: <MdAdd size={20} />,
+      },
+      {
+        type: "button",
+        title: "Refresh",
+        onClick: doRefresh,
+        className:
+          "inline-flex items-center gap-2 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-100",
+        icon: <MdRefresh size={20} />,
+      },
+    ],
+    [openFilterModal, openTambah, doRefresh]
+  );
+
+  useNavbar({ variant: "page", title: "Diskon", backTo: "/management", actions }, [actions]);
+
+  // --- filtered list
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    let arr = discounts;
+
+    if (q) {
+      arr = arr.filter(
+        (d) =>
+          (d.nama || "").toLowerCase().includes(q) ||
+          String(d.jumlah || "").includes(q)
+      );
+    }
+    if (filter.jenis_diskon) arr = arr.filter((d) => String(d.jenis_diskon) === String(filter.jenis_diskon));
+    if (filter.status) arr = arr.filter((d) => String(d.status) === filter.status);
+    if (filter.toko_id) arr = arr.filter((d) => String(d.toko_id || "") === String(filter.toko_id));
+
+    return arr;
+  }, [discounts, search, filter]);
+
+  // --- edit
+  const handleOpenEdit = useCallback(() => {
+    if (!selected) return;
+    setFormEdit({
+      ...emptyDiskon,
+      ...selected,
+      jenis_diskon: String(selected.jenis_diskon || "1"),
+    });
+    setOpenEdit(true);
+  }, [selected]);
+
+  const handleSaveAdd = useCallback(async () => {
+    const payload = {
+      ...formAdd,
+      jumlah: Number(formAdd.jumlah || 0),
+      jenis_diskon: Number(formAdd.jenis_diskon || 1),
+      updated_at: today(),
+    };
+    // kalau ada API, kirim. Di sini kita langsung local update:
+    setDiscounts((prev) => [payload, ...prev]);
+    setSelected(payload);
+    setOpenAdd(false);
 
     try {
-      setSaving(true);
-      await window.electronAPI.createDiskon({ nama, jumlah, jenis_diskon });
-      setNewDiscountName("");
-      setNewDiscountAmount("");
-      setNewDiscountType("1");
-      setIsModalOpen(false);
-      await fetchDiscounts();
-    } catch (err) {
-      console.error("createDiskon error:", err);
-      alert(err?.message || "Gagal menyimpan diskon");
-    } finally {
-      setSaving(false);
+      if (window.electronAPI?.createDiskon) {
+        await window.electronAPI.createDiskon({
+          nama: payload.nama,
+          jumlah: payload.jumlah,
+          jenis_diskon: payload.jenis_diskon,
+          toko_id: payload.toko_id,
+          status: payload.status,
+          created_by: payload.created_by,
+          updated_by: payload.updated_by,
+          sync_at: payload.sync_at || null,
+        });
+        await fetchDiscounts();
+      }
+    } catch (e) {
+      console.error("createDiskon error:", e);
     }
-  };
+  }, [formAdd, fetchDiscounts]);
+
+  const handleSaveEdit = useCallback(async () => {
+    const payload = {
+      ...formEdit,
+      jumlah: Number(formEdit.jumlah || 0),
+      jenis_diskon: Number(formEdit.jenis_diskon || 1),
+      updated_at: today(),
+    };
+    setDiscounts((prev) => prev.map((d) => (d.id === payload.id ? payload : d)));
+    setSelected(payload);
+    setOpenEdit(false);
+
+    try {
+      if (window.electronAPI?.updateDiskon) {
+        await window.electronAPI.updateDiskon(payload.id, {
+          nama: payload.nama,
+          jumlah: payload.jumlah,
+          jenis_diskon: payload.jenis_diskon,
+          toko_id: payload.toko_id,
+          status: payload.status,
+          updated_by: payload.updated_by,
+          sync_at: payload.sync_at || null,
+        });
+        await fetchDiscounts();
+      }
+    } catch (e) {
+      console.error("updateDiskon error:", e);
+    }
+  }, [formEdit, fetchDiscounts]);
+
+  const clearFilters = useCallback(() => setFilter({ jenis_diskon: "", status: "", toko_id: "" }), []);
+
+  // focus refs untuk Modal
+  const addFocusRef = useRef(null);
+  const editFocusRef = useRef(null);
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
-      {/* Header */}
-      <div className="bg-white px-6 py-4 flex justify-between items-center border-b shadow-sm">
-        <div className="flex items-center gap-4">
-          <Link to="/management" className="text-2xl text-gray-700 hover:text-green-600">
-            ←
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-800">Diskon</h1>
-        </div>
-        <button
-          className="text-green-600 hover:text-green-700 flex items-center gap-2"
-          onClick={fetchDiscounts}
-          title="Refresh (F5)"
-        >
-          🔄 Refresh (F5)
-        </button>
-      </div>
-
-      <div className="flex flex-1 overflow-hidden">
-        <div className="w-full flex flex-col bg-white border-x border-gray-200 rounded-t-2xl">
-          
-          {/* Search */}
-          <div className="p-4 border-b sticky top-0 bg-white z-10">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div className="relative w-full md:max-w-xl">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17.74 12.51a7.25 7.25 0 11-14.5 0 7.25 7.25 0 0114.5 0z" />
-                  </svg>
-                </span>
-                <input
-                  type="text"
-                  placeholder="Cari diskon…"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-10 border border-gray-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 hover:bg-gray-100 text-gray-500"
-                    title="Bersihkan"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                )}
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gray-200">
-                  <span className="inline-block h-2 w-2 rounded-full bg-green-500"></span>
-                  {discounts.length} diskon
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* List */}
-          <div className="flex-1 overflow-auto p-4">
-            {discounts.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-center">
-                <div className="mb-4 h-24 w-24 rounded-2xl bg-green-100 flex items-center justify-center text-4xl">
-                  🎁
-                </div>
-                <div className="text-xl font-semibold text-gray-700 mb-1">Belum ada data</div>
-                <div className="text-gray-500 mb-4">Silakan tambah diskon terlebih dahulu</div>
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-white bg-green-600 hover:bg-green-700"
-                >
-                  ＋ Tambah Diskon
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-3">
-                {discounts.map((disc) => (
-                  <div key={disc.id} className="group flex justify-between items-center border rounded-xl p-4 hover:shadow-sm transition">
-                    <div>
-                      <div className="font-semibold text-gray-800">{disc.nama}</div>
-                      <div className="text-sm text-gray-500">
-                        {disc.jenis_diskon === 1 ? `${disc.jumlah}%` : `Rp ${disc.jumlah.toLocaleString()}`}
-                      </div>
-                    </div>
-                    <div className="text-gray-300 group-hover:text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </div>
-                ))}
-              </div>
+    <div className="flex h-full bg-gray-50">
+      {/* KIRI: search + list (scrollable) */}
+      <div className="w-1/2 border-r flex flex-col bg-white">
+        {/* search bar */}
+        <div className="p-4 border-b">
+          <div className="relative">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Cari nama atau jumlah…"
+              className="w-full h-11 pl-4 pr-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-600 hover:text-gray-800"
+              >
+                Bersihkan
+              </button>
             )}
           </div>
-
-          {/* Tambah */}
-          <div className="border-t p-3">
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg rounded-xl font-semibold transition-colors"
-            >
-              TAMBAH DISKON
-            </button>
+          <div className="mt-2 text-xs text-gray-500">
+            Menampilkan <b>{filtered.length}</b> dari {discounts.length} diskon
           </div>
+        </div>
+
+        {/* list */}
+        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+          {filtered.length === 0 ? (
+            <div className="h-full flex items-center justify-center text-gray-500">
+              Tidak ada diskon yang cocok.
+            </div>
+          ) : (
+            filtered.map((d) => {
+              const active = selected?.id === d.id;
+              return (
+                <button
+                  key={d.id}
+                  type="button"
+                  onClick={() => setSelected(d)}
+                  className={cx(
+                    "w-full text-left rounded-xl border transition focus:outline-none focus:ring-2",
+                    active
+                      ? "border-green-500 ring-1 ring-green-500 bg-green-50"
+                      : "border-gray-200 bg-white hover:shadow-sm"
+                  )}
+                >
+                  <div className="flex items-stretch">
+                    <div className={cx("w-1.5 rounded-l-xl", active ? "bg-green-500" : "bg-gradient-to-b from-green-400 to-emerald-500")} />
+                    <div className="flex-1 flex items-center justify-between p-3">
+                      <div className="min-w-0">
+                        <div className="font-semibold text-gray-800 truncate">
+                          {d.nama}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-0.5">
+                          {labelJenis(d.jenis_diskon)} • {showJumlah(d.jenis_diskon, d.jumlah)}
+                        </div>
+                      </div>
+                      <span
+                        className={cx(
+                          "text-xs px-2 py-1 rounded-full",
+                          d.status ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"
+                        )}
+                      >
+                        {d.status ? "Aktif" : "Nonaktif"}
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })
+          )}
         </div>
       </div>
 
-      {/* Modal */}
-      <Modal open={isModalOpen} title="Tambah Diskon" onClose={() => setIsModalOpen(false)}>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="discountName" className="block text-sm font-medium text-gray-700">Nama Diskon</label>
-            <input
-              id="discountName"
-              type="text"
-              value={newDiscountName}
-              onChange={(e) => setNewDiscountName(e.target.value)}
-              placeholder="cth: Promo Akhir Tahun"
-              className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
-            />
+      {/* KANAN: DETAIL TANPA CARD */}
+      <div className="w-1/2 p-6">
+        {selected ? (
+          <div className="space-y-6">
+            {/* Header: Nama + tombol edit */}
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="text-2xl font-bold">{selected.nama}</div>
+                <div className="text-gray-600">
+                  {labelJenis(selected.jenis_diskon)} •{" "}
+                  <span className="font-semibold">
+                    {showJumlah(selected.jenis_diskon, selected.jumlah)}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={handleOpenEdit}
+                className="inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50"
+              >
+                <MdEdit size={18} /> Edit
+              </button>
+            </div>
+
+            {/* Status */}
+            <div className="flex items-center gap-2">
+              {selected.status ? (
+                <>
+                  <FiCheckCircle className="text-green-600" />
+                  <span className="text-green-700 text-sm">Aktif</span>
+                </>
+              ) : (
+                <>
+                  <FiXCircle className="text-gray-500" />
+                  <span className="text-gray-600 text-sm">Nonaktif</span>
+                </>
+              )}
+            </div>
+
+            {/* Info grid */}
+            <section>
+              <h3 className="text-sm font-semibold text-gray-700 mb-2">Informasi</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <Info label="Toko ID" value={selected.toko_id} icon={<FiHash className="text-green-600" />} />
+                <Info label="Jenis Diskon" value={labelJenis(selected.jenis_diskon)} icon={<FiPercent className="text-green-600" />} />
+                <Info label="Jumlah" value={showJumlah(selected.jenis_diskon, selected.jumlah)} />
+                <Info label="Sync At" value={selected.sync_at || "-"} />
+              </div>
+            </section>
+
+            {/* Meta */}
+            <section>
+              <h3 className="text-sm font-semibold text-gray-700 mb-2">Metadata</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <Info label="Dibuat" value={selected.created_at || "-"} />
+                <Info label="Diupdate" value={selected.updated_at || "-"} />
+                {selected.created_by != null && <Info label="Created by (ID)" value={selected.created_by} />}
+                {selected.updated_by != null && <Info label="Updated by (ID)" value={selected.updated_by} />}
+              </div>
+            </section>
           </div>
-          <div>
-            <label htmlFor="discountType" className="block text-sm font-medium text-gray-700">Jenis Diskon</label>
+        ) : (
+          <div className="flex h-full items-center justify-center text-gray-400">
+            Pilih salah satu diskon untuk melihat detail.
+          </div>
+        )}
+      </div>
+
+      {/* MODAL: Tambah */}
+      <Modal open={openAdd} title="Tambah Diskon" onClose={() => setOpenAdd(false)} initialFocusRef={addFocusRef}>
+        <DiskonForm
+          form={formAdd}
+          setForm={setFormAdd}
+          onSubmit={handleSaveAdd}
+          submitText="Simpan"
+          initialFocusRef={addFocusRef}
+        />
+      </Modal>
+
+      {/* MODAL: Edit */}
+      <Modal open={openEdit} title="Edit Diskon" onClose={() => setOpenEdit(false)} initialFocusRef={editFocusRef}>
+        <DiskonForm
+          form={formEdit}
+          setForm={setFormEdit}
+          onSubmit={handleSaveEdit}
+          submitText="Update"
+          initialFocusRef={editFocusRef}
+        />
+      </Modal>
+
+      {/* MODAL: Filter */}
+      <Modal open={openFilter} title="Filter Diskon" onClose={() => setOpenFilter(false)}>
+        <div className="grid grid-cols-1 gap-3">
+          <Labeled label="Jenis Diskon">
             <select
-              id="discountType"
-              value={newDiscountType}
-              onChange={(e) => setNewDiscountType(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
+              value={filter.jenis_diskon}
+              onChange={(e) => setFilter((f) => ({ ...f, jenis_diskon: e.target.value }))}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
             >
-              <option value="1">Persentase (%)</option>
-              <option value="2">Nominal (Rp)</option>
+              <option value="">Semua</option>
+              <option value="1">Persentase</option>
+              <option value="2">Nominal</option>
             </select>
-          </div>
-          <div>
-            <label htmlFor="discountAmount" className="block text-sm font-medium text-gray-700">Jumlah</label>
-            <input
-              id="discountAmount"
-              type="number"
-              min="0"
-              value={newDiscountAmount}
-              onChange={(e) => setNewDiscountAmount(e.target.value)}
-              placeholder="cth: 10 atau 50000"
-              className="mt-1 w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
-            />
-          </div>
-          <div className="flex justify-end gap-2">
-            <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200">
-              Batal
-            </button>
-            <button
-              type="submit"
-              disabled={!newDiscountName.trim() || !newDiscountAmount.trim() || saving}
-              className="px-4 py-2 rounded-xl bg-green-600 hover:bg-green-700 text-white disabled:opacity-60"
+          </Labeled>
+
+          <Labeled label="Status">
+            <select
+              value={filter.status}
+              onChange={(e) => setFilter((f) => ({ ...f, status: e.target.value }))}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
             >
-              {saving ? "Menyimpan..." : "Tambah"}
+              <option value="">Semua</option>
+              <option value="true">Aktif</option>
+              <option value="false">Nonaktif</option>
+            </select>
+          </Labeled>
+
+          <Labeled label="Toko ID">
+            <input
+              value={filter.toko_id}
+              onChange={(e) =>
+                setFilter((f) => ({ ...f, toko_id: e.target.value.replace(/\D/g, "") }))
+              }
+              inputMode="numeric"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+              placeholder="cth: 10"
+            />
+          </Labeled>
+
+          <div className="flex items-center justify-between pt-2">
+            <button
+              onClick={clearFilters}
+              className="px-4 py-2 rounded-lg border hover:bg-gray-50"
+            >
+              Reset
             </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setOpenFilter(false)}
+                className="px-4 py-2 rounded-lg border hover:bg-gray-50"
+              >
+                Batal
+              </button>
+              <button
+                onClick={() => setOpenFilter(false)}
+                className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600"
+              >
+                Terapkan
+              </button>
+            </div>
           </div>
-        </form>
+        </div>
       </Modal>
     </div>
+  );
+}
+
+/* -------- sub components -------- */
+
+function Labeled({ label, children }) {
+  return (
+    <label className="flex flex-col gap-1">
+      <span className="text-sm text-gray-600">{label}</span>
+      {children}
+    </label>
+  );
+}
+
+function Info({ label, value, icon }) {
+  return (
+    <div className="rounded-lg border border-gray-200 p-3">
+      <div className="text-xs text-gray-500 mb-1 flex items-center gap-2">
+        {icon} <span>{label}</span>
+      </div>
+      <div className="font-medium text-gray-800 break-words">{value}</div>
+    </div>
+  );
+}
+
+function DiskonForm({ form, setForm, onSubmit, submitText = "Simpan", initialFocusRef }) {
+  const txt = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const num = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value === "" ? "" : toInt(e.target.value) }));
+  const chk = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.checked }));
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!String(form.nama || "").trim()) return alert("Nama wajib diisi");
+        if (!form.jumlah && form.jumlah !== 0) return alert("Jumlah wajib diisi");
+        if (!form.toko_id) return alert("Toko ID wajib diisi");
+        onSubmit?.();
+      }}
+      className="grid grid-cols-1 gap-3"
+    >
+      <Labeled label="Nama *">
+        <input
+          ref={initialFocusRef}
+          value={form.nama}
+          onChange={txt("nama")}
+          placeholder="cth: Promo Akhir Tahun"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          data-autofocus
+        />
+      </Labeled>
+
+      <div className="grid grid-cols-2 gap-3">
+        <Labeled label="Jenis Diskon">
+          <select
+            value={String(form.jenis_diskon)}
+            onChange={txt("jenis_diskon")}
+            className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          >
+            <option value="1">Persentase (%)</option>
+            <option value="2">Nominal (Rp)</option>
+          </select>
+        </Labeled>
+
+        <Labeled label="Jumlah *">
+          <input
+            value={form.jumlah}
+            onChange={num("jumlah")}
+            inputMode="numeric"
+            placeholder={String(form.jenis_diskon) === "1" ? "cth: 10" : "cth: 50000"}
+            className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          />
+        </Labeled>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <Labeled label="Toko ID *">
+          <input
+            value={form.toko_id}
+            onChange={num("toko_id")}
+            inputMode="numeric"
+            placeholder="cth: 10"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          />
+        </Labeled>
+
+        <Labeled label="Status Aktif">
+          <div className="h-10 flex items-center px-3 border rounded-lg">
+            <input type="checkbox" checked={!!form.status} onChange={chk("status")} />
+            <span className="ml-2">Aktif</span>
+          </div>
+        </Labeled>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <Labeled label="Created By (ID)">
+          <input value={form.created_by} onChange={num("created_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+        </Labeled>
+        <Labeled label="Updated By (ID)">
+          <input value={form.updated_by} onChange={num("updated_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+        </Labeled>
+      </div>
+
+      <Labeled label="Sync At (opsional)">
+        <input
+          value={form.sync_at}
+          onChange={txt("sync_at")}
+          placeholder="YYYY-MM-DD"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+        />
+      </Labeled>
+
+      <div className="flex items-center justify-end gap-2 pt-2">
+        <button type="button" className="px-4 py-2 rounded-lg border hover:bg-gray-50" onClick={() => history.back()}>
+          Batal
+        </button>
+        <button type="submit" className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600">
+          {submitText}
+        </button>
+      </div>
+    </form>
   );
 }

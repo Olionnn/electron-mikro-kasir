@@ -41,16 +41,16 @@ import SettingsPage from "./pages/m_setting/Setting";
 import ManajemenStaf from "./pages/m_setting/ManajemenStaf";
 import KategoriBarangPage from "./pages/m_kategori/KategoriBarang";
 import Keuangan from "./pages/m_keuangan/Keuangan";
-import StokOpnamePage from "./pages/m_stok/stokopname";
+import StokOpnamePage from "./pages/m_stok/StokOpname";
 import LaporanPage from "./pages/m_laporan/laporan";
 import AbsensiPage from "./pages/m_absensi/Absen";
 import ShiftPage from "./pages/m_shift/Shift";
 import OlsopinPage from "./pages/m_setting/TokoOnline";
-import BarangStokPage from "./pages/m_stok/stok";
-import LaporanPembelian from "./pages/m_laporan/laporanpembelian";
-import LaporanPenjualan from "./pages/m_laporan/laporanpenjualan";
-import LaporanKeuangan from "./pages/m_laporan/laporankeuangan";
-import LaporanKeuanganPage from "./pages/m_laporan/detailkeuangan";
+import BarangStokPage from "./pages/m_stok/Stok";
+import LaporanPembelian from "./pages/m_laporan/LaporanPembelian";
+import LaporanPenjualan from "./pages/m_laporan/LaporanPenjualan";
+import LaporanKeuangan from "./pages/m_laporan/LaporanKeuangan";
+import LaporanKeuanganPage from "./pages/m_laporan/DetailKeuangan";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -77,7 +77,6 @@ function App() {
 
               {/* Pengaturan */}
               <Route path="/pengaturan" element={<SettingsPage />} />
-              
               <Route path="/pengaturan/bantuan" element={<Bantuan />} />
               <Route
                 path="/pengaturan/informasitoko"
@@ -105,10 +104,9 @@ function App() {
                 element={<ManajemenStaf />}
               />
               <Route path="/pengaturan/pos" element={<div>Pengaturan POS Page</div>} />
-
+              <Route path="/pengaturan/printsetting" element={<div>sad</div>} />
               {/* Keuangan */}
               <Route path="/keuangan" element={<Keuangan />} />
-
 
 
               {/* Laporan */}
@@ -117,8 +115,6 @@ function App() {
               <Route path="/laporan/laporan-penjualan" element={<LaporanPenjualan />} />
               <Route path="/laporan/laporan-keuangan" element={<LaporanKeuangan />} />
               <Route path="/laporan/laporan-keuangan/detail" element={<LaporanKeuanganPage />} />
-
-            
 
 
               {/* Absensi */}
@@ -171,6 +167,11 @@ function App() {
               <Route path="/review" element={<Review />} />
               <Route path="/trx" element={<Transaksi />} />
               <Route path="/struk" element={<Struk />} />
+
+
+              {/* Users */}
+              <Route path="/users/staff" element={<ManajemenStaf/>} />
+
 
 
 

@@ -38,6 +38,8 @@ export default function BarangJasa() {
   const editFocusRef = useRef(null);
   const filterFocusRef = useRef(null);
 
+  const handleCloseAdd = useCallback(() => setOpenAdd(false), []);
+
   // LIST
   const filteredItems = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -199,73 +201,75 @@ export default function BarangJasa() {
           </div>
         </div>
 
-        {/* RIGHT */}
-        <div className="w-full lg:w-[40%] overflow-y-auto p-4 lg:p-6 bg-gray-50">
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 text-base lg:text-lg rounded-lg">
-            ✏️ Untuk mengubah data barang, silakan buka <span className="text-blue-600 underline cursor-pointer">Kasir Pintar Dashboard</span>.
-          </div>
+   
+          <div className="w-full lg:w-[40%] overflow-y-auto p-4 lg:p-6 bg-gray-50">
 
-          {selected ? (
-            <>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-4">
-                  {selected.image ? (
-                    <img src={selected.image} alt={selected.nama} className="w-14 h-14 object-cover rounded-lg" />
-                  ) : (
-                    <div className="bg-gray-200 w-14 h-14 rounded-lg flex items-center justify-center font-bold text-2xl">
-                      {selected.nama.slice(0, 2).toUpperCase()}
-                    </div>
-                  )}
-                  <div>
-                    <div className="text-2xl font-bold">{selected.nama}</div>
-                    <div className="text-gray-600 text-lg">Kode: {selected.kode || "-"}</div>
-                  </div>
+            {selected ? (
+              <>
+                <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4">
+              {selected.image ? (
+                <img src={selected.image} alt={selected.nama} className="w-14 h-14 object-cover rounded-lg" />
+              ) : (
+                <div className="bg-gray-200 w-14 h-14 rounded-lg flex items-center justify-center font-bold text-2xl">
+                  {selected.nama.slice(0, 2).toUpperCase()}
+                </div>
+              )}
+              <div>
+                <div className="text-2xl font-bold">{selected.nama}</div>
+                <div className="text-gray-600 text-lg">Kode: {selected.kode || "-"}</div>
+              </div>
+            </div>
+
+            <button onClick={handleOpenEdit} className="inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50">
+              <MdEdit size={18} /> Edit
+            </button>
                 </div>
 
-                <button onClick={handleOpenEdit} className="inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50">
-                  <MdEdit size={18} /> Edit
-                </button>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 text-base lg:text-lg">
+            <Info label="Harga Dasar" value={<strong>{rupiah(selected.harga_dasar)}</strong>} />
+            <Info label="Harga Jual" value={<strong>{rupiah(selected.harga_jual)}</strong>} />
+            <Info label="Diskon" value="0%" />
+            <Info label="Berat" value="0 Gram" />
+            <Info label="Stok" value={selected.stok} />
+            <Info label="Stok Minimum" value="0" />
+            <Info label="Kategori" value="-" />
+            <Info label="Letak Rak" value="-" />
+            <Info label="Keterangan" value="-" />
+            <Info label="Tampil di Transaksi" value={selected.show_transaksi ? "Ya" : "Tidak"} />
+            <Info label="Gunakan Manajemen Stok" value={selected.use_stok ? "Ya" : "Tidak"} />
+            <Info label="Status" value={selected.status ? "Aktif" : "Nonaktif"} />
+                </div>
+
+                <Link to={`/stok/${selected.id}`} className="mt-6 w-full bg-blue-100 text-blue-900 text-center py-3 rounded-lg font-medium text-lg hover:bg-blue-200 block">
+            ➔ LIHAT DETAIL STOK
+                </Link>
+              </>
+            ) : (
+              <div className="text-gray-500">Pilih salah satu barang untuk melihat detailnya.</div>
+            )}
+          </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 text-base lg:text-lg">
-                <Info label="Harga Dasar" value={<strong>{rupiah(selected.harga_dasar)}</strong>} />
-                <Info label="Harga Jual" value={<strong>{rupiah(selected.harga_jual)}</strong>} />
-                <Info label="Diskon" value="0%" />
-                <Info label="Berat" value="0 Gram" />
-                <Info label="Stok" value={selected.stok} />
-                <Info label="Stok Minimum" value="0" />
-                <Info label="Kategori" value="-" />
-                <Info label="Letak Rak" value="-" />
-                <Info label="Keterangan" value="-" />
-                <Info label="Tampil di Transaksi" value={selected.show_transaksi ? "Ya" : "Tidak"} />
-                <Info label="Gunakan Manajemen Stok" value={selected.use_stok ? "Ya" : "Tidak"} />
-                <Info label="Status" value={selected.status ? "Aktif" : "Nonaktif"} />
-              </div>
 
-              <button className="mt-6 w-full bg-blue-100 text-blue-900 text-center py-3 rounded-lg font-medium text-lg hover:bg-blue-200">
-                ➔ LIHAT DETAIL STOK
-              </button>
-            </>
-          ) : (
-            <div className="text-gray-500">Pilih salah satu barang untuk melihat detailnya.</div>
-          )}
-        </div>
-      </div>
 
-      {/* MODALS */}
-
-      {/* MODAL: Tambah Barang */}
-      <Modal open={openAdd} title="Tambah Barang" onClose={() => setOpenAdd(false)} initialFocusRef={addFocusRef}>
-        <BarangForm
-          form={formAdd}
-          setForm={setFormAdd}
-          onSubmit={handleSaveAdd}
-          submitText="Simpan"
+              <Modal
+          open={openAdd}
+          title="Tambah Barang"
+          onClose={handleCloseAdd}
           initialFocusRef={addFocusRef}
-        />
-      </Modal>
+              >
+          <BarangForm
+            form={formAdd}
+            setForm={setFormAdd}
+            onClose={handleCloseAdd}
+            onSubmit={handleSaveAdd}
+            submitText="Simpan"
+            initialFocusRef={addFocusRef}
+              />
+              </Modal>
 
-      {/* MODAL: Edit Barang */}
+              {/* MODAL: Edit Barang */}
       <Modal open={openEdit} title="Edit Barang" onClose={() => setOpenEdit(false)} initialFocusRef={editFocusRef}>
         <BarangForm
           form={formEdit}
@@ -389,7 +393,7 @@ function Labeled({ label, children }) {
   );
 }
 
-function BarangForm({ form, setForm, onSubmit, submitText = "Simpan", initialFocusRef }) {
+function BarangForm({ form, setForm, onSubmit, submitText = "Simpan", initialFocusRef, onClose }) {
   const handle = (key) => (e) => {
     const v = e.target.value;
     if (["stok", "harga_dasar", "harga_jual", "kategori_id", "toko_id", "created_by", "updated_by"].includes(key)) {
@@ -416,7 +420,6 @@ function BarangForm({ form, setForm, onSubmit, submitText = "Simpan", initialFoc
           onChange={handle("nama")}
           placeholder="Nama barang"
           className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
-          data-autofocus
         />
       </Labeled>
 
@@ -504,7 +507,7 @@ function BarangForm({ form, setForm, onSubmit, submitText = "Simpan", initialFoc
       </Labeled>
 
       <div className="flex items-center justify-end gap-2 pt-2">
-        <button type="button" className="px-4 py-2 rounded-lg border hover:bg-gray-50" onClick={() => history.back()}>
+        <button type="button" className="px-4 py-2 rounded-lg border hover:bg-gray-50" onClick={onClose}>
           Batal
         </button>
         <button type="submit" className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600">

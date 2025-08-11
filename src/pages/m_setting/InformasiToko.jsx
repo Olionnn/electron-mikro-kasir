@@ -1,47 +1,80 @@
-import React from 'react';
+import React from "react";
+import { MdEdit } from "react-icons/md";
 
 const InformasiToko = () => {
+  const infoToko = [
+    { label: "Jenis Usaha", value: "pilih jenis usaha ..." },
+    { label: "Nama Toko", value: "Abror G4nteng" },
+    { label: "Pajak Default", value: "0%" },
+    { label: "Nama Pemilik / Owner", value: "beastbeeme2" },
+    { label: "Nomor Telepon", value: "+62085707896575" },
+  ];
+
+  const lokasi = [
+    { label: "Negara", value: "Indonesia" },
+    { label: "Provinsi", value: "JAMBI" },
+    { label: "Kota", value: "KABUPATEN KERINCI" },
+    { label: "Detail Lokasi", value: "-" },
+  ];
+
+  const preferensi = [
+    { label: "Bahasa", value: "Bahasa Indonesia" },
+    { label: "Mata Uang", value: "Indonesian Rupiah" },
+    { label: "Motto", value: "Melayani dengan sepenuh hati" },
+    { label: "Metode Akuntansi", value: "Kas" },
+    { label: "Status Olshopin", value: "Aktif" },
+  ];
+
+  const Section = ({ title, items }) => (
+    <section>
+      <div className="px-6 pt-6">
+        <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+      </div>
+      <div className="mt-2">
+        {items.map((row, i) => (
+          <div key={i}>
+            <div className="px-6 py-4">
+              <div className="text-sm text-gray-500">{row.label}</div>
+              <div className="text-base md:text-lg font-semibold text-gray-900">
+                {row.value}
+              </div>
+            </div>
+            {i < items.length - 1 && <div className="h-px bg-gray-200" />}
+          </div>
+        ))}
+      </div>
+      <div className="h-3 bg-gray-100" />
+    </section>
+  );
+
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col min-h-screen bg-white">
       {/* Header */}
-      <div className="flex justify-between items-center border-b px-10 py-4 shadow-sm">
-        <h1 className="text-2xl font-bold">INFORMASI TOKO</h1>
-        <a href="#" className="text-green-600 font-semibold">Edit Toko</a>
+      <div className="flex items-center justify-between px-6 py-4 border-b">
+        <h1 className="text-2xl font-bold tracking-tight">INFORMASI TOKO</h1>
+        <button
+          className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold transition-colors"
+          title="Edit Toko"
+        >
+          <MdEdit className="text-lg" />
+          Edit Toko
+        </button>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-10 overflow-y-auto flex flex-col items-center text-[18px]">
+      {/* Avatar / Icon */}
+      <div className="flex flex-col items-center py-8">
         <img
           src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png"
           alt="Store Icon"
-          className="w-24 h-24 mb-6"
+          className="w-24 h-24 rounded-full ring-2 ring-green-100"
         />
+      </div>
 
-        {/* Info Toko */}
-        <div className="w-full max-w-3xl bg-gray-100 rounded-lg p-6 shadow">
-          <p className="mb-4"><span className="font-bold">Jenis Usaha</span><br />pilih jenis usaha ...</p>
-          <p className="mb-4"><span className="font-bold">Nama Toko</span><br />Abror G4nteng</p>
-          <p className="mb-4"><span className="font-bold">Pajak Default</span><br />0%</p>
-          <p className="mb-4"><span className="font-bold">Nama Pemilik / Owner</span><br />beastbeeme2</p>
-          <p className="mb-4"><span className="font-bold">Nomor Telepon</span><br />+62085707896575</p>
-        </div>
-
-        {/* Lokasi */}
-        <div className="w-full max-w-3xl bg-gray-100 rounded-lg p-6 mt-6 shadow">
-          <p className="mb-4"><span className="font-bold">Negara</span><br />Indonesia</p>
-          <p className="mb-4"><span className="font-bold">Provinsi</span><br />JAMBI</p>
-          <p className="mb-4"><span className="font-bold">Kota</span><br />KABUPATEN KERINCI</p>
-          <p className="mb-4"><span className="font-bold">Detail Lokasi</span><br />-</p>
-        </div>
-
-        {/* Bahasa & Mata Uang */}
-        <div className="w-full max-w-3xl bg-gray-100 rounded-lg p-6 mt-6 shadow">
-          <p className="mb-4"><span className="font-bold">Bahasa</span><br />Bahasa Indonesia</p>
-          <p className="mb-4"><span className="font-bold">Mata Uang</span><br />Indonesian Rupiah</p>
-          <p className="mb-4"><span className="font-bold">Motto</span><br />Melayani dengan sepenuh hati</p>
-          <p className="mb-4"><span className="font-bold">Metode Akuntansi</span><br />Kas</p>
-          <p className="mb-4"><span className="font-bold">Status Olshopin</span><br />Aktif</p>
-        </div>
+      {/* Sections (tanpa card/container) */}
+      <div className="flex-1">
+        <Section title="Info Toko" items={infoToko} />
+        <Section title="Lokasi" items={lokasi} />
+        <Section title="Bahasa & Mata Uang" items={preferensi} />
       </div>
     </div>
   );

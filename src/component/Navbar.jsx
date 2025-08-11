@@ -53,13 +53,23 @@ export default function Navbar({
   const Left = (
     <div className="flex items-center gap-3">
       {backTo ? (
-        <Link
-          to={backTo}
-          className="text-2xl text-gray-700 hover:text-gray-900"
-          title="Kembali"
-        >
-          <MdArrowBack size={28} />
-        </Link>
+        typeof backTo === "function" ? (
+          <button
+            onClick={backTo}
+            className="text-2xl text-gray-700 hover:text-gray-900"
+            title="Kembali"
+          >
+            <MdArrowBack size={28} />
+          </button>
+        ) : (
+          <Link
+            to={backTo}
+            className="text-2xl text-gray-700 hover:text-gray-900"
+            title="Kembali"
+          >
+            <MdArrowBack size={28} />
+          </Link>
+        )
       ) : onToggleSidebar ? (
         <button onClick={onToggleSidebar} title="Toggle Sidebar" className="text-gray-700 hover:text-gray-900">
           <MdMenu size={28} />

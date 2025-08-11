@@ -1,4 +1,11 @@
 import React, { useState } from "react";
+import {
+  MdArrowBack,
+  MdAdd,
+  MdEdit,
+  MdCreditCard,
+  MdLink,
+} from "react-icons/md";
 
 const MetodePembayaran = () => {
   const [paymentMethods, setPaymentMethods] = useState([
@@ -22,69 +29,108 @@ const MetodePembayaran = () => {
   };
 
   return (
-    <div className="h-screen w-full bg-white flex flex-col p-8 overflow-y-auto">
-      {/* Header */}
-      <div className="flex items-center space-x-3 mb-6">
-        <button className="text-xl text-gray-600">&larr;</button>
-        <h1 className="text-2xl font-bold">Metode Pembayaran</h1>
-      </div>
+    <div className="h-full w-full bg-white flex flex-col overflow-hidden">
 
-      {/* Input tambah metode */}
-      <div className="flex items-center gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Nama metode"
-          className="flex-1 px-4 py-3 border rounded-md text-lg"
-        />
-        <button className="bg-green-100 text-green-700 font-medium px-6 py-3 rounded-md hover:bg-green-200 transition text-lg">
-          Tambah
-        </button>
-      </div>
-
-      {/* List metode default */}
-      <h2 className="font-semibold text-lg text-gray-800 mb-3">Metode Default</h2>
-      <div className="space-y-4 mb-10">
-        {paymentMethods.map((method, index) => (
-          <div
-            key={method.name}
-            className="flex items-center justify-between bg-gray-100 px-6 py-4 rounded-md"
-          >
-            <span className="text-lg">{method.name}</span>
-            <div className="flex items-center gap-5">
-              {method.name !== "Cash" && (
-                <span className="text-green-600 font-semibold cursor-pointer text-lg">
-                  Edit
-                </span>
-              )}
-              <label className="inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="sr-only peer"
-                  checked={method.checked}
-                  onChange={() => toggleMethod(index)}
-                />
-                <div className="w-14 h-8 bg-gray-300 peer-checked:bg-green-500 rounded-full transition relative">
-                  <div className="absolute left-1 top-1 w-6 h-6 bg-white rounded-full transition peer-checked:translate-x-6" />
-                </div>
-              </label>
-            </div>
+      {/* Body */}
+      <div className="flex-1 overflow-y-auto px-6 md:px-8 py-6">
+        {/* Input tambah metode */}
+        <div className="flex items-center gap-3 md:gap-4 mb-6">
+          <div className="flex-1 flex items-center gap-3 px-4 py-3 border rounded-xl text-lg focus-within:ring-2 focus-within:ring-green-500">
+            <span className="inline-block text-gray-400">
+              <MdCreditCard className="text-2xl" />
+            </span>
+            <input
+              type="text"
+              placeholder="Nama metode"
+              className="flex-1 outline-none"
+            />
           </div>
-        ))}
+          <button
+            className="inline-flex items-center gap-2 bg-green-100 text-green-700 font-medium px-5 md:px-6 py-3 rounded-xl hover:bg-green-200 transition"
+            title="Tambah Metode"
+          >
+            <MdAdd className="text-xl" />
+            <span className="hidden sm:inline">Tambah</span>
+          </button>
+        </div>
+
+        {/* Metode Default */}
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="font-semibold text-gray-800">Metode Default</h2>
+          <span className="text-xs px-2 py-1 rounded-full bg-gray-50 border border-gray-200 text-gray-600">
+            {paymentMethods.filter((m) => m.checked).length} aktif
+          </span>
+        </div>
+
+        <div className="space-y-3 mb-10">
+          {paymentMethods.map((method, index) => (
+            <div
+              key={method.name}
+              className="flex items-center justify-between bg-gray-50 px-4 sm:px-6 py-4 rounded-xl border border-gray-200 hover:border-green-200 hover:bg-green-50/40 transition"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-white border border-gray-200 flex items-center justify-center">
+                  <MdCreditCard className="text-gray-500" />
+                </div>
+                <span className="text-base sm:text-lg font-medium text-gray-800">
+                  {method.name}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-4">
+                {method.name !== "Cash" && (
+                  <button
+                    className="inline-flex items-center gap-1.5 text-green-600 font-semibold text-sm hover:underline"
+                    title={`Edit ${method.name}`}
+                  >
+                    <MdEdit className="text-base" />
+                    <span className="hidden sm:inline">Edit</span>
+                  </button>
+                )}
+
+                {/* Toggle */}
+                <label className="relative inline-flex items-center cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={method.checked}
+                    onChange={() => toggleMethod(index)}
+                  />
+                  <div className="w-14 h-8 rounded-full bg-gray-300 peer-checked:bg-green-500 transition-colors"></div>
+                  <div className="absolute left-1 top-1 w-6 h-6 bg-white rounded-full transition-transform peer-checked:translate-x-6 shadow"></div>
+                </label>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* EDC BCA */}
+        <div className="flex items-center justify-between bg-gray-50 px-4 sm:px-6 py-4 rounded-xl border border-gray-200">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-white border border-gray-200 flex items-center justify-center">
+              <MdLink className="text-gray-500" />
+            </div>
+            <span className="text-base sm:text-lg font-medium text-gray-800">
+              EDC BCA
+            </span>
+          </div>
+          <button className="text-green-600 font-medium hover:text-green-700">
+            Sambungkan
+          </button>
+        </div>
+
+        {/* Metode tambahan */}
+        <p className="mt-6 font-semibold text-sm text-gray-600 uppercase tracking-wide">
+          Metode Tambahan
+        </p>
+
+        {/* Tombol Simpan */}
+        <div className="mt-4">
+          <button className="w-full bg-green-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-green-700 transition shadow-sm">
+            Simpan
+          </button>
+        </div>
       </div>
-
-      {/* EDC BCA */}
-      <div className="flex items-center justify-between bg-gray-100 px-6 py-4 rounded-md">
-        <span className="text-lg">EDC BCA</span>
-        <button className="text-green-600 font-medium">Sambungkan</button>
-      </div>
-
-      {/* Metode tambahan */}
-      <p className="mt-6 font-semibold text-base">Metode Tambahan</p>
-
-      {/* Tombol simpan */}
-      <button className="w-full bg-green-600 text-white py-4 rounded-lg font-semibold text-xl hover:bg-green-700 transition mt-4">
-        Simpan
-      </button>
     </div>
   );
 };

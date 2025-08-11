@@ -13,6 +13,8 @@ export default function ManagementPage() {
           { icon: 'sale.png', label: 'Diskon', link: '/diskon' },
           { icon: 'tax.png', label: 'Pajak', link: '/pajak' },
           { icon: 'money.png', label: 'Biaya', link: '/biaya' },
+          { icon: 'stock.png', label: 'Stok', link: '/stok' },
+          { icon: 'stock-opname.png', label: 'Stok Opname', link: '/stokopname' },
         ].map((item, index) => (
           <Link
             to={item.link}

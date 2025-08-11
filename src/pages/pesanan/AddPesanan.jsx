@@ -1,26 +1,77 @@
-import React, { useState, useCallback } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useNavbar } from '../../hooks/useNavbar';
+import React, { useState, useCallback } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { MdClose, MdSave } from "react-icons/md";
+import { useNavbar } from "../../hooks/useNavbar";
+
 const BuatPesanan = () => {
-  const location = useLocation();
-  const { cartItems, totalPrice } = location.state || { cartItems: [], totalPrice: 0 };
-
-  const [tipeLayanan, setTipeLayanan] = useState('Dine in');
-  const [namaTransaksi, setNamaTransaksi] = useState('');
-  const [pelanggan, setPelanggan] = useState('');
-  const [noMeja, setNoMeja] = useState('');
-  const [jatuhTempo, setJatuhTempo] = useState('');
-  const [keterangan, setKeterangan] = useState('');
-  const [lihatReview, setLihatReview] = useState(false);
-  
   const navigate = useNavigate();
+  const location = useLocation();
+  const { cartItems = [], totalPrice = 0 } = location.state || {};
 
+  const [tipeLayanan, setTipeLayanan] = useState("Dine in");
+  const [namaTransaksi, setNamaTransaksi] = useState("");
+  const [pelanggan, setPelanggan] = useState("");
+  const [noMeja, setNoMeja] = useState("");
+  const [jatuhTempo, setJatuhTempo] = useState("");
+  const [keterangan, setKeterangan] = useState("");
+  const [lihatReview, setLihatReview] = useState(false);
+
+  const handleSimpan = useCallback(
+    (event) => {
+      event?.preventDefault?.();
+
+      if (!namaTransaksi) {
+        alert("Nama Transaksi wajib diisi");
+        return;
+      }
+
+      const newOrder = {
+        id: Date.now(),
+        customer: namaTransaksi,
+        date: new Date().toISOString(),
+        items: cartItems,
+        total: totalPrice,
+
+        tipeLayanan,
+        pelanggan,
+        noMeja,
+        jatuhTempo,
+        keterangan,
+        author: "user",
+      };
+
+      const savedOrders = JSON.parse(localStorage.getItem("savedOrders")) || [];
+      localStorage.setItem("savedOrders", JSON.stringify([...savedOrders, newOrder]));
+      localStorage.setItem("lastSavedOrderId", newOrder.id);
+
+      if (lihatReview) {
+        navigate("/review");
+      } else {
+        navigate("/pos");
+      }
+    },
+    [
+      namaTransaksi,
+      cartItems,
+      totalPrice,
+      tipeLayanan,
+      pelanggan,
+      noMeja,
+      jatuhTempo,
+      keterangan,
+      lihatReview,
+      navigate,
+    ]
+  );
+
+  const onCancel = useCallback(() => navigate(-1), [navigate]);
+  const onSave = useCallback(() => handleSimpan(), [handleSimpan]);
 
   useNavbar(
     {
       variant: "page",
-      title: "Buat Barang",
-      backTo: "/barang-jasa",
+      title: "Buat Pesanan",
+      backTo: "/pos",
       actions: [
         {
           type: "button",
@@ -43,54 +94,18 @@ const BuatPesanan = () => {
     [onCancel, onSave]
   );
 
-
-  const handleSimpan = (event) => {
-    event.preventDefault();
-    if (!namaTransaksi) {
-      alert('Nama Transaksi wajib diisi');
-      return;
-    }
-
-    const newOrder = {
-      id: Date.now(),
-      customer: namaTransaksi,
-      date: new Date().toISOString(),
-      items: cartItems,
-      total: totalPrice,
-      
-      tipeLayanan,
-      pelanggan,
-      noMeja,
-      jatuhTempo,
-      keterangan,
-      author: 'user' 
-    };
-
-    const savedOrders = JSON.parse(localStorage.getItem('savedOrders')) || [];
-    localStorage.setItem('savedOrders', JSON.stringify([...savedOrders, newOrder]));
-    localStorage.setItem('lastSavedOrderId', newOrder.id); 
-
-    if (lihatReview) {
-      navigate('/review');
-    } else {
-      navigate('/pos');
-    }
-  };
-
-
   return (
     <div className="bg-white w-full h-full flex flex-col">
-      <div className="p-6 border-b border-gray-300 text-center bg-white">
-        <h2 className="text-3xl font-bold">BUAT PESANAN</h2>
-      </div>
 
       <div className="px-6 py-4 flex flex-wrap gap-3 justify-start bg-white">
-        {['Dine in', 'Take away', 'Delivery', 'Drive Thru'].map((label) => (
+        {["Dine in", "Take away", "Delivery", "Drive Thru"].map((label) => (
           <button
             key={label}
             onClick={() => setTipeLayanan(label)}
             className={`${
-              tipeLayanan === label ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'
+              tipeLayanan === label
+                ? "bg-green-600 text-white"
+                : "bg-gray-200 text-gray-700"
             } px-4 py-2 rounded-full text-base transition`}
           >
             {label}
@@ -99,10 +114,11 @@ const BuatPesanan = () => {
       </div>
 
       <div className="p-6 flex-grow overflow-auto w-full">
-        {/* Tambahkan onSubmit ke form */}
         <form onSubmit={handleSimpan} className="space-y-6 text-lg w-full">
           <div className="w-full">
-            <label className="text-gray-700 block mb-2 text-base font-medium">Nama Transaksi</label>
+            <label className="text-gray-700 block mb-2 text-base font-medium">
+              Nama Transaksi
+            </label>
             <input
               type="text"
               placeholder="Nama Transaksi"
@@ -114,7 +130,9 @@ const BuatPesanan = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
             <div className="w-full">
-              <label className="text-gray-700 block mb-2 text-base font-medium">Pelanggan</label>
+              <label className="text-gray-700 block mb-2 text-base font-medium">
+                Pelanggan
+              </label>
               <input
                 type="text"
                 placeholder="Pelanggan"
@@ -124,7 +142,9 @@ const BuatPesanan = () => {
               />
             </div>
             <div className="w-full">
-              <label className="text-gray-700 block mb-2 text-base font-medium">No. Meja</label>
+              <label className="text-gray-700 block mb-2 text-base font-medium">
+                No. Meja
+              </label>
               <input
                 type="text"
                 placeholder="No. Meja"
@@ -134,7 +154,9 @@ const BuatPesanan = () => {
               />
             </div>
             <div className="w-full">
-              <label className="text-gray-700 block mb-2 text-base font-medium">Jatuh Tempo</label>
+              <label className="text-gray-700 block mb-2 text-base font-medium">
+                Jatuh Tempo
+              </label>
               <div className="relative w-full">
                 <input
                   type="date"
@@ -148,7 +170,9 @@ const BuatPesanan = () => {
           </div>
 
           <div className="w-full">
-            <label className="text-gray-700 block mb-2 text-base font-medium">Keterangan Struk</label>
+            <label className="text-gray-700 block mb-2 text-base font-medium">
+              Keterangan Struk
+            </label>
             <input
               type="text"
               placeholder="Keterangan Struk"
@@ -165,20 +189,28 @@ const BuatPesanan = () => {
               checked={lihatReview}
               onChange={(e) => setLihatReview(e.target.checked)}
             />
-            <span className="font-medium text-gray-900">Lihat Review Setelah Simpan</span>
+            <span className="font-medium text-gray-900">
+              Lihat Review Setelah Simpan
+            </span>
           </label>
 
           <p className="text-center text-gray-500 text-sm">
             Cetak Pesanan Dapat Dilakukan Di Halaman Review
           </p>
-        </form>        
+        </form>
       </div>
 
       <div className="flex justify-between items-center px-6 py-6 border-t border-gray-300 bg-white">
-        <Link to="/pos" className="px-6 py-3 text-base text-gray-700 border border-gray-400 rounded-md hover:bg-gray-100">
+        <Link
+          to="/pos"
+          className="px-6 py-3 text-base text-gray-700 border border-gray-400 rounded-md hover:bg-gray-100"
+        >
           Batal (Esc)
         </Link>
-        <button onClick={handleSimpan} className="px-6 py-3 text-base bg-green-600 text-white font-semibold rounded-md hover:bg-green-700">
+        <button
+          onClick={handleSimpan}
+          className="px-6 py-3 text-base bg-green-600 text-white font-semibold rounded-md hover:bg-green-700"
+        >
           Simpan
         </button>
       </div>

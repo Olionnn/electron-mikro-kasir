@@ -1,4 +1,5 @@
 import React from "react";
+import { MdSync } from "react-icons/md";
 
 const SyncPage = () => {
   const syncItems = [
@@ -9,8 +10,7 @@ const SyncPage = () => {
 
   return (
     <div className="h-screen bg-white p-8 overflow-y-auto">
-      {/* Header */}
-      <div className="text-lg text-gray-700 mb-2">← Download Data</div>
+
       <h2 className="text-2xl font-bold mb-4">Download Data</h2>
       <p className="text-base text-gray-700 mb-6">
         Ambil data dari cloud ke perangkat Anda.
@@ -41,20 +41,7 @@ const SyncPage = () => {
               className="text-green-600 hover:text-green-700 p-2 rounded-lg"
               title="Sinkronkan"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 4v5h.582M20 20v-5h-.581M4 9a8.003 8.003 0 0115.418-2.996M20 15a8.003 8.003 0 01-15.418 2.996"
-                />
-              </svg>
+              <MdSync className="text-2xl" />
             </button>
           </div>
         ))}

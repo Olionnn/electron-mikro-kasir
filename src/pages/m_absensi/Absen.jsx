@@ -1,16 +1,37 @@
-import React from "react";
-import Navbar from "../../component/Navbar";
+import React, { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { MdCalendarToday } from "react-icons/md";
+import { useNavbar } from "../../hooks/useNavbar";
 
 export default function AbsensiPage() {
+  const navigate = useNavigate();
+
+  // Aksi (opsional): back pakai history
+  const onBack = useCallback(() => navigate(-1), [navigate]);
+
+  // Terapkan navbar via context
+  useNavbar(
+    {
+      variant: "page",
+      title: "ABSENSI",
+      // pakai salah satu:
+      backTo: null, // atau null jika mau pakai tombol aksi custom
+      // actions: [
+      //   {
+      //     type: "button",
+      //     title: "Kembali",
+      //     onClick: onBack,
+      //     label: "Kembali",
+      //     className:
+      //       "border border-gray-300 text-gray-700 px-4 py-2 rounded-full",
+      //   },
+      // ],
+    },
+    [onBack]
+  );
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Navbar */}
-      <Navbar
-        title="ABSENSI"
-        onToggleSidebar={() => console.log("Toggle Sidebar")}
-      />
-
       {/* Konten */}
       <div className="flex flex-col md:flex-row h-[calc(100vh-64px)] border-t">
         {/* Kiri */}
@@ -42,9 +63,7 @@ export default function AbsensiPage() {
               <span className="text-gray-700">Tanggal :</span>
               <div className="flex items-center gap-2 border border-green-500 rounded-lg px-3 py-1 cursor-pointer">
                 <MdCalendarToday className="text-green-500" />
-                <span className="text-gray-800">
-                  01/08/2025 - 31/08/2025
-                </span>
+                <span className="text-gray-800">01/08/2025 - 31/08/2025</span>
               </div>
             </div>
           </div>
