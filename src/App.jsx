@@ -138,7 +138,13 @@ function App() {
               <Route path="/kirim-masukan" element={<div>Kirim Masukan Page</div>} />
 
 
+              {/* Stok */}
+              <Route path="/stok" element={<div>Stok Page</div>} />
+              <Route path="/stok/tambah" element={<div>Tambah Stok Page</div>} />
+              <Route path="/stok/edit/:id" element={<div>Edit Stok Page</div>} />
+              <Route path="/stokopname" element={<div>Stok Opname Page</div>} />
 
+              
 
               <Route path="/pesanan/tambah" element={<BuatPesanan />} />
               <Route path="/pesanan/edit/:id" element={<BuatPesanan />} />

@@ -24,6 +24,8 @@ const menuItems = [
   { icon: <FaUserCheck className="text-green-600" />, text: "Absensi", link: "/absensi" },
   { icon: <FaClock className="text-green-600" />, text: "Shift", link: "/shift" },
   { icon: <FaCog className="text-green-600" />, text: "Pengaturan", link: "/pengaturan" },
+  { icon: <FaShoppingCart className="text-green-600" />, text: "Stok", link: "/stok" },
+  { icon: <FaFileInvoice className="text-green-600" />, text: "Stok Opname", link: "/stokopname" },
 ];
 
 const bottomMenuItems = [
