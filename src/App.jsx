@@ -41,6 +41,12 @@ import SettingsPage from "./pages/m_setting/Setting";
 import ManajemenStaf from "./pages/m_setting/ManajemenStaf";
 import KategoriBarangPage from "./pages/m_kategori/KategoriBarang";
 import Keuangan from "./pages/m_keuangan/Keuangan";
+import StokOpnamePage from "./pages/m_stok/stokopname";
+import LaporanPage from "./pages/m_laporan/laporan";
+import AbsensiPage from "./pages/m_absensi/Absen";
+import ShiftPage from "./pages/m_shift/Shift";
+import OlsopinPage from "./pages/m_setting/TokoOnline";
+import BarangStokPage from "./pages/m_stok/stok";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -101,15 +107,15 @@ function App() {
 
 
               {/* Laporan */}
-              <Route path="/laporan" element={<div>Laporan Page</div>} />
+              <Route path="/laporan" element={<LaporanPage/>} />
 
 
               {/* Absensi */}
-              <Route path="/absensi" element={<div>Absensi Page</div>} />
+              <Route path="/absensi" element={<AbsensiPage/>} />
 
 
               {/* Shift */}
-              <Route path="/shift" element={<div>Shift Page</div>} />
+              <Route path="/shift" element={<ShiftPage/>} />
 
 
               {/* Pembelian Supplier */}
@@ -129,22 +135,22 @@ function App() {
 
 
               {/* Toko Online */}
-              <Route path="/toko-online" element={<div>Toko Online Page</div>} />
+              <Route path="/toko-online" element={<OlsopinPage/>} />
 
 
               {/* Pusat Bantuan */}
-              <Route path="/pusat-bantuan" element={<div>Pusat Bantuan Page</div>} />
+              <Route path="/pusat-bantuan" element={<Bantuan/>} />
 
               {/* Kirim Masukan */}
               <Route path="/kirim-masukan" element={<div>Kirim Masukan Page</div>} />
 
 
               {/* Stok */}
-              <Route path="/stok" element={<div>Stok Page</div>} />
+              <Route path="/stok" element={<BarangStokPage/>} />
               <Route path="/stok/:id" element={<div>Detail Stok Page</div>} />
               <Route path="/stok/tambah" element={<div>Tambah Stok Page</div>} />
               <Route path="/stok/edit/:id" element={<div>Edit Stok Page</div>} />
-              <Route path="/stokopname" element={<div>Stok Opname Page</div>} />
+              <Route path="/stokopname" element={<StokOpnamePage/>} />
 
 
               {/* Cart And Preview */}
