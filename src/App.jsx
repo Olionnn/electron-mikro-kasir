@@ -127,6 +127,16 @@ function App() {
               <Route path="/barang/edit/:id" element={<AddEditBarang />} />
 
 
+              {/* Toko Online */}
+              <Route path="/toko-online" element={<div>Toko Online Page</div>} />
+
+
+              {/* Pusat Bantuan */}
+              <Route path="/pusat-bantuan" element={<div>Pusat Bantuan Page</div>} />
+
+              {/* Kirim Masukan */}
+              <Route path="/kirim-masukan" element={<div>Kirim Masukan Page</div>} />
+
 
 
 
