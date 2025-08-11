@@ -94,6 +94,7 @@ function App() {
                 path="/pengaturan/manajemenstaf"
                 element={<ManajemenStaf />}
               />
+              <Route path="/pengaturan/pos" element={<div>Pengaturan POS Page</div>} />
 
               {/* Keuangan */}
               <Route path="/keuangan" element={<Keuangan />} />
@@ -140,18 +141,21 @@ function App() {
 
               {/* Stok */}
               <Route path="/stok" element={<div>Stok Page</div>} />
+              <Route path="/stok/:id" element={<div>Detail Stok Page</div>} />
               <Route path="/stok/tambah" element={<div>Tambah Stok Page</div>} />
               <Route path="/stok/edit/:id" element={<div>Edit Stok Page</div>} />
               <Route path="/stokopname" element={<div>Stok Opname Page</div>} />
 
-              
 
+              {/* Cart And Preview */}
               <Route path="/pesanan/tambah" element={<BuatPesanan />} />
               <Route path="/pesanan/edit/:id" element={<BuatPesanan />} />
               <Route path="/pesanan" element={<Pesanan />} />
               <Route path="/review" element={<Review />} />
               <Route path="/trx" element={<Transaksi />} />
               <Route path="/struk" element={<Struk />} />
+
+
 
           
 
