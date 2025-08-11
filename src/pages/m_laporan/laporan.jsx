@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useNavbar } from  "../../hooks/useNavbar";
 
@@ -29,6 +30,10 @@ export default function LaporanPage() {
   );
 
   const banners = [
+  const banners = [
+    { img: "https://via.placeholder.com/800x200?text=Banner+1", alt: "Banner 1" },
+    { img: "https://via.placeholder.com/800x200?text=Banner+2", alt: "Banner 2" },
+    { img: "https://via.placeholder.com/800x200?text=Banner+3", alt: "Banner 3" },
   ];
 
   const laporanCards = [
@@ -54,15 +59,20 @@ export default function LaporanPage() {
 
       {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">
-        {laporanCards.map((lap, i) => (
-          <div
-            key={i}
-            className="bg-white p-6 rounded-lg shadow hover:shadow-md cursor-pointer flex items-center gap-4"
-          >
-            <div className="text-green-600 text-3xl">{lap.icon}</div>
-            <div className="font-medium">{lap.title}</div>
-          </div>
-        ))}
+        {laporanCards.map((lap, i) => {
+          // Ubah title menjadi slug untuk URL
+          const slug = lap.title.toLowerCase().replace(/\s+/g, "-");
+          return (
+            <Link
+              to={`/laporan/${slug}`}
+              key={i}
+              className="bg-white p-6 rounded-lg shadow hover:shadow-md cursor-pointer flex items-center gap-4"
+            >
+              <div className="text-green-600 text-3xl">{lap.icon}</div>
+              <div className="font-medium">{lap.title}</div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
