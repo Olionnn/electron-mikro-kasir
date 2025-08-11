@@ -29,7 +29,7 @@ export default function LaporanPage() {
     [onBack]
   );
 
-  const banners = [
+  
   const banners = [
     { img: "https://via.placeholder.com/800x200?text=Banner+1", alt: "Banner 1" },
     { img: "https://via.placeholder.com/800x200?text=Banner+2", alt: "Banner 2" },
