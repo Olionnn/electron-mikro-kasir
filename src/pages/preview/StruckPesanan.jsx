@@ -59,6 +59,7 @@ const Struk = () => {
             /* Konten struk */
             .receipt {
               width: 30mm;                /* pas lebar kertas */
+              text-align: right; /* rata kiri */
               padding: 0mm 0mm;           /* ada padding rapi */
               font-size: 13.5px;          /* lebih besar */
               line-height: 1.35;          /* biar tidak patah */
@@ -72,7 +73,7 @@ const Struk = () => {
             .sep { border-top: 1px dashed #000; margin: 1.2mm 0; }
             .row {
               display:flex;
-              gap: 1mm;
+              gap: 5mm;
               align-items: baseline;
             }
             .muted { opacity:.85; }
@@ -82,7 +83,11 @@ const Struk = () => {
             .row span:last-child { white-space: nowrap; } /* angka kanan jangan pecah */
 
             /* Hindari putus di tengah item saat print */
-            .item { break-inside: avoid; page-break-inside: avoid; }
+            .item { 
+            break-inside: avoid; 
+            page-break-inside: avoid; 
+            text-align: right; /* rata kiri */
+            }
 
             /* Logo kecil di tengah */
             .logo {
@@ -231,7 +236,7 @@ const Struk = () => {
           ref={printRef}
           className="receipt bg-white shadow border rounded"
           style={{
-            width: "58mm",
+            width: "40mm",
             padding: "3mm 2mm",
           }}
         >
