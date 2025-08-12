@@ -58,7 +58,7 @@ const Struk = () => {
 
             /* Konten struk */
             .receipt {
-              width: 30mm;                /* pas lebar kertas */
+              width: 58mm;                /* pas lebar kertas */
               text-align: right; /* rata kiri */
               padding: 0mm 0mm;           /* ada padding rapi */
               font-size: 13.5px;          /* lebih besar */
@@ -236,7 +236,7 @@ const Struk = () => {
           ref={printRef}
           className="receipt bg-white shadow border rounded"
           style={{
-            width: "40mm",
+            width: "58mm",
             padding: "3mm 2mm",
           }}
         >
