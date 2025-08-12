@@ -65,8 +65,7 @@ const Struk = () => {
       .sep { border-top: 1px dashed #000; margin: 1.2mm 0; }
       .row {
         display:flex;
-        justify-content: space-between;
-        gap: 1mm;
+        gap: 5mm;
         align-items: baseline;
       }
       .muted { opacity:.85; }
