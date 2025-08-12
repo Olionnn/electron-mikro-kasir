@@ -44,9 +44,9 @@ const Struk = () => {
         <head>
           <meta charset="utf-8" />
           <style>
-            @page { size: 58mm auto; margin: 0; } /* jangan ada margin, tinggi auto */
+            @page { size: 50mm auto; margin: 0; } /* jangan ada margin, tinggi auto */
             * { box-sizing: border-box; }
-            html, body { margin:0; padding:0; }
+            html, body { margin:0; padding:10mm; }
             body {
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
@@ -58,7 +58,7 @@ const Struk = () => {
 
             /* Konten struk */
             .receipt {
-              width: 58mm;                /* pas lebar kertas */
+              width: 38mm;                /* pas lebar kertas */
               padding: 3mm 2mm;           /* ada padding rapi */
               font-size: 13.5px;          /* lebih besar */
               line-height: 1.35;          /* biar tidak patah */
@@ -73,7 +73,7 @@ const Struk = () => {
             .row {
               display:flex;
               justify-content: space-between;
-              gap: 4px;
+              gap: 0px;
               align-items: baseline;
             }
             .muted { opacity:.85; }
@@ -88,9 +88,17 @@ const Struk = () => {
             /* Logo kecil di tengah */
             .logo {
               display:block;
-              width: 9mm;
+              width: 20mm;
               height: auto;
               margin: 0 auto 1.2mm;
+
+              /* tambahkan ini: border bulat */
+              border-radius: 9999px;              /* bikin rounded/circular */
+              box-shadow: 0 0 0 0.6mm #000;       /* “border” melingkar tanpa ubah ukuran */
+              /* alternatif kalau mau border asli:
+                border: 1px solid #000;
+                overflow: hidden;                // supaya gambar ikut membulat
+              */
             }
 
             /* Pastikan mulai cetak dari paling atas tanpa ruang kosong */
@@ -229,7 +237,7 @@ const Struk = () => {
           }}
         >
           {/* Logo di tengah */}
-          <img src={logo} alt="Logo" className="logo" />
+          <img src={logo} alt="Logo" className="logo " />
 
           {/* Header toko */}
           <div className="center bold" style={{ fontSize: 14 }}>
