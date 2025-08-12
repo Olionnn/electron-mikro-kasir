@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdPrint, MdCheck } from "react-icons/md";
@@ -34,14 +40,36 @@ const Struk = () => {
     printWindow.document.write(`
       <html>
         <head>
+          <meta charset="utf-8" />
           <style>
             @page { size: 58mm auto; margin: 0; }
-            body { margin:0; padding:0; font-size:10px; font-family: 'Courier New', monospace; }
-            .receipt { width: 58mm; padding: 4mm; }
-            .text-center { text-align: center; }
-            .dashed { border-top: 1px dashed #000; margin: 4px 0; }
-            .flex { display: flex; justify-content: space-between; }
-            .small { font-size: 9px; }
+            * { box-sizing: border-box; }
+            html, body { margin:0; padding:0; }
+            body {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+              font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+              color:#111;
+            }
+            .receipt {
+              width: 40mm;               /* lebar efektif konten */
+              margin: 0 auto;
+              padding: 2mm 1.5mm;        /* padding tipis biar rapi */
+              font-size: 10.5px;         /* sedikit lebih besar */
+              line-height: 1.25;
+            }
+            .center { text-align:center; }
+            .bold { font-weight: 700; }
+            .small { font-size: 10px; }
+            .sep { border-top: 1px dashed #000; margin: 6px 0; }
+            .row {
+              display:flex;
+              justify-content: space-between;
+              gap: 4px;
+            }
+            .muted { color:#555; }
+            .mt2 { margin-top: 2px; }
+            .mt4 { margin-top: 4px; }
           </style>
         </head>
         <body>${printContents}</body>
@@ -94,10 +122,9 @@ const Struk = () => {
     [handlePrint, handleDone]
   );
 
-  useNavbar(
-    { variant: "page", title: "Struk", backTo: "/pos", actions },
-    [actions]
-  );
+  useNavbar({ variant: "page", title: "Struk", backTo: "/pos", actions }, [
+    actions,
+  ]);
 
   if (!lastPaidOrder) {
     return (
@@ -134,7 +161,8 @@ const Struk = () => {
                   Cetak Struk
                 </button>
                 <button className="w-full border rounded px-3 py-2 text-left hover:bg-gray-100">
-                  Cetak Struk Dapur <span className="text-xs">*Tanpa Harga</span>
+                  Cetak Struk Dapur{" "}
+                  <span className="text-xs">*Tanpa Harga</span>
                 </button>
                 <button className="w-full border rounded px-3 py-2 text-left hover:bg-gray-100">
                   Cetak Pesanan
@@ -156,63 +184,76 @@ const Struk = () => {
       <div className="w-1/2 flex items-center justify-center bg-gray-50 p-6">
         <div
           ref={printRef}
-          className="bg-white receipt shadow border rounded"
-          style={{ width: "58mm" }}
+          className="receipt bg-white shadow border rounded"
+          style={{ width: "40mm" }} // preview sama seperti print
         >
-          <h2 className="text-center font-bold text-sm">TOKO SEMBAKO</h2>
-          <div className="dashed" />
+          {/* Header toko */}
+          <div className="center bold" style={{ fontSize: 12 }}>
+            TOKO SEMBAKO
+          </div>
 
+          <div className="sep" />
+
+          {/* Info tanggal & pelanggan */}
           <div className="small">
-            <div className="flex">
+            <div className="row">
               <span>
                 {new Date(lastPaidOrder.paidAt).toLocaleDateString("id-ID")}{" "}
                 {new Date(lastPaidOrder.paidAt).toLocaleTimeString("id-ID")}
               </span>
-              <span>{lastPaidOrder.customer}</span>
+              <span className="muted">{lastPaidOrder.customer}</span>
             </div>
-            <div>Meja 3/1</div>
+            <div className="mt2 muted">Meja 3/1</div>
           </div>
 
-          <div className="dashed" />
+          <div className="sep" />
 
+          {/* Items */}
           <div className="small">
             {lastPaidOrder.items.map((item, idx) => (
-              <div key={idx} className="flex">
-                <span>
-                  {item.nama}
-                  <div>
+              <div key={idx} style={{ marginBottom: 4 }}>
+                <div className="row">
+                  <span className="bold">{item.nama}</span>
+                  <span>
+                    Rp{" "}
+                    {(item.quantity * item.hargaJual).toLocaleString("id-ID")}
+                  </span>
+                </div>
+                <div className="row muted">
+                  <span>
                     {item.quantity} x Rp{" "}
                     {item.hargaJual.toLocaleString("id-ID")}
-                  </div>
-                </span>
-                <span>
-                  Rp {(item.quantity * item.hargaJual).toLocaleString("id-ID")}
-                </span>
+                  </span>
+                  <span />
+                </div>
               </div>
             ))}
           </div>
 
-          <div className="dashed" />
+          <div className="sep" />
 
-          <div className="flex small font-bold">
-            <span>Total</span>
-            <span>Rp {lastPaidOrder.total.toLocaleString("id-ID")}</span>
-          </div>
-          <div className="flex small">
-            <span>Bayar (cash)</span>
-            <span>
-              Rp{" "}
-              {(lastPaidOrder.paidAmount || lastPaidOrder.total).toLocaleString(
-                "id-ID"
-              )}
-            </span>
-          </div>
-          <div className="flex small">
-            <span>Kembali</span>
-            <span>Rp {kembalian.toLocaleString("id-ID")}</span>
+          {/* Total & pembayaran */}
+          <div className="small">
+            <div className="row bold">
+              <span>Total</span>
+              <span>Rp {lastPaidOrder.total.toLocaleString("id-ID")}</span>
+            </div>
+            <div className="row mt2">
+              <span>Bayar (cash)</span>
+              <span>
+                Rp{" "}
+                {(
+                  lastPaidOrder.paidAmount || lastPaidOrder.total
+                ).toLocaleString("id-ID")}
+              </span>
+            </div>
+            <div className="row mt2">
+              <span>Kembali</span>
+              <span>Rp {kembalian.toLocaleString("id-ID")}</span>
+            </div>
           </div>
 
-          <div className="text-center small mt-2">Tidak Ada Keterangan</div>
+          <div className="center small mt4 muted">Tidak Ada Keterangan</div>
         </div>
       </div>
     </div>
