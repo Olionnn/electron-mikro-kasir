@@ -33,18 +33,18 @@ const Struk = () => {
     [lastPaidOrder]
   );
 
-  // Print (stabil untuk dipakai di Navbar actions)
+  // Print: lebar fix 58mm, tinggi otomatis, margin 0, mulai dari atas
   const handlePrint = useCallback(() => {
     if (!printRef.current) return;
     const printContents = printRef.current.innerHTML;
-    const printWindow = window.open("", "", "width=320,height=600");
+    const printWindow = window.open("", "", "width=380,height=640");
 
     printWindow.document.write(`
       <html>
         <head>
           <meta charset="utf-8" />
           <style>
-            @page { size: 57mm 18mm; margin: 0; }
+            @page { size: 58mm auto; margin: 0; } /* jangan ada margin, tinggi auto */
             * { box-sizing: border-box; }
             html, body { margin:0; padding:0; }
             body {
@@ -56,98 +56,61 @@ const Struk = () => {
               text-rendering: geometricPrecision;
             }
 
-            /* Kertas tetap 57x18mm; konten di-scale supaya tidak terpotong */
-            .paper {
-              width: 57mm;
-              height: 18mm;
-              padding: 2mm;                /* padding sesuai permintaan */
-              overflow: hidden;            /* biar tidak spill */
-            }
-            .content {
-              transform-origin: top left;   /* penting untuk scale */
-            }
-
-            /* Semua teks bold & agak besar */
-            .all-bold, .all-bold * { 
-              font-weight: 800 !important;
-            }
+            /* Konten struk */
             .receipt {
-              font-size: 12px;              /* sedikit lebih besar */
-              line-height: 1.25;
+              width: 58mm;                /* pas lebar kertas */
+              padding: 3mm 2mm;           /* ada padding rapi */
+              font-size: 13.5px;          /* lebih besar */
+              line-height: 1.35;          /* biar tidak patah */
+              font-weight: 800;           /* semua lebih tebal */
             }
+            .receipt * { font-weight: 800; } /* bold semua sesuai permintaan */
 
             .center { text-align:center; }
             .bold { font-weight: 900; }
-            .small { font-size: 11px; }
-            .sep { border-top: 1px dashed #000; margin: 1mm 0; }
+            .small { font-size: 12px; }
+            .sep { border-top: 1px dashed #000; margin: 1.2mm 0; }
             .row {
               display:flex;
               justify-content: space-between;
               gap: 4px;
+              align-items: baseline;
             }
-            .muted { opacity: .8; }
+            .muted { opacity:.85; }
             .mt2 { margin-top: 2px; }
             .mt4 { margin-top: 4px; }
-
-            /* Harga/angka kanan tidak kepecah */
-            .row span:last-child { white-space: nowrap; }
             .wrap { word-break: break-word; }
+            .row span:last-child { white-space: nowrap; } /* angka kanan jangan pecah */
+
+            /* Hindari putus di tengah item saat print */
+            .item { break-inside: avoid; page-break-inside: avoid; }
 
             /* Logo kecil di tengah */
             .logo {
               display:block;
-              width: 8mm;
+              width: 9mm;
               height: auto;
-              margin: 0 auto 1mm;
+              margin: 0 auto 1.2mm;
+            }
+
+            /* Pastikan mulai cetak dari paling atas tanpa ruang kosong */
+            @media print {
+              html, body { margin:0; padding:0; }
             }
           </style>
         </head>
         <body>
-          <div class="paper">
-            <div class="content">
-              ${printContents}
-            </div>
-          </div>
-
+          ${printContents}
           <script>
-            (function() {
-              function whenImagesReady() {
-                var imgs = Array.prototype.slice.call(document.images);
-                if (imgs.length === 0) return Promise.resolve();
-                return Promise.all(imgs.map(function(img){
-                  return img.complete ? Promise.resolve() : new Promise(function(res){ img.onload = img.onerror = res; });
-                }));
-              }
-
-              function fitToPaper() {
-                var paper = document.querySelector('.paper');
-                var content = document.querySelector('.content');
-                if (!paper || !content) return;
-
-                // reset scale dulu
-                content.style.transform = 'none';
-
-                var availH = paper.clientHeight;
-                var availW = paper.clientWidth;
-                var contentH = content.scrollHeight;
-                var contentW = content.scrollWidth;
-
-                var scaleH = availH / contentH;
-                var scaleW = availW / contentW;
-                var scale = Math.min(1, scaleH, scaleW); // jangan lebih besar dari 1
-
-                content.style.transform = 'scale(' + scale + ')';
-              }
-
-              window.addEventListener('load', function(){
-                whenImagesReady().then(function(){
-                  fitToPaper();
-                  setTimeout(function(){ window.print(); }, 100);
-                });
+            window.addEventListener('load', function(){
+              // Pastikan semua gambar siap (logo) lalu langsung print
+              var imgs = Array.prototype.slice.call(document.images);
+              Promise.all(imgs.map(function(img){
+                return img.complete ? Promise.resolve() : new Promise(function(res){ img.onload = img.onerror = res; });
+              })).then(function(){
+                setTimeout(function(){ window.print(); }, 50);
               });
-
-              window.addEventListener('resize', fitToPaper);
-            })();
+            });
           </script>
         </body>
       </html>
@@ -255,23 +218,21 @@ const Struk = () => {
         </button>
       </div>
 
-      {/* Kanan - Preview Struk (samakan ukuran kertas) */}
+      {/* Kanan - Preview Struk: samakan aturan print (tanpa tinggi paksa) */}
       <div className="w-1/2 flex items-center justify-center bg-gray-50 p-6">
         <div
           ref={printRef}
-          className="all-bold receipt bg-white shadow border rounded"
+          className="receipt bg-white shadow border rounded"
           style={{
-            width: "57mm",
-            height: "18mm",
-            padding: "2mm",
-            overflow: "hidden", // preview juga tidak spill
+            width: "58mm",
+            padding: "3mm 2mm",
           }}
         >
           {/* Logo di tengah */}
           <img src={logo} alt="Logo" className="logo" />
 
           {/* Header toko */}
-          <div className="center bold" style={{ fontSize: 13 }}>
+          <div className="center bold" style={{ fontSize: 14 }}>
             TOKO SEMBAKO
           </div>
 
@@ -286,8 +247,6 @@ const Struk = () => {
               </span>
               <span className="muted">{lastPaidOrder.customer}</span>
             </div>
-            {/* contoh meja; hapus jika tak perlu */}
-            <div className="mt2 muted">Meja 3/1</div>
           </div>
 
           <div className="sep" />
@@ -295,18 +254,16 @@ const Struk = () => {
           {/* Items */}
           <div className="small">
             {lastPaidOrder.items.map((item, idx) => (
-              <div key={idx} style={{ marginBottom: 3 }}>
+              <div className="item" key={idx} style={{ marginBottom: 3 }}>
                 <div className="row">
                   <span className="wrap">{item.nama}</span>
                   <span>
-                    Rp{" "}
-                    {(item.quantity * item.hargaJual).toLocaleString("id-ID")}
+                    Rp {(item.quantity * item.hargaJual).toLocaleString("id-ID")}
                   </span>
                 </div>
                 <div className="row muted">
                   <span>
-                    {item.quantity} x Rp{" "}
-                    {item.hargaJual.toLocaleString("id-ID")}
+                    {item.quantity} x Rp {item.hargaJual.toLocaleString("id-ID")}
                   </span>
                   <span />
                 </div>
@@ -325,10 +282,7 @@ const Struk = () => {
             <div className="row mt2">
               <span>Bayar (cash)</span>
               <span>
-                Rp{" "}
-                {(
-                  lastPaidOrder.paidAmount || lastPaidOrder.total
-                ).toLocaleString("id-ID")}
+                Rp {(lastPaidOrder.paidAmount || lastPaidOrder.total).toLocaleString("id-ID")}
               </span>
             </div>
             <div className="row mt2">
