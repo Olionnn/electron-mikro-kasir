@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdPrint, MdCheck } from "react-icons/md";
 import { useNavbar } from "../../hooks/useNavbar";
+import logo from "../../assets/images/logo/logo.png";
 
 const Struk = () => {
   const navigate = useNavigate();
@@ -32,53 +33,127 @@ const Struk = () => {
     [lastPaidOrder]
   );
 
-  // Print (dibuat stabil untuk dipakai di Navbar actions)
+  // Print (stabil untuk dipakai di Navbar actions)
   const handlePrint = useCallback(() => {
     if (!printRef.current) return;
     const printContents = printRef.current.innerHTML;
-    const printWindow = window.open("", "", "width=300,height=600");
+    const printWindow = window.open("", "", "width=320,height=600");
+
     printWindow.document.write(`
       <html>
         <head>
           <meta charset="utf-8" />
           <style>
-            @page { size: 58mm auto; margin: 0; }
+            @page { size: 57mm 18mm; margin: 0; }
             * { box-sizing: border-box; }
             html, body { margin:0; padding:0; }
             body {
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
-              font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
-              color:#111;
+              font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue", sans-serif;
+              color:#000;
+              -webkit-font-smoothing: antialiased;
+              text-rendering: geometricPrecision;
+            }
+
+            /* Kertas tetap 57x18mm; konten di-scale supaya tidak terpotong */
+            .paper {
+              width: 57mm;
+              height: 18mm;
+              padding: 2mm;                /* padding sesuai permintaan */
+              overflow: hidden;            /* biar tidak spill */
+            }
+            .content {
+              transform-origin: top left;   /* penting untuk scale */
+            }
+
+            /* Semua teks bold & agak besar */
+            .all-bold, .all-bold * { 
+              font-weight: 800 !important;
             }
             .receipt {
-              width: 40mm;               /* lebar efektif konten */
-              margin: 0 auto;
-              padding: 2mm 1.5mm;        /* padding tipis biar rapi */
-              font-size: 10.5px;         /* sedikit lebih besar */
+              font-size: 12px;              /* sedikit lebih besar */
               line-height: 1.25;
             }
+
             .center { text-align:center; }
-            .bold { font-weight: 700; }
-            .small { font-size: 10px; }
-            .sep { border-top: 1px dashed #000; margin: 6px 0; }
+            .bold { font-weight: 900; }
+            .small { font-size: 11px; }
+            .sep { border-top: 1px dashed #000; margin: 1mm 0; }
             .row {
               display:flex;
               justify-content: space-between;
               gap: 4px;
             }
-            .muted { color:#555; }
+            .muted { opacity: .8; }
             .mt2 { margin-top: 2px; }
             .mt4 { margin-top: 4px; }
+
+            /* Harga/angka kanan tidak kepecah */
+            .row span:last-child { white-space: nowrap; }
+            .wrap { word-break: break-word; }
+
+            /* Logo kecil di tengah */
+            .logo {
+              display:block;
+              width: 8mm;
+              height: auto;
+              margin: 0 auto 1mm;
+            }
           </style>
         </head>
-        <body>${printContents}</body>
+        <body>
+          <div class="paper">
+            <div class="content">
+              ${printContents}
+            </div>
+          </div>
+
+          <script>
+            (function() {
+              function whenImagesReady() {
+                var imgs = Array.prototype.slice.call(document.images);
+                if (imgs.length === 0) return Promise.resolve();
+                return Promise.all(imgs.map(function(img){
+                  return img.complete ? Promise.resolve() : new Promise(function(res){ img.onload = img.onerror = res; });
+                }));
+              }
+
+              function fitToPaper() {
+                var paper = document.querySelector('.paper');
+                var content = document.querySelector('.content');
+                if (!paper || !content) return;
+
+                // reset scale dulu
+                content.style.transform = 'none';
+
+                var availH = paper.clientHeight;
+                var availW = paper.clientWidth;
+                var contentH = content.scrollHeight;
+                var contentW = content.scrollWidth;
+
+                var scaleH = availH / contentH;
+                var scaleW = availW / contentW;
+                var scale = Math.min(1, scaleH, scaleW); // jangan lebih besar dari 1
+
+                content.style.transform = 'scale(' + scale + ')';
+              }
+
+              window.addEventListener('load', function(){
+                whenImagesReady().then(function(){
+                  fitToPaper();
+                  setTimeout(function(){ window.print(); }, 100);
+                });
+              });
+
+              window.addEventListener('resize', fitToPaper);
+            })();
+          </script>
+        </body>
       </html>
     `);
     printWindow.document.close();
     printWindow.focus();
-    printWindow.print();
-    printWindow.close();
   }, []);
 
   // Selesai → kembali ke POS
@@ -180,15 +255,23 @@ const Struk = () => {
         </button>
       </div>
 
-      {/* Kanan - Preview Struk */}
+      {/* Kanan - Preview Struk (samakan ukuran kertas) */}
       <div className="w-1/2 flex items-center justify-center bg-gray-50 p-6">
         <div
           ref={printRef}
-          className="receipt bg-white shadow border rounded"
-          style={{ width: "40mm" }} // preview sama seperti print
+          className="all-bold receipt bg-white shadow border rounded"
+          style={{
+            width: "57mm",
+            height: "18mm",
+            padding: "2mm",
+            overflow: "hidden", // preview juga tidak spill
+          }}
         >
+          {/* Logo di tengah */}
+          <img src={logo} alt="Logo" className="logo" />
+
           {/* Header toko */}
-          <div className="center bold" style={{ fontSize: 12 }}>
+          <div className="center bold" style={{ fontSize: 13 }}>
             TOKO SEMBAKO
           </div>
 
@@ -203,6 +286,7 @@ const Struk = () => {
               </span>
               <span className="muted">{lastPaidOrder.customer}</span>
             </div>
+            {/* contoh meja; hapus jika tak perlu */}
             <div className="mt2 muted">Meja 3/1</div>
           </div>
 
@@ -211,9 +295,9 @@ const Struk = () => {
           {/* Items */}
           <div className="small">
             {lastPaidOrder.items.map((item, idx) => (
-              <div key={idx} style={{ marginBottom: 4 }}>
+              <div key={idx} style={{ marginBottom: 3 }}>
                 <div className="row">
-                  <span className="bold">{item.nama}</span>
+                  <span className="wrap">{item.nama}</span>
                   <span>
                     Rp{" "}
                     {(item.quantity * item.hargaJual).toLocaleString("id-ID")}
@@ -253,7 +337,7 @@ const Struk = () => {
             </div>
           </div>
 
-          <div className="center small mt4 muted">Tidak Ada Keterangan</div>
+          <div className="center small mt4 muted">Terima kasih 🙏</div>
         </div>
       </div>
     </div>

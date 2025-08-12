@@ -1,80 +1,86 @@
-import React from 'react';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useNavbar } from "../../hooks/useNavbar";
 
-const PengaturanPrinter = () => {
+// Icons
+import { MdArrowBack, MdPrint, MdReceiptLong, MdChevronRight } from "react-icons/md";
+
+export default function PengaturanPrinter() {
+  const navigate = useNavigate();
+
+  // Set Navbar global
+  useNavbar(
+    {
+      variant: "page",
+      title: "Printer & Struk",
+      backTo: "/pengaturan", // balik ke halaman Pengaturan
+      actions: [],
+    },
+    [navigate]
+  );
+
   return (
-    <div className="flex h-screen">
-      
-      {/* Sidebar (40%) */}
-      <aside className="w-[40%] border-r bg-white">
-        <div className="p-6 text-center text-2xl font-bold border-b">PENGATURAN</div>
-        
-        <div className="flex items-center gap-4 px-6 py-4 text-xl border-b">
-          <span className="text-3xl">&larr;</span>
-          <span className="font-semibold">Printer dan Struk</span>
-        </div>
-
-        <div className="flex flex-col gap-6 mt-6 px-4">
-          <div className="flex items-center gap-4 p-5 rounded-xl bg-gray-100 cursor-pointer hover:bg-gray-200">
-            <div className="bg-green-100 text-green-600 p-3 rounded-full">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                  d="M9 17v-6a2 2 0 012-2h6m-6 6h6m-6 0V5m0 6h6" />
-              </svg>
-            </div>
-            <div className="flex-1 font-bold text-lg">Pengaturan Struk</div>
-            <div className="text-2xl">&gt;</div>
-          </div>
-
-          <div className="flex items-center gap-4 p-5 rounded-xl bg-green-500 text-white cursor-pointer">
-            <div className="bg-white text-green-600 p-3 rounded-full">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                  d="M6 9v6m6-6v6m6-6v6M4 6h16M4 18h16" />
-              </svg>
-            </div>
-            <div className="flex-1 font-bold text-lg">Pengaturan Printer</div>
-            <div className="text-2xl">&gt;</div>
-          </div>
-        </div>
-      </aside>
-
+    <div className="flex h-full bg-white"> 
       {/* Konten (60%) */}
-      <main className="w-[60%] bg-white p-8 overflow-y-auto">
-        <div className="flex items-center gap-4 mb-10 text-2xl font-bold">
-          <span className="text-3xl">&larr;</span>
-          <span>PENGATURAN PRINTER</span>
-        </div>
-        <hr />
-
-        <div className="space-y-8">
-          {[
-            "Struk Transaksi",
-            "Struk Pesanan",
-            "Struk Dapur"
-          ].map((label, idx) => (
-            <div key={idx} className="flex items-center justify-between p-5 border-b">
+      <main className="hidden lg:block w-full p-8 overflow-y-auto">
+        {/* Title row */}
+        <div className="rounded-2xl border overflow-hidden">
+          {["Struk Transaksi", "Struk Pesanan", "Struk Dapur"].map((label, idx) => (
+            <div
+              key={label}
+              className={`flex items-center justify-between px-5 py-4 ${idx !== 2 ? "border-b" : ""} bg-white`}
+            >
               <div>
-                <div className="font-bold text-xl">{label}</div>
-                <div className="text-gray-600 mt-1">Belum Ada yang terhubung</div>
+                <div className="font-semibold">{label}</div>
+                <div className="text-sm text-gray-500 mt-0.5">Belum ada yang terhubung</div>
               </div>
-              <button className="text-lg border border-green-600 text-green-600 rounded-full px-6 py-2 hover:bg-green-100">
+              <button
+                className="text-sm border border-green-600 text-green-700 rounded-full px-4 py-2 hover:bg-green-50 transition"
+                onClick={() => alert(`Tambah printer untuk ${label}`)}
+              >
                 + Tambah
               </button>
             </div>
           ))}
 
-          <div className="flex items-center justify-between p-5 border-b">
-            <div className="font-bold text-xl">Struk Label</div>
-            <span className="bg-yellow-400 text-white px-5 py-2 text-base font-semibold rounded-full">
-              Coming Soon !
+          {/* Struk Label - Coming soon */}
+          <div className="flex items-center justify-between px-5 py-4 bg-white">
+            <div className="font-semibold">Struk Label</div>
+            <span className="bg-yellow-400 text-white px-4 py-1.5 text-xs font-semibold rounded-full">
+              Coming Soon!
             </span>
           </div>
         </div>
       </main>
+
+      {/* Mobile content (opsional): tampilkan konten kanan di bawah sidebar saat layar kecil */}
+      <section className="lg:hidden w-full p-5 border-t">
+        <h3 className="text-base font-semibold mb-3">PENGATURAN PRINTER</h3>
+        <div className="space-y-3">
+          {["Struk Transaksi", "Struk Pesanan", "Struk Dapur"].map((label) => (
+            <div key={label} className="p-4 rounded-xl border">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">{label}</div>
+                  <div className="text-xs text-gray-500 mt-0.5">Belum ada yang terhubung</div>
+                </div>
+                <button
+                  className="text-xs border border-green-600 text-green-700 rounded-full px-3 py-1.5 hover:bg-green-50 transition"
+                  onClick={() => alert(`Tambah printer untuk ${label}`)}
+                >
+                  + Tambah
+                </button>
+              </div>
+            </div>
+          ))}
+          <div className="p-4 rounded-xl border flex items-center justify-between">
+            <div className="font-medium">Struk Label</div>
+            <span className="bg-yellow-400 text-white px-3 py-1 text-[10px] font-semibold rounded-full">
+              Coming Soon!
+            </span>
+          </div>
+        </div>
+      </section>
     </div>
   );
-};
-
-export default PengaturanPrinter;
+}

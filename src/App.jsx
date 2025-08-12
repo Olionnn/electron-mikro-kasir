@@ -106,7 +106,8 @@ function App() {
                 element={<ManajemenStaf />}
               />
               <Route path="/pengaturan/pos" element={<div>Pengaturan POS Page</div>} />
-              <Route path="/pengaturan/printsetting" element={<div>sad</div>} />
+              <Route path="/pengaturan/printsetting" element={<CountPrint />} />
+              <Route path="/pengaturan/struksetting" element={<CountStruk />} />
               {/* Keuangan */}
               <Route path="/keuangan" element={<Keuangan />} />
 
@@ -155,7 +156,7 @@ function App() {
 
 
               {/* Kirim Masukan */}
-              <Route path="/kirim-masukan" element={<div>Kirim Masukan Page</div>} />
+              <Route path="/kirim-masukan" element={<FeedbackForm />} />
 
 
               {/* Stok */}

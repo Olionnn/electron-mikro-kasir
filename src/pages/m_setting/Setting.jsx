@@ -60,9 +60,12 @@
       id: "printer",
       description: "Konfigurasi printer dan format struk",
       status: "Belum Terhubung",
-      // hasSubmenu: true,            // HAPUS kalau mau langsung link
-      // submenu: [...],              // HAPUS submenu
-      route: "/pengaturan/printsetting" // ⬅️ tambahkan route
+      hasSubmenu: true,            // HAPUS kalau mau langsung link
+      submenu: [
+        { label: "Pengaturan Printer",  route: "/pengaturan/printsetting"  }, 
+        { label: "Pengaturan Struk", route: "/pengaturan/struksetting" }
+      ],              // HAPUS submenu
+     // ⬅️ tambahkan route
     },
     {
       icon: <MdGroup />,
@@ -151,22 +154,31 @@
       return <div className="">{map[selectedMenu] || <div className="flex items-center justify-center h-full text-gray-500">Komponen tidak ditemukan</div>}</div>;
     };
 
+
     const handleMenuClick = (item) => {
       if (item.route) {
         navigate(item.route);
         return;
       }
-    
       if (item.hasSubmenu) {
         setExpandedMenu(expandedMenu === item.id ? null : item.id);
-      } else if (item.component) {
+        return;
+      }
+      if (item.component) {
         setSelectedMenu(item.component);
         setExpandedMenu(null);
       }
     };
-
-    const handleSubmenuClick = (component) => setSelectedMenu(component);
-
+    
+    const handleSubmenuClick = (sub) => {
+      if (sub.route) {
+        navigate(sub.route);
+        return;
+      }
+      if (sub.component) {
+        setSelectedMenu(sub.component);
+      }
+    };
     const isActive = (item) => selectedMenu === item.component || expandedMenu === item.id;
 
     return (
@@ -229,8 +241,8 @@
                       <div className="ml-4 mt-2 pl-4 border-l border-gray-200 space-y-1">
                         {item.submenu.map((sub) => (
                           <button
-                            key={sub.id}
-                            onClick={() => handleSubmenuClick(sub.component)}
+                            key={sub.id || sub.label}         // gunakan label bila id tidak ada
+                            onClick={() => handleSubmenuClick(sub)}
                             className={[
                               "w-full text-left p-3 rounded-xl transition-colors",
                               "hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500/30",
