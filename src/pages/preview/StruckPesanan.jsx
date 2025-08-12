@@ -53,15 +53,15 @@ const Struk = () => {
         width: ${PAPER_MM}mm;
         padding: ${PAD_Y_MM}mm ${PAD_X_MM}mm;
         transform: translateX(${OFFSET_MM}mm); /* geser kanan */
-        font-size: 13.5px;
+        font-size: 12.5px;
         line-height: 1.35;
-        font-weight: 800;
+        font-weight: 700;
       }
-      .receipt * { font-weight: 800; }
+      .receipt * { font-weight: 700; }
 
       .center { text-align:center; }
-      .bold { font-weight: 900; }
-      .small { font-size: 12px; }
+      .bold { font-weight: 800; }
+      .small { font-size: 10px; }
       .sep { border-top: 1px dashed #000; margin: 1.2mm 0; }
       .row {
         display:flex;
