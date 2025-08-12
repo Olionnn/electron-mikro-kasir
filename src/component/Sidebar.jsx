@@ -21,7 +21,7 @@ const menuItems = [
   { icon: <FaTruck className="text-green-600" />, text: "Pembelian Ke Supplier", link: "/pembelian-supplier" },
   { icon: <FaFileInvoice className="text-green-600" />, text: "Keuangan", link: "/keuangan" },
   { icon: <FaChartBar className="text-green-600" />, text: "Laporan", link: "/laporan" },
-  { icon: <FaUserCheck className="text-green-600" />, text: "Absensi", link: "/absensi" },
+  // { icon: <FaUserCheck className="text-green-600" />, text: "Absensi", link: "/absensi" },
   { icon: <FaClock className="text-green-600" />, text: "Shift", link: "/shift" },
   { icon: <FaCog className="text-green-600" />, text: "Pengaturan", link: "/pengaturan" },
 ];
