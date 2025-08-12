@@ -44,9 +44,9 @@ const Struk = () => {
         <head>
           <meta charset="utf-8" />
           <style>
-            @page { size: 50mm auto; margin: 0; } /* jangan ada margin, tinggi auto */
+            @page { size: 30mm auto; margin: 0; } /* jangan ada margin, tinggi auto */
             * { box-sizing: border-box; }
-            html, body { margin:0; padding:10mm; }
+            html, body { margin:2mm 0 0 0; padding:10mm; }
             body {
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
@@ -58,8 +58,9 @@ const Struk = () => {
 
             /* Konten struk */
             .receipt {
-              width: 38mm;                /* pas lebar kertas */
-              padding: 3mm 2mm;           /* ada padding rapi */
+              width: 30mm;                /* pas lebar kertas */
+              padding: 0mm 0mm;           /* ada padding rapi */
+              text-align: center; /* rata kiri */
               font-size: 13.5px;          /* lebih besar */
               line-height: 1.35;          /* biar tidak patah */
               font-weight: 800;           /* semua lebih tebal */
@@ -72,8 +73,7 @@ const Struk = () => {
             .sep { border-top: 1px dashed #000; margin: 1.2mm 0; }
             .row {
               display:flex;
-              justify-content: space-between;
-              gap: 0px;
+              gap: 10mm;
               align-items: baseline;
             }
             .muted { opacity:.85; }
@@ -88,7 +88,7 @@ const Struk = () => {
             /* Logo kecil di tengah */
             .logo {
               display:block;
-              width: 20mm;
+              width: 15mm;
               height: auto;
               margin: 0 auto 1.2mm;
 
