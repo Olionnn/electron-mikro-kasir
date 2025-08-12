@@ -44,9 +44,9 @@ const Struk = () => {
         <head>
           <meta charset="utf-8" />
           <style>
-            @page { size: 30mm auto; margin: 0; } /* jangan ada margin, tinggi auto */
+            @page { size: 30mm; margin: 0; } /* jangan ada margin, tinggi auto */
             * { box-sizing: border-box; }
-            html, body { margin:2mm 0 0 0; padding:10mm; }
+            html, body { margin:5mm; padding:15mm; }
             body {
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
@@ -73,7 +73,7 @@ const Struk = () => {
             .sep { border-top: 1px dashed #000; margin: 1.2mm 0; }
             .row {
               display:flex;
-              gap: 10mm;
+              gap: 5mm;
               align-items: baseline;
             }
             .muted { opacity:.85; }
