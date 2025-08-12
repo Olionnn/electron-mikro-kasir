@@ -1,106 +1,151 @@
-import React, { useState } from "react";
-import { FiChevronLeft, FiCalendar, FiX } from "react-icons/fi";
+import React, { useState, useCallback } from "react";
+import { FiCalendar, FiX, FiDownload, FiFilter, FiSearch } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { useNavbar } from "../../hooks/useNavbar";
 
 const LaporanPenjualan = () => {
+  const navigate = useNavigate();
   const [dateRange, setDateRange] = useState("11/08/2025 - 11/08/2025");
+  const [q, setQ] = useState("");
   const data = []; // kosong untuk contoh
 
-  return (
-    <div className="w-full h-screen bg-white flex flex-col overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center gap-3 p-4 border-b">
-        <button className="text-2xl text-gray-600">
-          <FiChevronLeft />
-        </button>
-        <h1 className="text-lg font-semibold">Laporan Penjualan</h1>
-      </div>
+  // ===== handlers =====
+  const onBack = useCallback(() => navigate(-1), [navigate]);
+  const onExport = useCallback(() => alert("Export (dummy)"), []);
+  const onOpenFilterDate = useCallback(() => alert("Pilih rentang tanggal (dummy)"), []);
 
-      {/* Banner */}
-      <div className="bg-green-100 text-green-800 p-3 flex justify-between items-start">
-        <div>
-          <p className="font-medium">Kelola laporan lebih lengkap dan leluasa</p>
-          <p className="text-green-600 font-medium cursor-pointer">
-            Kasir Pintar Dashboard
-          </p>
+  // ===== useNavbar =====
+  useNavbar(
+    {
+      variant: "page",
+      title: "Laporan Penjualan",
+      backTo: onBack, 
+      actions: [
+        {
+          type: "button",
+          title: "Export",
+          onClick: onExport,
+          label: "Export",
+          className:
+            "hidden sm:inline-flex items-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-green-700",
+        },
+      ],
+      rightExtra: (
+        <div className="hidden md:flex items-center gap-2">
+          <button
+            onClick={onOpenFilterDate}
+            className="inline-flex items-center gap-2 border px-3 py-2 rounded-lg text-sm hover:bg-gray-50"
+            title="Filter tanggal"
+          >
+            <FiFilter />
+            {dateRange || "Pilih tanggal"}
+          </button>
         </div>
-        <button className="text-gray-500">
-          <FiX />
-        </button>
-      </div>
+      ),
+    },
+    [onBack, onExport, onOpenFilterDate, dateRange]
+  );
+
+  return (
+    <div className="w-full min-h-screen bg-white flex flex-col">
+     
 
       {/* Filter Bar */}
       <div className="p-4 border-b">
         <div className="flex flex-wrap gap-3 items-center">
-          {/* Date Picker */}
-          <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 text-sm">
+          {/* Date Picker (mobile/extra tools) */}
+          <button
+            onClick={onOpenFilterDate}
+            className="inline-flex items-center border border-gray-300 rounded-lg px-3 py-2 text-sm hover:bg-gray-50"
+            title="Filter tanggal"
+          >
             <FiCalendar className="text-green-500 mr-2" />
-            <span>{dateRange}</span>
-            <button
-              className="ml-3 text-gray-400 hover:text-red-500"
-              onClick={() => setDateRange("")}
-            >
-              ✕
-            </button>
-          </div>
+            {dateRange || "Pilih tanggal"}
+          </button>
 
           {/* Search Input */}
-          <input
-            type="text"
-            placeholder="Cari Struk"
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm flex-1 min-w-[200px]"
-          />
+          <div className="relative flex-1 min-w-[200px]">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Cari Struk"
+              className="border border-gray-300 rounded-lg pl-9 pr-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
       {/* Summary */}
-      <div className="flex gap-1 p-4">
-        <div className="flex-1 bg-green-500 text-white text-center rounded-full py-2">
-          <p className="text-xs">Jml Transaksi</p>
+      <div className="flex gap-2 p-4">
+        <div className="flex-1 bg-green-500 text-white text-center rounded-full py-2 shadow-sm">
+          <p className="text-xs opacity-90">Jml Transaksi</p>
           <p className="font-bold text-sm">0</p>
         </div>
-        <div className="flex-1 bg-green-700 text-white text-center rounded-full py-2">
-          <p className="text-xs">Pendapatan</p>
+        <div className="flex-1 bg-green-600 text-white text-center rounded-full py-2 shadow-sm">
+          <p className="text-xs opacity-90">Pendapatan</p>
           <p className="font-bold text-sm">Rp 0</p>
         </div>
-        <div className="flex-1 bg-green-700 text-white text-center rounded-full py-2">
-          <p className="text-xs">Keuntungan</p>
+        <div className="flex-1 bg-green-700 text-white text-center rounded-full py-2 shadow-sm">
+          <p className="text-xs opacity-90">Keuntungan</p>
           <p className="font-bold text-sm">Rp 0</p>
         </div>
       </div>
 
       {/* Filter Radio */}
-      <div className="flex gap-5 px-4 pb-2 text-sm">
-        <label className="flex items-center gap-1">
+      <div className="flex gap-5 px-4 pb-2 text-sm text-gray-700">
+        <label className="flex items-center gap-2 cursor-pointer">
           <input type="radio" name="filter" defaultChecked />
-          Semua Transaksi
+          <span>Semua Transaksi</span>
         </label>
-        <label className="flex items-center gap-1">
+        <label className="flex items-center gap-2 cursor-pointer">
           <input type="radio" name="filter" />
-          Piutang
+          <span>Piutang</span>
         </label>
       </div>
 
       {/* Content */}
-      <div className="flex flex-1 border-t">
+      <div className="flex flex-1 border-t min-h-0">
         {/* Table */}
-        <div className="w-1/2 border-r">
-          <div className="grid grid-cols-4 bg-gray-100 text-sm font-medium text-gray-600 py-2 px-3">
+        <div className="w-full lg:w-1/2 border-r min-h-0">
+          <div className="grid grid-cols-4 bg-gray-50 text-sm font-medium text-gray-600 py-2 px-3 border-b sticky top-0">
             <span>Tanggal</span>
             <span>No.Transaksi</span>
             <span>Pendapatan</span>
             <span>Keuntungan</span>
           </div>
-          {data.length === 0 && (
-            <div className="text-center text-gray-400 py-10 text-sm">
+
+          {data.length === 0 ? (
+            <div className="h-full flex items-center justify-center text-gray-400 text-sm">
               Belum ada data transaksi
             </div>
+          ) : (
+            // render rows di sini
+            <div />
           )}
         </div>
 
         {/* Detail */}
-        <div className="w-1/2 flex items-center justify-center text-gray-400 text-sm">
-          Silahkan pilih struk
+        <div className="hidden lg:flex w-1/2 items-center justify-center text-gray-400 text-sm">
+          Silakan pilih struk
         </div>
+      </div>
+
+      {/* Footer actions (mobile) */}
+      <div className="p-4 border-t flex gap-2 sm:hidden">
+        <button
+          onClick={onOpenFilterDate}
+          className="flex-1 inline-flex items-center justify-center gap-2 border px-3 py-2 rounded-lg text-sm hover:bg-gray-50"
+        >
+          <FiCalendar /> {dateRange || "Pilih tanggal"}
+        </button>
+        <button
+          onClick={onExport}
+          className="inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm"
+        >
+          <FiDownload /> Export
+        </button>
       </div>
     </div>
   );

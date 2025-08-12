@@ -1,21 +1,19 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FiDownload, FiSearch, FiFilter, FiChevronRight, FiTag, FiHash, FiCreditCard
 } from "react-icons/fi";
+import { useNavbar } from "../../hooks/useNavbar";
 
 export default function LaporanKeuanganPage() {
   const navigate = useNavigate();
 
   // ==== DUMMY DATA ====
   const data = useMemo(() => ([
-    // 11 Aug 2025
     { id: "TRX-20250811-001", tanggal: "2025-08-11", waktu: "11:14:26", aktivitas: "Pengeluaran", kategori: "Operasional", metode: "Kartu Debit", nominal: -555500, catatan: "Beli kertas dan tinta", ref: "INV-OP-90813" },
     { id: "TRX-20250811-002", tanggal: "2025-08-11", waktu: "11:14:04", aktivitas: "Pemasukan", kategori: "Penjualan", metode: "Tunai", nominal: 444444, catatan: "Penjualan #10231", ref: "SO-10231" },
-    // 10 Aug 2025
     { id: "TRX-20250810-003", tanggal: "2025-08-10", waktu: "15:02:11", aktivitas: "Pemasukan", kategori: "Penjualan", metode: "QRIS", nominal: 1250000, catatan: "Order online", ref: "SO-10229" },
     { id: "TRX-20250810-004", tanggal: "2025-08-10", waktu: "09:41:36", aktivitas: "Pengeluaran", kategori: "Gaji", metode: "Transfer Bank", nominal: -2500000, catatan: "Gaji harian", ref: "PAY-78512" },
-    // 09 Aug 2025
     { id: "TRX-20250809-005", tanggal: "2025-08-09", waktu: "18:22:44", aktivitas: "Pemasukan", kategori: "Penjualan", metode: "Kartu Kredit", nominal: 355000, catatan: "Add-on service", ref: "SO-10188" },
   ]), []);
 
@@ -25,6 +23,7 @@ export default function LaporanKeuanganPage() {
 
   const formatRupiah = (n) => `Rp ${Math.abs(n).toLocaleString("id-ID")}`;
   const toID = (iso) => new Date(iso + "T00:00:00").toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+  const rangeLabel = `${toID(range.from)} – ${toID(range.to)}`;
 
   // Filter sederhana by keyword + tanggal
   const filtered = useMemo(() => {
@@ -58,13 +57,54 @@ export default function LaporanKeuanganPage() {
     return { pemasukan, pengeluaran, net: pemasukan - pengeluaran };
   }, [filtered]);
 
+  // ===== useNavbar =====
+  const onBack = useCallback(() => navigate(-1), [navigate]);
+  const onFilterDate = useCallback(() => {
+    // taruh date picker kamu di sini
+    alert("Filter date range (dummy)");
+  }, []);
+  const onExport = useCallback(() => {
+    // taruh logika export di sini
+    alert("Export (dummy)");
+  }, []);
+
+  useNavbar(
+    {
+      variant: "page",
+      title: "Daftar Laporan Keuangan",
+      backTo: onBack, // pakai history back
+      actions: [
+        {
+          type: "button",
+          title: "Export",
+          onClick: onExport,
+          label: "Export",
+          className:
+            "hidden sm:inline-flex items-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-green-700",
+        },
+      ],
+      rightExtra: (
+        <div className="hidden sm:flex items-center gap-2">
+          <button
+            className="inline-flex items-center gap-2 border px-3 py-2 rounded-lg text-sm hover:bg-gray-50"
+            onClick={onFilterDate}
+            title="Filter tanggal"
+          >
+            <FiFilter /> {rangeLabel}
+          </button>
+        </div>
+      ),
+    },
+    [onBack, onExport, onFilterDate, rangeLabel]
+  );
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* Header */}
-      <div className="flex justify-between items-center border-b px-4 py-3 bg-white sticky top-0 z-10">
+      {/* Header lokal untuk mobile saja (Navbar global sudah handle di desktop) */}
+      <div className="flex justify-between items-center border-b px-4 py-3 bg-white sticky top-0 z-10 sm:hidden">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate(-1)}
+            onClick={onBack}
             className="text-green-600 text-lg font-semibold hover:opacity-80"
           >
             ←
@@ -74,12 +114,15 @@ export default function LaporanKeuanganPage() {
         <div className="flex items-center gap-2">
           <button
             className="inline-flex items-center gap-2 border px-3 py-2 rounded-lg text-sm hover:bg-gray-50"
-            onClick={() => alert("Filter date range dummy")}
+            onClick={onFilterDate}
             title="Filter tanggal"
           >
-            <FiFilter /> {toID(range.from)} – {toID(range.to)}
+            <FiFilter /> {rangeLabel}
           </button>
-          <button className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm inline-flex items-center gap-2">
+          <button
+            onClick={onExport}
+            className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm inline-flex items-center gap-2"
+          >
             <FiDownload /> Export
           </button>
         </div>
@@ -127,10 +170,9 @@ export default function LaporanKeuanganPage() {
           )}
 
           {Object.entries(grouped)
-            .sort((a, b) => new Date(b[0]) - new Date(a[0])) // terbaru dulu
+            .sort((a, b) => new Date(b[0]) - new Date(a[0]))
             .map(([tgl, rows]) => (
               <div key={tgl} className="px-4 py-4">
-                {/* Chip tanggal */}
                 <div className="flex justify-center mb-3">
                   <div className="bg-gray-100 px-4 py-1.5 rounded-full text-gray-700 text-xs font-medium">
                     {toID(tgl)}

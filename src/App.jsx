@@ -51,6 +51,8 @@ import LaporanPembelian from "./pages/m_laporan/LaporanPembelian";
 import LaporanPenjualan from "./pages/m_laporan/LaporanPenjualan";
 import LaporanKeuangan from "./pages/m_laporan/LaporanKeuangan";
 import LaporanKeuanganPage from "./pages/m_laporan/DetailKeuangan";
+import ContactList from "./pages/m_bantuan/HubungiKami";
+import FeedbackForm from "./pages/m_bantuan/feedbackapk";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -146,7 +148,11 @@ function App() {
 
 
               {/* Pusat Bantuan */}
-              <Route path="/pusat-bantuan" element={<Bantuan/>} />
+              <Route path="/pusat-bantuan" element={<Bantuan />} />
+              <Route path="/hubungi-kami" element={<ContactList />} />
+              <Route path="/medsos" element={<div>Sosials</div>} />
+              <Route path="/feedback" element={<FeedbackForm />} />
+
 
               {/* Kirim Masukan */}
               <Route path="/kirim-masukan" element={<div>Kirim Masukan Page</div>} />
@@ -171,6 +177,7 @@ function App() {
 
               {/* Users */}
               <Route path="/users/staff" element={<ManajemenStaf/>} />
+
 
 
 

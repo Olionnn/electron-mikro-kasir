@@ -1,10 +1,40 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { FiChevronLeft, FiCalendar } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { useNavbar } from "../../hooks/useNavbar";
 
 const LaporanKeuangan = () => {
   const navigate = useNavigate();
   const [dateRange, setDateRange] = useState("09/08/2025 - 11/08/2025");
+
+  // Setup Navbar
+  const onBack = useCallback(() => navigate("/laporan"), [navigate]);
+  const onClearDate = useCallback(() => setDateRange(""), []);
+
+  useNavbar(
+    {
+      variant: "page",
+      title: "Laporan Keuangan",
+      backTo: "/laporan",
+      rightExtra: (
+        <div className="hidden sm:flex items-center gap-2">
+          <div className="flex items-center border rounded-lg px-3 py-1.5 text-sm">
+            <FiCalendar className="text-green-600 mr-2" />
+            <span className="text-gray-700">{dateRange || "Pilih rentang tanggal"}</span>
+          </div>
+          <button
+            onClick={onClearDate}
+            className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50"
+            title="Bersihkan tanggal"
+          >
+            Bersihkan
+          </button>
+        </div>
+      ),
+      actions: [],
+    },
+    [onBack, onClearDate, dateRange]
+  );
 
   // DUMMY ringkasan
   const transaksi = [
@@ -27,32 +57,30 @@ const LaporanKeuangan = () => {
     });
   const rp = (n) => `Rp ${n.toLocaleString("id-ID")}`;
 
-  // handler klik detail per tanggal
   const goToDetail = (isoDate) => {
-    // contoh pakai query param ?date=YYYY-MM-DD
     navigate(`/laporan/laporan-keuangan/detail`);
   };
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col p-6">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-4">
-        <button className="text-2xl text-gray-600">
+      {/* Header lokal (biarkan, tapi sekarang Navbar utama dikontrol useNavbar) */}
+      <div className="flex items-center gap-3 mb-4 sm:hidden">
+        <button className="text-2xl text-gray-600" onClick={() => navigate("/laporan")}>
           <FiChevronLeft />
         </button>
         <h1 className="text-lg font-semibold">Laporan Keuangan</h1>
       </div>
 
-      {/* Info */}
       <p className="text-xs text-gray-500 mb-3">
-        *Hanya memuat data <span className="font-semibold">Pemasukan & Pengeluaran</span> dari menu <span className="font-semibold">Keuangan</span>
+        *Hanya memuat data <span className="font-semibold">Pemasukan & Pengeluaran</span> dari menu{" "}
+        <span className="font-semibold">Keuangan</span>
       </p>
 
-      {/* Date Picker */}
-      <div className="flex items-center gap-3 mb-5">
+      {/* Date Picker (versi mobile) */}
+      <div className="flex items-center gap-3 mb-5 sm:hidden">
         <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 text-sm w-fit">
           <FiCalendar className="text-green-500 mr-2" />
-          <span>{dateRange}</span>
+          <span>{dateRange || "Pilih rentang tanggal"}</span>
           <button
             className="ml-3 text-gray-400 hover:text-red-500"
             onClick={() => setDateRange("")}

@@ -22,7 +22,7 @@ const Keuangan = () => {
         {
             variant: "page",
             title: "Keuangan",
-            backTo: () => navigate(-1),
+            backTo: null, 
             actions: [
                 // {
                 //   type: "button",
@@ -62,7 +62,7 @@ const Keuangan = () => {
   ];
 
   return (
-    <div className="h-screen w-screen bg-white text-gray-800 font-sans flex flex-col">
+    <div className="h-full w-screen bg-white text-gray-800 font-sans flex flex-col">
       {/* Konten full-screen di bawah navbar global */}
       <div className="flex-1 overflow-hidden">
         <div className="h-full w-full flex flex-col xl:flex-row">
