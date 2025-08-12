@@ -27,7 +27,7 @@ const menuItems = [
 ];
 
 const bottomMenuItems = [
-  { icon: <FaStore className="text-green-600" />, text: "Toko Online Saya", link: "/toko-online" },
+  // { icon: <FaStore className="text-green-600" />, text: "Toko Online Saya", link: "/toko-online" },
   { icon: <FaQuestionCircle className="text-green-600" />, text: "Pusat Bantuan", link: "/pusat-bantuan" },
   { icon: <FaPaperPlane className="text-green-600" />, text: "Kirim Masukan", link: "/kirim-masukan" },
 ];
