@@ -44,9 +44,9 @@ const Struk = () => {
         <head>
           <meta charset="utf-8" />
           <style>
-            @page { size: 30mm; margin: 0; } /* jangan ada margin, tinggi auto */
+            @page { size: auto; margin: 0; } /* jangan ada margin, tinggi auto */
             * { box-sizing: border-box; }
-            html, body { margin:5mm; padding:15mm; }
+            html, body { margin:0mm; padding:15mm; }
             body {
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
@@ -60,7 +60,6 @@ const Struk = () => {
             .receipt {
               width: 30mm;                /* pas lebar kertas */
               padding: 0mm 0mm;           /* ada padding rapi */
-              text-align: center; /* rata kiri */
               font-size: 13.5px;          /* lebih besar */
               line-height: 1.35;          /* biar tidak patah */
               font-weight: 800;           /* semua lebih tebal */
@@ -73,7 +72,7 @@ const Struk = () => {
             .sep { border-top: 1px dashed #000; margin: 1.2mm 0; }
             .row {
               display:flex;
-              gap: 5mm;
+              gap: 1mm;
               align-items: baseline;
             }
             .muted { opacity:.85; }
