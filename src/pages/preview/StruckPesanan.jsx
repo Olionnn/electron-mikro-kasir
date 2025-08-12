@@ -1,20 +1,20 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-  useMemo,
-} from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdPrint, MdCheck } from "react-icons/md";
 import { useNavbar } from "../../hooks/useNavbar";
 import logo from "../../assets/images/logo/logo.png";
 
+const PAPER_MM = 58;   // lebar kertas
+const PAD_X_MM = 2;    // padding kiri/kanan
+const PAD_Y_MM = 3;    // padding atas/bawah
+const OFFSET_MM = 3;   // geser seluruh struk ke kanan
+
 const Struk = () => {
   const navigate = useNavigate();
   const [lastPaidOrder, setLastPaidOrder] = useState(null);
-  const printRef = useRef();
+
+  const previewRef = useRef(null); // iframe preview
 
   // Ambil data struk terakhir
   useEffect(() => {
@@ -33,110 +33,181 @@ const Struk = () => {
     [lastPaidOrder]
   );
 
-  // Print: lebar fix 58mm, tinggi otomatis, margin 0, mulai dari atas
-  const handlePrint = useCallback(() => {
-    if (!printRef.current) return;
-    const printContents = printRef.current.innerHTML;
-    const printWindow = window.open("", "", "width=380,height=640");
+  // =============== HTML & CSS YANG SAMA UNTUK PREVIEW & PRINT ===============
 
-    printWindow.document.write(`
+  const buildCSS = useCallback(() => {
+    return `
+      @page { size: ${PAPER_MM}mm auto; margin: 0; }
+      * { box-sizing: border-box; }
+      html, body { margin:0; padding:0; }
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue", sans-serif;
+        color:#000;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: geometricPrecision;
+      }
+
+      .receipt {
+        width: ${PAPER_MM}mm;
+        padding: ${PAD_Y_MM}mm ${PAD_X_MM}mm;
+        transform: translateX(${OFFSET_MM}mm); /* geser kanan */
+        font-size: 13.5px;
+        line-height: 1.35;
+        font-weight: 800;
+      }
+      .receipt * { font-weight: 800; }
+
+      .center { text-align:center; }
+      .bold { font-weight: 900; }
+      .small { font-size: 12px; }
+      .sep { border-top: 1px dashed #000; margin: 1.2mm 0; }
+      .row {
+        display:flex;
+        justify-content: space-between;
+        gap: 1mm;
+        align-items: baseline;
+      }
+      .muted { opacity:.85; }
+      .mt2 { margin-top: 2px; }
+      .mt4 { margin-top: 4px; }
+      .wrap { word-break: break-word; }
+      .row span:last-child { white-space: nowrap; }
+      .item { break-inside: avoid; page-break-inside: avoid; }
+
+      .logo {
+        display:block;
+        width: 15mm;
+        height: auto;
+        margin: 0 auto 1.2mm;
+        border-radius: 9999px;
+        overflow: hidden;
+        border: 0.6mm solid #000;  /* circular border */
+      }
+    `;
+  }, []);
+
+  const buildReceiptHTML = useCallback(() => {
+    if (!lastPaidOrder) return "";
+
+    const itemsHtml = (lastPaidOrder.items || [])
+      .map(
+        (item) => `
+          <div class="item" style="margin-bottom:3px;">
+            <div class="row">
+              <span class="wrap">${item.nama}</span>
+              <span>Rp ${(item.quantity * item.hargaJual).toLocaleString("id-ID")}</span>
+            </div>
+            <div class="row muted">
+              <span>${item.quantity} x Rp ${item.hargaJual.toLocaleString("id-ID")}</span>
+              <span></span>
+            </div>
+          </div>
+        `
+      )
+      .join("");
+
+    return `
+      <div class="receipt">
+        <img src="${logo}" alt="Logo" class="logo" />
+        <div class="center bold" style="font-size:14px;">TOKO SEMBAKO</div>
+        <div class="sep"></div>
+
+        <div class="small">
+          <div class="row">
+            <span>${new Date(lastPaidOrder.paidAt).toLocaleDateString("id-ID")} ${new Date(lastPaidOrder.paidAt).toLocaleTimeString("id-ID")}</span>
+            <span class="muted">${lastPaidOrder.customer || ""}</span>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="small">
+          ${itemsHtml}
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="small">
+          <div class="row bold">
+            <span>Total</span>
+            <span>Rp ${lastPaidOrder.total.toLocaleString("id-ID")}</span>
+          </div>
+          <div class="row mt2">
+            <span>Bayar (cash)</span>
+            <span>Rp ${(lastPaidOrder.paidAmount || lastPaidOrder.total).toLocaleString("id-ID")}</span>
+          </div>
+          <div class="row mt2">
+            <span>Kembali</span>
+            <span>Rp ${kembalian.toLocaleString("id-ID")}</span>
+          </div>
+        </div>
+
+        <div class="center small mt4 muted">Terima kasih 🙏</div>
+      </div>
+    `;
+  }, [lastPaidOrder, kembalian]);
+
+  const buildDocument = useCallback(
+    (bodyInner) => `
       <html>
         <head>
           <meta charset="utf-8" />
-          <style>
-            @page { size: auto; margin: 0; } /* jangan ada margin, tinggi auto */
-            * { box-sizing: border-box; }
-            html, body { margin:0mm; padding:15mm; }
-            body {
-              -webkit-print-color-adjust: exact;
-              print-color-adjust: exact;
-              font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue", sans-serif;
-              color:#000;
-              -webkit-font-smoothing: antialiased;
-              text-rendering: geometricPrecision;
-            }
-
-            /* Konten struk */
-            .receipt {
-              width: 58mm;                /* pas lebar kertas */
-              text-align: right; /* rata kiri */
-              padding: 0mm 0mm;           /* ada padding rapi */
-              font-size: 13.5px;          /* lebih besar */
-              line-height: 1.35;          /* biar tidak patah */
-              font-weight: 800;           /* semua lebih tebal */
-            }
-            .receipt * { font-weight: 800; } /* bold semua sesuai permintaan */
-
-            .center { text-align:center; }
-            .bold { font-weight: 900; }
-            .small { font-size: 12px; }
-            .sep { border-top: 1px dashed #000; margin: 1.2mm 0; }
-            .row {
-              display:flex;
-              gap: 5mm;
-              align-items: baseline;
-            }
-            .muted { opacity:.85; }
-            .mt2 { margin-top: 2px; }
-            .mt4 { margin-top: 4px; }
-            .wrap { word-break: break-word; }
-            .row span:last-child { white-space: nowrap; } /* angka kanan jangan pecah */
-
-            /* Hindari putus di tengah item saat print */
-            .item { 
-            break-inside: avoid; 
-            page-break-inside: avoid; 
-            text-align: right; /* rata kiri */
-            }
-
-            /* Logo kecil di tengah */
-            .logo {
-              display:block;
-              width: 15mm;
-              height: auto;
-              margin: 0 auto 1.2mm;
-
-              /* tambahkan ini: border bulat */
-              border-radius: 9999px;              /* bikin rounded/circular */
-              box-shadow: 0 0 0 0.6mm #000;       /* “border” melingkar tanpa ubah ukuran */
-              /* alternatif kalau mau border asli:
-                border: 1px solid #000;
-                overflow: hidden;                // supaya gambar ikut membulat
-              */
-            }
-
-            /* Pastikan mulai cetak dari paling atas tanpa ruang kosong */
-            @media print {
-              html, body { margin:0; padding:0; }
-            }
-          </style>
+          <style>${buildCSS()}</style>
         </head>
-        <body>
-          ${printContents}
-          <script>
-            window.addEventListener('load', function(){
-              // Pastikan semua gambar siap (logo) lalu langsung print
-              var imgs = Array.prototype.slice.call(document.images);
-              Promise.all(imgs.map(function(img){
-                return img.complete ? Promise.resolve() : new Promise(function(res){ img.onload = img.onerror = res; });
-              })).then(function(){
-                setTimeout(function(){ window.print(); }, 50);
-              });
-            });
-          </script>
-        </body>
+        <body>${bodyInner}</body>
       </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-  }, []);
+    `,
+    [buildCSS]
+  );
 
-  // Selesai → kembali ke POS
+  // ====== PREVIEW: tulis HTML yang sama ke iframe ======
+  const renderPreview = useCallback(() => {
+    if (!previewRef.current || !lastPaidOrder) return;
+    const doc =
+      previewRef.current.contentDocument ||
+      previewRef.current.contentWindow?.document;
+    if (!doc) return;
+
+    const html = buildDocument(buildReceiptHTML());
+    doc.open();
+    doc.write(html);
+    doc.close();
+  }, [buildDocument, buildReceiptHTML, lastPaidOrder]);
+
+  useEffect(() => {
+    renderPreview();
+  }, [renderPreview]);
+
+  // ====== PRINT: pakai dokumen yang sama (1:1) ======
+  const handlePrint = useCallback(() => {
+    if (!lastPaidOrder) return;
+    const win = window.open("", "", "width=420,height=700");
+    const html = buildDocument(`
+      ${buildReceiptHTML()}
+      <script>
+        window.addEventListener('load', function(){
+          var imgs = Array.prototype.slice.call(document.images);
+          Promise.all(imgs.map(function(img){
+            return img.complete ? Promise.resolve() : new Promise(function(res){ img.onload = img.onerror = res; });
+          })).then(function(){
+            setTimeout(function(){ window.print(); }, 50);
+          });
+        });
+      </script>
+    `);
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+  }, [buildDocument, buildReceiptHTML, lastPaidOrder]);
+
+  // ====== Selesai ======
   const handleDone = useCallback(() => {
     navigate("/pos");
   }, [navigate]);
 
-  // Shortcut Enter -> Selesai
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Enter") {
@@ -148,7 +219,6 @@ const Struk = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [handleDone]);
 
-  // Pasang Navbar (back & actions)
   const actions = useMemo(
     () => [
       {
@@ -172,9 +242,7 @@ const Struk = () => {
     [handlePrint, handleDone]
   );
 
-  useNavbar({ variant: "page", title: "Struk", backTo: "/pos", actions }, [
-    actions,
-  ]);
+  useNavbar({ variant: "page", title: "Struk", backTo: "/pos", actions }, [actions]);
 
   if (!lastPaidOrder) {
     return (
@@ -211,8 +279,7 @@ const Struk = () => {
                   Cetak Struk
                 </button>
                 <button className="w-full border rounded px-3 py-2 text-left hover:bg-gray-100">
-                  Cetak Struk Dapur{" "}
-                  <span className="text-xs">*Tanpa Harga</span>
+                  Cetak Struk Dapur <span className="text-xs">*Tanpa Harga</span>
                 </button>
                 <button className="w-full border rounded px-3 py-2 text-left hover:bg-gray-100">
                   Cetak Pesanan
@@ -230,81 +297,18 @@ const Struk = () => {
         </button>
       </div>
 
-      {/* Kanan - Preview Struk: samakan aturan print (tanpa tinggi paksa) */}
+      {/* Kanan — PREVIEW 1:1 (pakai iframe berisi HTML yang sama persis dengan print) */}
       <div className="w-1/2 flex items-center justify-center bg-gray-50 p-6">
-        <div
-          ref={printRef}
-          className="receipt bg-white shadow border rounded"
+        <iframe
+          ref={previewRef}
+          title="Preview Struk"
           style={{
-            width: "58mm",
-            padding: "3mm 2mm",
+            width: "100%",
+            height: "100%",
+            border: "none",
+            background: "transparent",
           }}
-        >
-          {/* Logo di tengah */}
-          <img src={logo} alt="Logo" className="logo " />
-
-          {/* Header toko */}
-          <div className="center bold" style={{ fontSize: 14 }}>
-            TOKO SEMBAKO
-          </div>
-
-          <div className="sep" />
-
-          {/* Info tanggal & pelanggan */}
-          <div className="small">
-            <div className="row">
-              <span>
-                {new Date(lastPaidOrder.paidAt).toLocaleDateString("id-ID")}{" "}
-                {new Date(lastPaidOrder.paidAt).toLocaleTimeString("id-ID")}
-              </span>
-              <span className="muted">{lastPaidOrder.customer}</span>
-            </div>
-          </div>
-
-          <div className="sep" />
-
-          {/* Items */}
-          <div className="small">
-            {lastPaidOrder.items.map((item, idx) => (
-              <div className="item" key={idx} style={{ marginBottom: 3 }}>
-                <div className="row">
-                  <span className="wrap">{item.nama}</span>
-                  <span>
-                    Rp {(item.quantity * item.hargaJual).toLocaleString("id-ID")}
-                  </span>
-                </div>
-                <div className="row muted">
-                  <span>
-                    {item.quantity} x Rp {item.hargaJual.toLocaleString("id-ID")}
-                  </span>
-                  <span />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="sep" />
-
-          {/* Total & pembayaran */}
-          <div className="small">
-            <div className="row bold">
-              <span>Total</span>
-              <span>Rp {lastPaidOrder.total.toLocaleString("id-ID")}</span>
-            </div>
-            <div className="row mt2">
-              <span>Bayar (cash)</span>
-              <span>
-                Rp {(lastPaidOrder.paidAmount || lastPaidOrder.total).toLocaleString("id-ID")}
-              </span>
-            </div>
-            <div className="row mt2">
-              <span>Kembali</span>
-              <span>Rp {kembalian.toLocaleString("id-ID")}</span>
-            </div>
-          </div>
-
-          <div className="center small mt4 muted">Terima kasih 🙏</div>
-        </div>
+        />
       </div>
     </div>
   );
