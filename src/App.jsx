@@ -57,6 +57,7 @@ import DashboardKasir from "./pages/m_dasbord/Dasbord";
 import LaporanNeraca from "./pages/m_laporan/LaporanNeraca";
 import Laporanshift from "./pages/m_laporan/LaporanShift";
 import Riwayattransaksi from "./pages/m_laporan/Riwayattransaksi";
+import TrxSetting from "./pages/m_setting/TrxSetting";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -109,7 +110,7 @@ function App() {
                 path="/pengaturan/manajemenstaf"
                 element={<ManajemenStaf />}
               />
-              <Route path="/pengaturan/pos" element={<div>Pengaturan POS Page</div>} />
+              <Route path="/pengaturan/pos" element={<TrxSetting/>} />
               <Route path="/pengaturan/printsetting" element={<CountPrint />} />
               <Route path="/pengaturan/struksetting" element={<CountStruk />} />
               {/* Keuangan */}
