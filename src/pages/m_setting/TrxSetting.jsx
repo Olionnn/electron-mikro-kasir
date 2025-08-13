@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavbar } from "../../hooks/useNavbar";
 import { MdSave, MdSettings, MdInfo } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 /* ====== util kecil ====== */
-const cx = (...a) => a.filter(Boolean).join(" ");
 const LS_KEY = "pos.trxSettings";
 
 /* ====== komponen kecil ====== */
@@ -71,9 +71,8 @@ const Radio = ({ name, value, checked, onChange, children }) => (
   </label>
 );
 
-/* ====== halaman ====== */
 const TrxSetting = () => {
-  // state
+  const navigate = useNavigate();
   const [onlineOnly, setOnlineOnly] = useState(false);
   const [itemView, setItemView] = useState("list"); // list | grid
   const [attr, setAttr] = useState({
@@ -90,6 +89,7 @@ const TrxSetting = () => {
   });
   const [showPriceTypeDialog, setShowPriceTypeDialog] = useState(false);
   const [showProfit, setShowProfit] = useState(true);
+  const onBack = useCallback(() => navigate(-1), [navigate]);
 
   // load dari LS
   useEffect(() => {
@@ -111,7 +111,6 @@ const TrxSetting = () => {
     } catch {}
   }, []);
 
-  // simpan ke LS
   const onSave = useCallback(() => {
     const payload = {
       onlineOnly,
@@ -123,7 +122,7 @@ const TrxSetting = () => {
       saved_at: new Date().toISOString(),
     };
     localStorage.setItem(LS_KEY, JSON.stringify(payload));
-    alert("Pengaturan disimpan (dummy). Lihat localStorage 'pos.trxSettings'.");
+    onBack(); 
   }, [onlineOnly, itemView, attr, searchMode, showPriceTypeDialog, showProfit]);
 
   // useNavbar
