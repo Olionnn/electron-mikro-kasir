@@ -38,9 +38,9 @@ const Switch = ({ checked, onChange, label, note }) => (
                     }`}
                 ></span>
             </div>
-            <span className="ml-3 text-sm font-medium text-gray-700">
+            {/* <span className="ml-3 text-sm font-medium text-gray-700">
                 {checked ? "Aktif" : "Nonaktif"}
-            </span>
+            </span> */}
         </label>
     </div>
 );
