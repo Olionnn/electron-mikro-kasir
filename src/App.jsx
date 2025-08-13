@@ -54,8 +54,8 @@ import LaporanKeuanganPage from "./pages/m_laporan/DetailKeuangan";
 import ContactList from "./pages/m_bantuan/HubungiKami";
 import FeedbackForm from "./pages/m_bantuan/feedbackapk";
 import DashboardKasir from "./pages/m_dasbord/Dasbord";
-import LaporanNeraca from "./pages/m_laporan/LaporanNeraca";
-import Laporanshift from "./pages/m_laporan/LaporanShift";
+import LaporanNeraca from "./pages/m_laporan/laporanneraca";
+import Laporanshift from "./pages/m_laporan/Laporanshift";
 import Riwayattransaksi from "./pages/m_laporan/Riwayattransaksi";
 import TrxSetting from "./pages/m_setting/TrxSetting";
 
