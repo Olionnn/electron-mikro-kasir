@@ -703,3 +703,55 @@ CREATE TABLE users (
     status BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (toko_id) REFERENCES toko(id) ON DELETE CASCADE
 );
+
+
+const pembelianTable = SqfEntityTable(
+  tableName: "pembelian",
+  primaryKeyName: 'id',
+  primaryKeyType: PrimaryKeyType.integer_auto_incremental,
+  fields: [
+    SqfEntityFieldRelationship(
+      parentTable: tokoTable,
+      fieldName: 'toko_id',
+      deleteRule: DeleteRule.CASCADE,
+      isPrimaryKeyField: false,
+    ),
+    SqfEntityFieldRelationship(
+      parentTable: supplierTable,
+      fieldName: 'supplier_id',
+      deleteRule: DeleteRule.CASCADE,
+      isPrimaryKeyField: false,
+      isNotNull: false,
+    ),
+    SqfEntityField('tanggal_waktu', DbType.datetime),
+    SqfEntityField('total_harga', DbType.integer),
+    SqfEntityField('total_diskon', DbType.integer, defaultValue: 0),
+    SqfEntityField('total_pajak', DbType.integer, defaultValue: 0),
+    SqfEntityField('nominal_bayar', DbType.integer),
+    SqfEntityField('nominal_dibayar', DbType.integer),
+    SqfEntityField('nominal_biaya', DbType.integer),
+    SqfEntityField('nominal_kembalian', DbType.integer, defaultValue: 0),
+    SqfEntityField('keterangan', DbType.text),
+    SqfEntityField('no_struk', DbType.text),
+    SqfEntityField('nama_biaya', DbType.text),
+    SqfEntityField('is_use_hutang', DbType.bool, defaultValue: false),
+    SqfEntityField('created_at', DbType.datetime, isNotNull: false),
+    SqfEntityField('updated_at', DbType.datetime, isNotNull: false),
+    SqfEntityFieldRelationship(
+      parentTable: usersTable,
+      fieldName: 'created_by',
+      deleteRule: DeleteRule.CASCADE,
+      isPrimaryKeyField: false,
+      isNotNull: false,
+    ),
+    SqfEntityFieldRelationship(
+      parentTable: usersTable,
+      fieldName: 'updated_by',
+      deleteRule: DeleteRule.CASCADE,
+      isPrimaryKeyField: false,
+      isNotNull: false,
+    ),
+    SqfEntityField('sync_at', DbType.datetime, isNotNull: false),
+    SqfEntityField('status', DbType.bool, defaultValue: true),
+  ],
+);
