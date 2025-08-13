@@ -1,27 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useNavbar } from "../../hooks/useNavbar";
+
 
 export default function App() {
   const [page, setPage] = useState("neraca"); // "neraca" atau "detail"
+  const navigate = useNavigate();
 
+  const onBack = useCallback(() => navigate(-1), [navigate]);
+
+  useNavbar({
+    variant: "page",
+    title: "Riwayat Transaksi",
+    backTo: onBack,
+    actions: [],
+  });
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Topbar */}
-      <div className="bg-white border-b shadow-sm sticky top-0 z-40">
-        <div className="max-w-[1400px] mx-auto px-4 py-3 flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-800">
-            {page === "history" ? "Laporan history" : "Detail History Transaksi"}
-          </h1>
-          <button className="px-3 py-2 bg-emerald-600 text-white rounded-lg text-sm hover:bg-emerald-700">
-            Atur Lokasi
-          </button>
-        </div>
-      </div>
 
-      {/* Breadcrumb */}
-      <div className="max-w-[1400px] mx-auto px-4 py-3 text-sm text-gray-600">
-        Home / Laporan /{" "}
-        {page === "history" ? "Laporan history" : "Detail History Transaksi"}
-      </div>
 
       {/* Content */}
       <div className="max-w-[1400px] mx-auto px-4 py-6">

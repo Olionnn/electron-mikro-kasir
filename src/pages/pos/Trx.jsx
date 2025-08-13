@@ -41,11 +41,13 @@ const Transaksi = () => {
     [handlePaymentSuccess]
   );
 
+  const onBack = useCallback(() => navigate(-1), [navigate]);
+
   useNavbar(
     {
       variant: 'page',
       title: 'Transaksi',
-      backTo: '/pesanan', // sama seperti tombol kembali di header lama
+      backTo: onBack,
       actions,
     },
     [actions]

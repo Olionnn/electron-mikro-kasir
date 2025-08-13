@@ -1,5 +1,8 @@
 import React from "react";
 import { Card } from "../../component/SimpleCard";
+import { useNavbar } from "../../hooks/useNavbar";
+import { MdFilterList } from "react-icons/md";
+import { useMemo } from "react";
 
 export default function LaporanPenjualan() {
   const penjualan = [
@@ -19,17 +22,18 @@ export default function LaporanPenjualan() {
   const totalTerjual = penjualan.reduce((acc, item) => acc + item.jumlah, 0);
   const keuntungan = totalPenjualan - totalPembelian;
 
-  return (
-    <div className="min-h-screen bg-gray-100 flex">
-     
 
-      {/* Main */}
-      <div className="flex-1">
-        {/* Header */}
-        <div className="bg-white border-b shadow-sm sticky top-0 z-40">
-          <div className="max-w-[1400px] mx-auto px-4 py-3 flex items-center justify-between">
-            <h1 className="text-lg font-semibold text-gray-800">Laporan Penjualan</h1>
-            <div className="flex items-center gap-2">
+
+
+  // Implementasi useNavbar
+  useNavbar(
+    {
+      variant: "page",
+      title: "Laporan Penjualan",
+      backTo: "/laporan",
+      actions: [],
+      rightExtra: (
+        <div className="flex items-center gap-2">
               <input
                 type="date"
                 defaultValue="2025-08-13"
@@ -39,13 +43,19 @@ export default function LaporanPenjualan() {
                 Tampilkan
               </button>
             </div>
-          </div>
-        </div>
+      ),
+    },
+  );
 
-        {/* Content */}
+  return (
+    <div className="h-full bg-gray-100 flex">
+     
+
+      <div className="flex-1">
+
+
         <div className="max-w-[1400px] mx-auto px-4 lg:px-6 py-6 space-y-6">
           
-          {/* Ringkasan Atas */}
           <Card>
             <div className="grid md:grid-cols-2 gap-4">
               <div>

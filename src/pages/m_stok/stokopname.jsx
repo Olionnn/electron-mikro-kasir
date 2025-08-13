@@ -1,38 +1,26 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import Modal from "../../component/Modal";
 import { useNavbar } from "../../hooks/useNavbar";
-import { MdAdd, MdRefresh, MdListAlt, MdFilterList } from "react-icons/md";
+import { MdAdd, MdRefresh, MdFilterList } from "react-icons/md";
 
-/* ---------------- Dummy Master (stok_opname) ---------------- */
+/* --- DUMMY DATA: stok_opname master (samakan pola dengan sebelumnya) --- */
 const dummyData = [
-  {
-    id: 1,
-    toko_id: 101,
-    keterangan: "Opname Gudang A",
-    created_by: "Admin 1",
-    created_at: "2025-08-10",
-  },
-  {
-    id: 2,
-    toko_id: 102,
-    keterangan: "Opname Gudang B",
-    created_by: "Admin 2",
-    created_at: "2025-08-11",
-  },
-  {
-    id: 3,
-    toko_id: 101,
-    keterangan: "Opname Display",
-    created_by: "Admin 3",
-    created_at: "2025-08-12",
-  },
+  { id: 1, toko_id: 101, keterangan: "Opname Gudang A", created_by: "Admin 1", status: true,  created_at: "2025-08-10", updated_at: "2025-08-10" },
+  { id: 2, toko_id: 102, keterangan: "Opname Gudang B", created_by: "Admin 2", status: true,  created_at: "2025-08-11", updated_at: "2025-08-11" },
+  { id: 3, toko_id: 101, keterangan: "Opname Display",  created_by: "Admin 3", status: false, created_at: "2025-08-12", updated_at: "2025-08-12" },
 ];
 
-/** Group wrapper untuk form input */
+/* --- UI Helpers (samakan gaya dengan contoh BarangStokPage) --- */
+function Th({ children }) {
+  return <th className="px-3 py-2">{children}</th>;
+}
+function Td({ children }) {
+  return <td className="px-3 py-2">{children}</td>;
+}
 function Group({ label, children }) {
   return (
-    <label className="grid gap-1">
-      <span className="text-sm font-medium text-gray-700">{label}</span>
+    <label className="flex flex-col gap-1">
+      <span className="text-sm">{label}</span>
       {children}
     </label>
   );
@@ -44,45 +32,25 @@ export default function StokOpnamePage() {
   const [debounced, setDebounced] = useState("");
 
   const [openModal, setOpenModal] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ toko_id: "", keterangan: "", created_by: "" });
-
-  // Filter state ⬅️
   const [openFilter, setOpenFilter] = useState(false);
-  const [filterToko, setFilterToko] = useState("");
-  const [filterTanggal, setFilterTanggal] = useState("");
+  const [saving, setSaving] = useState(false);
 
-  // Detail modal
-  const [detailData, setDetailData] = useState(null);
+  // form tambah
+  const [form, setForm] = useState({
+    toko_id: "",
+    keterangan: "",
+    created_by: "",
+    status: true,
+  });
 
-  // debounce search
-  useEffect(() => {
-    const t = setTimeout(() => setDebounced(search), 300);
-    return () => clearTimeout(t);
-  }, [search]);
+  // form filter (menyerupai pola di contoh)
+  const [filterForm, setFilterForm] = useState({
+    status: "",     // "", "aktif", "nonaktif"
+    toko: "",       // filter by toko_id
+    tanggal: "",    // filter exact date (yyyy-mm-dd)
+  });
 
-  // apply filter + search
-  const filtered = useMemo(() => {
-    const q = debounced.trim().toLowerCase();
-    let data = rows;
-
-    // filter toko & tanggal ⬅️
-    if (filterToko) {
-      data = data.filter((r) => String(r.toko_id) === String(filterToko));
-    }
-    if (filterTanggal) {
-      data = data.filter((r) => r.created_at === filterTanggal);
-    }
-
-    if (!q) return data;
-    return data.filter((r) =>
-      [r.id, r.toko_id, r.keterangan, r.created_by, r.created_at]
-        .map((v) => String(v ?? "").toLowerCase())
-        .some((t) => t.includes(q))
-    );
-  }, [rows, debounced, filterToko, filterTanggal]);
-
-  // Navbar actions
+  // Navbar (disamakan: Filter, Tambah, Refresh)
   const openTambah = useCallback(() => setOpenModal(true), []);
   const doRefresh = useCallback(() => setRows((prev) => [...prev]), []);
 
@@ -91,7 +59,7 @@ export default function StokOpnamePage() {
       {
         type: "button",
         title: "Filter Opname",
-        onClick: () => setOpenFilter(true), // ⬅️ filter
+        onClick: () => setOpenFilter(true),
         className:
           "inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50",
         icon: <MdFilterList size={20} />,
@@ -121,121 +89,217 @@ export default function StokOpnamePage() {
     [actions]
   );
 
-  // save new data
-  const saveData = (e) => {
+  // debounce search
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(search), 300);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  // filter & search (pola sama dengan contohmu)
+  const filtered = useMemo(() => {
+    let data = [...rows];
+
+    // search
+    const q = debounced.trim().toLowerCase();
+    if (q) {
+      data = data.filter((r) =>
+        [
+          r.id,
+          r.toko_id,
+          r.keterangan,
+          r.created_by,
+          r.created_at,
+          r.updated_at,
+          r.status ? "aktif" : "nonaktif",
+        ]
+          .map((v) => String(v ?? "").toLowerCase())
+          .some((t) => t.includes(q))
+      );
+    }
+
+    // filter status
+    if (filterForm.status) {
+      const isActive = filterForm.status === "aktif";
+      data = data.filter((r) => r.status === isActive);
+    }
+    // filter toko
+    if (filterForm.toko) {
+      data = data.filter((r) => String(r.toko_id) === String(filterForm.toko));
+    }
+    // filter tanggal (exact)
+    if (filterForm.tanggal) {
+      data = data.filter((r) => r.created_at === filterForm.tanggal);
+    }
+
+    return data;
+  }, [rows, debounced, filterForm]);
+
+  // handlers
+  const handleAdd = async (e) => {
     e.preventDefault();
-    setSaving(true);
-    setTimeout(() => {
-      setRows((prev) => [
-        ...prev,
-        {
-          id: prev.length + 1,
-          ...form,
-          created_at: new Date().toISOString().slice(0, 10),
-        },
-      ]);
-      setForm({ toko_id: "", keterangan: "", created_by: "" });
-      setSaving(false);
+    if (!form.toko_id || !form.keterangan || !form.created_by) {
+      alert("Toko, keterangan, dan created_by wajib diisi.");
+      return;
+    }
+    try {
+      setSaving(true);
+      const today = new Date().toISOString().slice(0, 10);
+      const newItem = {
+        id: Math.max(0, ...rows.map((r) => r.id)) + 1,
+        toko_id: parseInt(form.toko_id, 10),
+        keterangan: form.keterangan,
+        created_by: form.created_by,
+        status: !!form.status,
+        created_at: today,
+        updated_at: today,
+      };
+      setRows((prev) => [newItem, ...prev]);
       setOpenModal(false);
-    }, 800);
+      setForm({ toko_id: "", keterangan: "", created_by: "", status: true });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
+  };
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilterForm((f) => ({ ...f, [name]: value }));
   };
 
   return (
     <div className="w-full flex-1 flex flex-col bg-white">
-      {/* Search */}
-      <div className="p-4 border-b">
-        <input
-          type="text"
-          placeholder="Cari opname..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
-        />
+      {/* Toolbar / Search (serupa) */}
+      <div className="p-4 md:p-6 border-b sticky top-0 bg-white z-10">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="relative w-full md:max-w-xl">
+            <input
+              type="text"
+              placeholder="Cari opname…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-4 pr-10 border border-gray-300 rounded-xl px-4 py-3"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2"
+                title="Bersihkan"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gray-200 bg-gray-50">
+              {filtered.length} entri
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Table */}
-      <div className="flex-1 overflow-auto">
-        <table className="min-w-full border-t">
-          <thead className="bg-gray-50 border-b">
-            <tr>
-              <th className="p-2 border-r">ID</th>
-              <th className="p-2 border-r">Toko ID</th>
-              <th className="p-2 border-r">Keterangan</th>
-              <th className="p-2 border-r">Created By</th>
-              <th className="p-2 border-r">Tanggal</th>
-              <th className="p-2">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((row) => (
-              <tr key={row.id} className="border-b hover:bg-gray-50">
-                <td className="p-2 border-r">{row.id}</td>
-                <td className="p-2 border-r">{row.toko_id}</td>
-                <td className="p-2 border-r">{row.keterangan}</td>
-                <td className="p-2 border-r">{row.created_by}</td>
-                <td className="p-2 border-r">{row.created_at}</td>
-                <td className="p-2">
-                  <button
-                    className="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 inline-flex items-center gap-1"
-                    onClick={() => setDetailData(row)}
-                  >
-                    <MdListAlt /> Detail
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {filtered.length === 0 && (
+      <div className="flex-1 overflow-hidden">
+        <div className="h-full overflow-auto p-4 md:p-6">
+          <table className="w-full text-sm border">
+            <thead className="bg-green-50 sticky top-0">
               <tr>
-                <td colSpan="6" className="p-4 text-center text-gray-500">
-                  Tidak ada data
-                </td>
+                <Th>ID</Th>
+                <Th>Toko</Th>
+                <Th>Keterangan</Th>
+                <Th>Dibuat Oleh</Th>
+                <Th>Status</Th>
+                <Th>Created At</Th>
+                <Th>Updated At</Th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="p-6 text-center text-gray-500">
+                    Tidak ada data.
+                  </td>
+                </tr>
+              ) : (
+                filtered.map((item) => (
+                  <tr key={item.id} className="odd:bg-gray-50">
+                    <Td>{item.id}</Td>
+                    <Td>{item.toko_id}</Td>
+                    <Td>{item.keterangan}</Td>
+                    <Td>{item.created_by}</Td>
+                    <Td>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs ${
+                          item.status
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {item.status ? "Aktif" : "Nonaktif"}
+                      </span>
+                    </Td>
+                    <Td>{item.created_at}</Td>
+                    <Td>{item.updated_at}</Td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Modal Filter */}
-      <Modal open={openFilter} title="Filter Opname" onClose={() => setOpenFilter(false)}>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            setOpenFilter(false);
-          }}
-          className="grid gap-3"
-        >
+      <Modal open={openFilter} title="Filter Stok Opname" onClose={() => setOpenFilter(false)}>
+        <form className="grid gap-3">
+          <Group label="Status">
+            <select
+              name="status"
+              value={filterForm.status}
+              onChange={handleFilterChange}
+              className="border rounded-lg px-3 py-2"
+            >
+              <option value="">Semua</option>
+              <option value="aktif">Aktif</option>
+              <option value="nonaktif">Nonaktif</option>
+            </select>
+          </Group>
           <Group label="Toko ID">
             <input
               type="number"
-              value={filterToko}
-              onChange={(e) => setFilterToko(e.target.value)}
+              name="toko"
+              value={filterForm.toko}
+              onChange={handleFilterChange}
+              className="border rounded-lg px-3 py-2"
               placeholder="cth: 101"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
             />
           </Group>
           <Group label="Tanggal (YYYY-MM-DD)">
             <input
               type="date"
-              value={filterTanggal}
-              onChange={(e) => setFilterTanggal(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+              name="tanggal"
+              value={filterForm.tanggal}
+              onChange={handleFilterChange}
+              className="border rounded-lg px-3 py-2"
             />
           </Group>
-
-          <div className="flex items-center justify-end gap-2 pt-2">
+          <div className="flex justify-end gap-2">
             <button
               type="button"
-              className="px-4 py-2 rounded-lg border hover:bg-gray-50"
+              className="px-4 py-2 rounded-lg border"
               onClick={() => {
-                setFilterToko("");
-                setFilterTanggal("");
+                setFilterForm({ status: "", toko: "", tanggal: "" });
+                setOpenFilter(false);
               }}
             >
               Reset
             </button>
             <button
-              type="submit"
-              className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+              type="button"
+              className="px-4 py-2 rounded-lg bg-green-600 text-white"
+              onClick={() => setOpenFilter(false)}
             >
               Terapkan
             </button>
@@ -244,40 +308,54 @@ export default function StokOpnamePage() {
       </Modal>
 
       {/* Modal Tambah */}
-      <Modal open={openModal} title="Tambah Opname" onClose={() => setOpenModal(false)}>
-        <form onSubmit={saveData} className="grid gap-3">
+      <Modal open={openModal} title="Tambah Stok Opname" onClose={() => setOpenModal(false)}>
+        <form className="grid gap-3" onSubmit={handleAdd}>
           <Group label="Toko ID">
             <input
               type="number"
+              name="toko_id"
               value={form.toko_id}
-              onChange={(e) => setForm({ ...form, toko_id: e.target.value })}
+              onChange={handleFormChange}
+              className="border rounded-lg px-3 py-2"
               required
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
             />
           </Group>
           <Group label="Keterangan">
             <input
               type="text"
+              name="keterangan"
               value={form.keterangan}
-              onChange={(e) => setForm({ ...form, keterangan: e.target.value })}
+              onChange={handleFormChange}
+              className="border rounded-lg px-3 py-2"
+              placeholder="Opname Gudang A"
               required
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
             />
           </Group>
-          <Group label="Created By">
+          <Group label="Dibuat Oleh">
             <input
               type="text"
+              name="created_by"
               value={form.created_by}
-              onChange={(e) => setForm({ ...form, created_by: e.target.value })}
+              onChange={handleFormChange}
+              className="border rounded-lg px-3 py-2"
+              placeholder="Nama petugas"
               required
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
             />
           </Group>
+          <label className="inline-flex items-center gap-2 mt-1">
+            <input
+              type="checkbox"
+              name="status"
+              checked={form.status}
+              onChange={handleFormChange}
+            />
+            <span className="text-sm">Aktif</span>
+          </label>
 
-          <div className="flex items-center justify-end gap-2 pt-2">
+          <div className="flex justify-end gap-2 pt-2">
             <button
               type="button"
-              className="px-4 py-2 rounded-lg border hover:bg-gray-50"
+              className="px-4 py-2 rounded-lg border"
               onClick={() => setOpenModal(false)}
             >
               Batal
@@ -285,39 +363,12 @@ export default function StokOpnamePage() {
             <button
               type="submit"
               disabled={saving}
-              className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
+              className="px-4 py-2 rounded-lg bg-green-600 text-white disabled:opacity-50"
             >
               {saving ? "Menyimpan..." : "Simpan"}
             </button>
           </div>
         </form>
-      </Modal>
-
-      {/* Modal Detail */}
-      <Modal
-        open={!!detailData}
-        title="Detail Opname"
-        onClose={() => setDetailData(null)}
-      >
-        {detailData && (
-          <div className="space-y-2">
-            <p>
-              <strong>ID:</strong> {detailData.id}
-            </p>
-            <p>
-              <strong>Toko ID:</strong> {detailData.toko_id}
-            </p>
-            <p>
-              <strong>Keterangan:</strong> {detailData.keterangan}
-            </p>
-            <p>
-              <strong>Created By:</strong> {detailData.created_by}
-            </p>
-            <p>
-              <strong>Tanggal:</strong> {detailData.created_at}
-            </p>
-          </div>
-        )}
       </Modal>
     </div>
   );

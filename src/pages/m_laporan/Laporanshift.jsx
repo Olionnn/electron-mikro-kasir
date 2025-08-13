@@ -1,18 +1,24 @@
 import React from "react";
 import { FaCalendarAlt } from "react-icons/fa";
+import { useNavbar } from "../../hooks/useNavbar";
+import { useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LaporanNeraca() {
+  const navigate = useNavigate();
+
+  const onBack = useCallback(() => navigate(-1), [navigate]);
+
+  useNavbar({
+    variant: "page",
+    title: "Laporan Shift",
+    backTo: onBack,
+    actions: [],
+  });
+
+
   return (
     <div className="bg-gray-100 min-h-screen">
-      {/* Top Bar */}
-      <div className="bg-white shadow-sm border-b flex items-center justify-between px-6 py-3">
-        <div className="text-gray-600 text-sm">
-          Toko Anda belum atur titik pin lokasi toko, ayo atur titik lokasi sekarang.
-        </div>
-        <button className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-4 py-2 rounded">
-          Atur Lokasi
-        </button>
-      </div>
 
       {/* Content */}
       <div className="max-w-7xl mx-auto p-6">

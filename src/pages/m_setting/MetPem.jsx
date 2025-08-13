@@ -18,6 +18,7 @@ const MetodePembayaran = () => {
     { name: "LikAja", checked: true },
     { name: "QRIS", checked: true },
     { name: "Transfer", checked: true },
+    { name: "Credit Card", checked: false },
   ]);
 
   const toggleMethod = (index) => {
