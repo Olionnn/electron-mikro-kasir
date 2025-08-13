@@ -7,7 +7,7 @@ import Login from "./pages/login/login";
 import Register from "./pages/register/register";
 import PosLayout from "./layouts/pos/poslayout";
 import ShellLayout from "./layouts/ShellLayout";
-import Pos from "./pages/pos/pos";
+import Pos from "./pages/pos/Pos";
 import BuatPesanan from "./pages/pesanan/AddPesanan";
 import Pesanan from "./pages/pesanan/Pesanan";
 import Review from "./pages/pesanan/Review";
@@ -121,6 +121,7 @@ function App() {
               <Route path="/laporan/laporan-keuangan" element={<LaporanKeuangan />} />
               <Route path="/laporan/laporan-keuangan/detail" element={<LaporanKeuanganPage />} />
               <Route path="/laporan/laporan-neraca" element={<LaporanNeraca/>} />
+              <Route path="/laporan/laporan-shift" element={<div>Laporan Shift Page</div>} />
 
               {/* Absensi */}
               <Route path="/absensi" element={<AbsensiPage/>} />
@@ -183,6 +184,8 @@ function App() {
 
               {/* Dasboard */}
               <Route path="/dashboard" element={<DashboardKasir/>} />
+
+
 
 
 
