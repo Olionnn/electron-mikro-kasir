@@ -1,86 +1,66 @@
 import React from "react";
-
-// Utility: join class names
-const cx = (...a) => a.filter(Boolean).join(" ");
-
-// Simple Badge component
-const Badge = ({ children, className = "" }) => (
-  <span className={cx("inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium", className)}>
-    {children}
-  </span>
-);
-
-// Simple Card component
-const Card = ({ title, action, children, className = "" }) => (
-  <div className={cx("bg-white rounded-xl border border-gray-200 shadow-sm", className)}>
-    {(title || action) && (
-      <div className="flex items-center justify-between px-4 py-3 border-b">
-        {typeof title === "string" ? (
-          <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
-        ) : (
-          title
-        )}
-        {action}
-      </div>
-    )}
-    <div className="p-4">{children}</div>
-  </div>
-);
+import { useNavbar } from "../../hooks/useNavbar";
+import { Card } from "../../component/SimpleCard";
+import { Badge } from "../../component/SimpleBadge";
 
 // Sidebar link
-const NavItem = ({ label, active, icon = null, children }) => (
-  <div className={cx(
-    "group w-full",
-    active ? "bg-emerald-700/20" : "hover:bg-emerald-700/10"
-  )}>
-    <button className="w-full flex items-center gap-3 text-left px-4 py-2.5 text-white/90">
-      <span className="w-5 h-5 grid place-items-center">{icon}</span>
-      <span className="text-sm font-medium">{label}</span>
-      {children && <span className="ml-auto text-xs opacity-70">▸</span>}
-    </button>
-    {children}
-  </div>
-);
+// const NavItem = ({ label, active, icon = null, children }) => (
+//   <div className={cx(
+//     "group w-full",
+//     active ? "bg-emerald-700/20" : "hover:bg-emerald-700/10"
+//   )}>
+//     <button className="w-full flex items-center gap-3 text-left px-4 py-2.5 text-white/90">
+//       <span className="w-5 h-5 grid place-items-center">{icon}</span>
+//       <span className="text-sm font-medium">{label}</span>
+//       {children && <span className="ml-auto text-xs opacity-70">▸</span>}
+//     </button>
+//     {children}
+//   </div>
+// );
 
 export default function DashboardKasir() {
+  // Pasang navbar global (ganti topbar manual)
+  useNavbar({
+    variant: "page",
+    title: "Dashboard",
+    actions: [
+      {
+        type: "button",
+        title: "Fitur Baru",
+        onClick: () => console.log("Fitur Baru"),
+        className: "px-3 py-1.5 border rounded-lg text-sm hover:bg-gray-50",
+        label: "Fitur Baru ▾",
+      },
+      {
+        type: "button",
+        title: "Bahasa",
+        onClick: () => console.log("Bahasa"),
+        className: "px-3 py-1.5 border rounded-lg text-sm hover:bg-gray-50",
+        label: "🇮🇩",
+      },
+      {
+        type: "button",
+        title: "Notifikasi",
+        onClick: () => console.log("Notifikasi"),
+        className: "relative w-8 h-8 grid place-items-center rounded-full bg-gray-100",
+        label: "🔔",
+      },
+      {
+        type: "span",
+        title: "User",
+        className: "hidden md:inline-flex items-center gap-2 text-sm text-gray-700",
+        label: "Narin Elvarelle",
+      },
+    ],
+  }, []); // tidak perlu deps
+
   return (
     <div className="h-screen w-screen flex flex-col bg-gray-100 overflow-hidden">
-      {/* Top bar */}
-      <div className="sticky top-0 z-40 bg-white border-b shadow-sm">
-        <div className="max-w-[1400px] mx-auto px-4">
-          <div className="flex items-center justify-between py-3">
-            <div className="flex items-center gap-3">
-              <button className="lg:hidden p-2 rounded-lg hover:bg-gray-100" aria-label="Open menu">
-                <span className="text-2xl">☰</span>
-              </button>
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-lg bg-emerald-600 grid place-items-center text-white font-bold">K</div>
-                <div className="leading-tight">
-                  <div className="font-semibold text-gray-800">KasirPintar®</div>
-                  <div className="text-[10px] text-gray-500">Web Kasir Pintar v1.031 2025-08-13</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button className="px-3 py-1.5 border rounded-lg text-sm hover:bg-gray-50">Fitur Baru ▾</button>
-              <button className="px-3 py-1.5 border rounded-lg text-sm hover:bg-gray-50">🇮🇩</button>
-              <button className="relative w-8 h-8 grid place-items-center rounded-full bg-gray-100">🔔</button>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-green-600 grid place-items-center text-white">N</div>
-                <span className="text-sm font-medium text-gray-700">Narin Elvarelle</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Top bar DIHAPUS karena sudah diganti Navbar via useNavbar */}
 
       {/* Main Content Scrollable */}
       <div className="flex-1 overflow-auto">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-6 py-4 grid grid-cols-12 gap-4">
-          {/* Sidebar placeholder if needed */}
-          {/* <aside className="hidden lg:block col-span-2">Sidebar Content</aside> */}
-
           {/* Main */}
           <main className="col-span-12">
             {/* Dismiss info banner */}
