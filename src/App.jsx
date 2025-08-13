@@ -53,6 +53,7 @@ import LaporanKeuangan from "./pages/m_laporan/LaporanKeuangan";
 import LaporanKeuanganPage from "./pages/m_laporan/DetailKeuangan";
 import ContactList from "./pages/m_bantuan/HubungiKami";
 import FeedbackForm from "./pages/m_bantuan/feedbackapk";
+import DashboardKasir from "./pages/m_dasbord/Dasbord";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -178,6 +179,9 @@ function App() {
 
               {/* Users */}
               <Route path="/users/staff" element={<ManajemenStaf/>} />
+
+              {/* Dasboard */}
+              <Route path="/dashboard" element={<DashboardKasir/>} />
 
 
 

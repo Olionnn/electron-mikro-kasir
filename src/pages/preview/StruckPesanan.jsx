@@ -14,9 +14,8 @@ const Struk = () => {
   const navigate = useNavigate();
   const [lastPaidOrder, setLastPaidOrder] = useState(null);
 
-  const previewRef = useRef(null); // iframe preview
+  const previewRef = useRef(null);
 
-  // Ambil data struk terakhir
   useEffect(() => {
     const paidOrders = JSON.parse(localStorage.getItem("paidOrders")) || [];
     if (paidOrders.length > 0) {

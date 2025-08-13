@@ -16,6 +16,7 @@ import {
 } from "react-icons/fa";
 
 const menuItems = [
+  { icon: <FaStore className="text-green-600" />, text: "Dashboard", link: "/dashboard" },  
   { icon: <FaMoneyBillWave className="text-green-600" />, text: "Manajemen", link: "/management" },
   { icon: <FaShoppingCart className="text-green-600" />, text: "Transaksi Penjualan", link: "/pos" },
   { icon: <FaTruck className="text-green-600" />, text: "Pembelian Ke Supplier", link: "/pembelian-supplier" },
