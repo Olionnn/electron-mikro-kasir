@@ -1,5 +1,6 @@
 import React from "react";
 import { MdEdit, MdLogout, MdBlock } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const ProfilePage = () => {
   return (
@@ -9,13 +10,19 @@ const ProfilePage = () => {
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
           PROFIL
         </h2>
+{/*         
         <button
           className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-base md:text-lg transition-colors"
           title="Edit Profil"
         >
           <MdEdit className="text-lg md:text-xl" />
           Edit Profil
-        </button>
+        </button> */}
+        <Link to={"/pengaturan/editprofil"} className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-base md:text-lg transition-colors">
+          <MdEdit className="text-lg md:text-xl" />
+          Edit Profil
+        </Link>
+        
       </div>
 
       {/* Avatar */}

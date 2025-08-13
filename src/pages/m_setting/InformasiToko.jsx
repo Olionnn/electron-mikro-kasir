@@ -1,5 +1,6 @@
 import React from "react";
 import { MdEdit } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const InformasiToko = () => {
   const infoToko = [
@@ -52,13 +53,21 @@ const InformasiToko = () => {
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b">
         <h1 className="text-2xl font-bold tracking-tight">INFORMASI TOKO</h1>
-        <button
+        {/* <button
           className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold transition-colors"
           title="Edit Toko"
         >
           <MdEdit className="text-lg" />
           Edit Toko
-        </button>
+        </button> */}
+        <Link to={"/pengaturan/edittoko"}
+          className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold transition-colors"
+          title="Edit Toko"
+        >
+          <MdEdit className="text-lg" />
+          Edit Toko
+        </Link>
+
       </div>
 
       {/* Avatar / Icon */}

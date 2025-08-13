@@ -31,7 +31,7 @@ import CountPrint from "./pages/m_setting/CountPrint";
 import SingkronasiDon from "./pages/m_setting/SingkronasiDon";
 import SingkronasiUp from "./pages/m_setting/SingkronasiUp";
 import EDC from "./pages/m_setting/EDC";
-import EditProfil from "./pages/m_setting/EditProfil";
+import EditParentProfile from "./pages/m_setting/EditProfil";
 import EditToko from "./pages/m_setting/EditToko";
 import MetPem from "./pages/m_setting/MetPem";
 import TokoOnline from "./pages/m_setting/TokoOnline";
@@ -100,7 +100,7 @@ function App() {
                 element={<SingkronasiUp />}
               />
               <Route path="/pengaturan/edc" element={<EDC />} />
-              <Route path="/pengaturan/editprofil" element={<EditProfil />} />
+              <Route path="/pengaturan/editprofil" element={<EditParentProfile />} />
               <Route path="/pengaturan/edittoko" element={<EditToko />} />
               <Route path="/pengaturan/metpem" element={<MetPem />} />
               <Route path="/pengaturan/tokoonline" element={<TokoOnline />} />

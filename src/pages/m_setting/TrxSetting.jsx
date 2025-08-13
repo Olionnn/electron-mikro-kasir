@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavbar } from "../../hooks/useNavbar";
 import { MdSave, MdSettings, MdInfo } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 /* ====== util kecil ====== */
 const cx = (...a) => a.filter(Boolean).join(" ");
@@ -18,22 +19,30 @@ const Section = ({ title, desc, children }) => (
 );
 
 const Switch = ({ checked, onChange, label, note }) => (
-  <div className="flex items-start justify-between gap-4">
-    <div>
-      <div className="font-medium text-gray-800">{label}</div>
-      {note && <div className="text-sm text-gray-500">{note}</div>}
+    <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+            <div className="text-sm font-semibold text-gray-800">{label}</div>
+            {note && <p className="text-sm text-gray-500 mt-1">{note}</p>}
+        </div>
+        <label className="inline-flex items-center cursor-pointer">
+            <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={checked}
+                onChange={(e) => onChange(e.target.checked)}
+            />
+            <div className="w-12 h-6 bg-gray-300 rounded-full peer-checked:bg-green-500 transition-colors relative">
+                <span
+                    className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${
+                        checked ? "translate-x-6" : ""
+                    }`}
+                ></span>
+            </div>
+            <span className="ml-3 text-sm font-medium text-gray-700">
+                {checked ? "Aktif" : "Nonaktif"}
+            </span>
+        </label>
     </div>
-    <label className="inline-flex relative items-center cursor-pointer">
-      <input
-        type="checkbox"
-        className="sr-only peer"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-      />
-      <div className="w-14 h-7 bg-gray-200 rounded-full peer-checked:bg-green-500 transition-colors"></div>
-      <span className="ml-3 text-sm text-gray-700">{checked ? "Aktif" : "Nonaktif"}</span>
-    </label>
-  </div>
 );
 
 const Check = ({ checked, onChange, children }) => (
@@ -133,13 +142,13 @@ const TrxSetting = () => {
           icon: <MdSave className="text-lg" />,
           label: "Simpan",
         },
-        {
-          type: "button",
-          title: "Info",
-          onClick: () => console.log("info"),
-          className: "w-10 h-10 inline-flex items-center justify-center rounded-full hover:bg-gray-100",
-          icon: <MdInfo className="text-2xl text-gray-700" />,
-        },
+        // {
+        //   type: "button",
+        //   title: "Info",
+        //   onClick: () => console.log("info"),
+        //   className: "w-10 h-10 inline-flex items-center justify-center rounded-full hover:bg-gray-100",
+        //   icon: <MdInfo className="text-2xl text-gray-700" />,
+        // },
       ],
     },
     [onSave]
@@ -162,9 +171,6 @@ const TrxSetting = () => {
             <p className="text-sm text-gray-500 mt-1">
               Sesuaikan perilaku transaksi, tampilan item, dan preferensi pencarian.
             </p>
-          </div>
-          <div className="hidden md:flex items-center gap-2 text-emerald-700">
-            <MdSettings className="text-2xl" />
           </div>
         </div>
 
@@ -253,12 +259,16 @@ const TrxSetting = () => {
           </Check>
           <div className="mt-4">
             <p className="text-sm font-medium text-gray-700">Mode Stok Tracking</p>
-            <button
+            {/* <button
               className="w-full border border-gray-300 rounded-xl py-2.5 px-4 mt-2 text-left hover:bg-gray-50"
               onClick={() => alert("Modal pengaturan stok tracking (dummy)")}
             >
               Atur Mode Stok Tracking
-            </button>
+            </button> */}
+            <Link to={"/pengaturan/edittoko"} className="w-full block border border-gray-300 rounded-xl py-2.5 px-4 mt-2 text-left hover:bg-gray-50">
+                Atur Mode Stok Tracking
+            </Link>
+
           </div>
         </Section>
 
