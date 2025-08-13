@@ -39,6 +39,8 @@ export default function LaporanPage() {
     { icon: "💼", title: "Laporan Keuangan" },
     { icon: "📊", title: "Laporan Penjualan" },
     { icon: "🛒", title: "Laporan Pembelian" },
+    { icon: "📈", title: "Laporan Neraca" },
+    { icon: "⏳", title: "Laporan Shift" },
     // { icon: "📄", title: "Laporan Lebih Lengkap" },
   ];
 
