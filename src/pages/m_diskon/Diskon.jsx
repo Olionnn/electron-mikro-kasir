@@ -27,9 +27,7 @@ const emptyDiskon = {
 };
 
 export default function DiskonPage() {
-  // --- data state
   const [discounts, setDiscounts] = useState([
-    // dummy fallback (akan diganti fetch jika electronAPI tersedia)
     {
       id: 1,
       toko_id: 10,
