@@ -123,6 +123,7 @@ function App() {
               <Route path="/laporan/laporan-keuangan/detail" element={<LaporanKeuanganPage />} />
               <Route path="/laporan/laporan-neraca" element={<LaporanNeraca/>} />
               <Route path="/laporan/laporan-shift" element={<Laporanshift/>} />
+              <Route path="/laporan/riwayat-transaksi" element={<div>Riwayat Transaksi Page</div>} />
 
               {/* Absensi */}
               <Route path="/absensi" element={<AbsensiPage/>} />

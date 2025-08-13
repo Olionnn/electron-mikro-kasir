@@ -41,7 +41,8 @@ export default function LaporanPage() {
     { icon: "🛒", title: "Laporan Pembelian" },
     { icon: "📈", title: "Laporan Neraca" },
     { icon: "⏳", title: "Laporan Shift" },
-    // { icon: "📄", title: "Laporan Lebih Lengkap" },
+    { icon: "📅", title: "Riwayat Transaksi" },
+,
   ];
 
   return (

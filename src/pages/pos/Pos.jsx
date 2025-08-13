@@ -8,7 +8,7 @@ import { HiOutlineQuestionMarkCircle } from "react-icons/hi2";
 import PosItemCard from "../../component/positemcard";
 import PosCartItem from "../../component/poscartitem";
 import { useNavbar } from "../../hooks/useNavbar";
-import { IoSearch } from "react-icons/io5";
+import { IoSearch, IoBarcode, IoReceiptOutline } from "react-icons/io5";
 
 /* ---------------- storage helpers ---------------- */
 const STORAGE_KEY_ITEMS = "pos.barangList";
@@ -58,6 +58,8 @@ const Pos = () => {
   const [search, setSearch] = useState("");
   const [debounced, setDebounced] = useState("");
   const [cart, setCart] = useState(() => loadCart());
+  const [selectedIcon, setSelectedIcon] = useState("search"); 
+
   const totalPrice = useMemo(
     () => cart.reduce((sum, it) => sum + (it.hargaJual * it.quantity), 0),
     [cart]
@@ -74,6 +76,19 @@ const Pos = () => {
 
   // Navbar
   const onCancel = useCallback(() => navigate(-1), [navigate]);
+
+  const renderSelectedIcon = () => {
+    switch (selectedIcon) {
+      case "search":
+        return <IoSearch size={30} className="text-gray-500" />;
+      case "barcode":
+        return <IoBarcode size={30} className="text-gray-500" />;
+      case "receipt":
+        return <IoReceiptOutline size={30} className="text-gray-500" />;
+      default:
+        return <MdOutlineSearch size={30} className="text-gray-500" />;
+    }
+  };
 
   useNavbar(
     {
@@ -189,34 +204,52 @@ const Pos = () => {
       {/* LEFT: items */}
       <div className="w-3/5 border-2 border-gray-100 bg-white p-8 flex flex-col gap-6 overflow-y-auto">
         {/* top tools */}
-        <div className="flex items-center gap-4">
-          <button className="bg-green-600 text-white p-3 rounded-full" title="Cari">
-            <IoSearch />
-          </button>
-          <button className="bg-white text-black p-3 rounded-full" title="Cari">
-            
-          </button>
-          <button className="bg-white text-black p-3 rounded-full" title="Cari">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 16 16">
-              <path fill="currentColor" d="m15.7 14.3l-4.2-4.2c-.2-.2-.5-.3-.8-.3c.8-1 1.3-2.4 1.3-3.8c0-3.3-2.7-6-6-6S0 2.7 0 6s2.7 6 6 6c1.4 0 2.8-.5 3.8-1.4c0 .3 0 .6.3.8l4.2 4.2c.2.2.5.3.7.3s.5-.1.7-.3c.4-.3.4-.9 0-1.3zM6 10.5c-2.5 0-4.5-2-4.5-4.5s2-4.5 4.5-4.5s4.5 2 4.5 4.5s-2 4.5-4.5 4.5z"/>
-            </svg>
-          </button>
+         <div className="flex items-center gap-4">
+            <button
+              className={`p-3 rounded-full ${
+                selectedIcon === "search" ? "bg-green-600 text-white" : "bg-white text-black"
+              }`}
+              title="Cari"
+              onClick={() => setSelectedIcon("search")}
+            >
+              <IoSearch size={20} />
+            </button>
 
-          <div className="flex items-center flex-1 border px-6 py-3 rounded-full text-lg">
-            <MdOutlineSearch size={30} />
-            <input
-              type="text"
-              placeholder="Cari Barang / Kode"
-              className="flex-1 outline-none"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <button
+              className={`p-3 rounded-full ${
+                selectedIcon === "barcode" ? "bg-green-600 text-white" : "bg-white text-black"
+              }`}
+              title="Barcode"
+              onClick={() => setSelectedIcon("barcode")}
+            >
+              <IoBarcode size={20} />
+            </button>
+
+            <button
+              className={`p-3 rounded-full ${
+                selectedIcon === "receipt" ? "bg-green-600 text-white" : "bg-white text-black"
+              }`}
+              title="Receipt"
+              onClick={() => setSelectedIcon("receipt")}
+            >
+              <IoReceiptOutline size={20} />
+            </button>
+
+            <div className="flex items-center flex-1 border px-6 py-3 rounded-full text-lg">
+              {renderSelectedIcon()}
+              <input
+                type="text"
+                placeholder="Cari Barang / Kode"
+                className="flex-1 outline-none ml-2"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+
+            <button className="flex gap-3 text-2xl items-center" onClick={handleRefresh}>
+              Refresh <MdOutlineRefresh size={30} />
+            </button>
           </div>
-
-          <button className="flex gap-3 text-2xl" onClick={handleRefresh}>
-            Refresh <MdOutlineRefresh size={30} />
-          </button>
-        </div>
 
         <div className="flex gap-4">
           <button className="bg-green-100 px-6 py-3 rounded-lg text-lg">Semua</button>
