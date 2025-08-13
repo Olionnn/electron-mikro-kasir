@@ -56,6 +56,7 @@ import FeedbackForm from "./pages/m_bantuan/feedbackapk";
 import DashboardKasir from "./pages/m_dasbord/Dasbord";
 import LaporanNeraca from "./pages/m_laporan/laporanneraca";
 import Laporanshift from "./pages/m_laporan/Laporanshift";
+import Riwayattransaksi from "./pages/m_laporan/Riwayattransaksi";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -123,7 +124,8 @@ function App() {
               <Route path="/laporan/laporan-keuangan/detail" element={<LaporanKeuanganPage />} />
               <Route path="/laporan/laporan-neraca" element={<LaporanNeraca/>} />
               <Route path="/laporan/laporan-shift" element={<Laporanshift/>} />
-              <Route path="/laporan/riwayat-transaksi" element={<div>Riwayat Transaksi Page</div>} />
+              <Route path="/laporan/riwayat-transaksi" element={<Riwayattransaksi/>} />
+            
 
               {/* Absensi */}
               <Route path="/absensi" element={<AbsensiPage/>} />
