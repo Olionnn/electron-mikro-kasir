@@ -149,16 +149,28 @@ const PembeliSuplier = () => {
   const [lineEditOpen, setLineEditOpen] = useState(false);
   const [lineForm, setLineForm] = useState({
     id: null,
-    harga: 0,          // harga beli per item
-    diskonPerQty: 0,   // diskon rupiah per item
-    note: "",          // catatan singkat
+    harga: 0,              // harga beli per item
+    discountType: "rp",    // 'rp' | 'pct'
+    diskonPerQtyRp: 0,     // nominal Rp per item
+    diskonPerQtyPct: 0,    // persen per item
+    note: "",
   });
+  
+  // helper hitung diskon per item sesuai tipe
+  const calcPerItemDiscount = (harga, type, rp, pct) => {
+    const h = Math.max(0, Number(harga || 0));
+    if (type === "pct") return Math.min(h, (h * Math.max(0, Number(pct || 0))) / 100);
+    return Math.min(h, Math.max(0, Number(rp || 0)));
+  };
+  
 
   const openLineEdit = (row) => {
     setLineForm({
       id: row.id,
       harga: Number(row.harga || 0),
-      diskonPerQty: Number(row.diskonPerQty || 0),
+      discountType: row.discountType || "rp",
+      diskonPerQtyRp: Number(row.diskonPerQtyRp || row.diskonPerQty || 0), // fallback ke field lama kalau ada
+      diskonPerQtyPct: Number(row.diskonPerQtyPct || 0),
       note: row.note || "",
     });
     setLineEditOpen(true);
@@ -172,7 +184,9 @@ const PembeliSuplier = () => {
           ? {
               ...p,
               harga: Math.max(0, Number(lineForm.harga || 0)),
-              diskonPerQty: Math.max(0, Number(lineForm.diskonPerQty || 0)),
+              discountType: lineForm.discountType,         // 'rp' | 'pct'
+              diskonPerQtyRp: Math.max(0, Number(lineForm.diskonPerQtyRp || 0)),
+              diskonPerQtyPct: Math.max(0, Number(lineForm.diskonPerQtyPct || 0)),
               note: lineForm.note || "",
             }
           : p
@@ -180,7 +194,6 @@ const PembeliSuplier = () => {
     );
     setLineEditOpen(false);
   };
-
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     let data = items;
@@ -367,6 +380,7 @@ const PembeliSuplier = () => {
     clearCurrent();
   }, []);
 
+  
   useNavbar(
     {
       variant: "page",
@@ -665,10 +679,11 @@ const PembeliSuplier = () => {
                   </div>
                   <div className="text-xs text-gray-500">
                     {row.kode} • {rp(row.harga)}
-                    {Number(row.diskonPerQty || 0) > 0 && (
-                      <span className="ml-2 text-emerald-700">
-                        • Diskon/qty: {rp(row.diskonPerQty)}
-                      </span>
+                    {row.discountType === "pct" && Number(row.diskonPerQtyPct || 0) > 0 && (
+                      <span className="ml-2 text-emerald-700">• Diskon/qty: {row.diskonPerQtyPct}%</span>
+                    )}
+                    {row.discountType !== "pct" && Number(row.diskonPerQtyRp || 0) > 0 && (
+                      <span className="ml-2 text-emerald-700">• Diskon/qty: {rp(row.diskonPerQtyRp)}</span>
                     )}
                     {row.note && <span className="ml-2 text-gray-400">• {row.note}</span>}
                   </div>
@@ -979,100 +994,127 @@ const PembeliSuplier = () => {
         </div>
       )}
 
-
 {lineEditOpen && (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
     <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-5">
       <div className="flex items-center justify-between mb-3">
         <div className="font-semibold text-lg">Edit Baris</div>
-        <button
-          onClick={() => setLineEditOpen(false)}
-          className="w-8 h-8 rounded-full hover:bg-gray-100"
-          title="Tutup"
-        >
-          ✕
-        </button>
+        <button onClick={() => setLineEditOpen(false)} className="w-8 h-8 rounded-full hover:bg-gray-100" title="Tutup">✕</button>
       </div>
 
       <div className="space-y-3">
+        {/* Harga per item */}
         <label className="grid gap-1">
           <span className="text-sm">Harga Beli (per item)</span>
           <input
             type="number"
             min={0}
             value={lineForm.harga}
-            onChange={(e) =>
-              setLineForm((f) => ({ ...f, harga: e.target.value }))
-            }
+            onChange={(e) => setLineForm((f) => ({ ...f, harga: e.target.value }))}
             className="border rounded-lg px-3 py-2"
             placeholder="0"
           />
         </label>
 
-        <label className="grid gap-1">
-          <span className="text-sm">Diskon per Jumlah (Rp / item)</span>
-          <input
-            type="number"
-            min={0}
-            value={lineForm.diskonPerQty}
-            onChange={(e) =>
-              setLineForm((f) => ({ ...f, diskonPerQty: e.target.value }))
-            }
-            className="border rounded-lg px-3 py-2"
-            placeholder="0"
-          />
-          <span className="text-xs text-gray-500">
-            Contoh: isi 500 berarti setiap item didiskon Rp 500.
-          </span>
-        </label>
+        {/* PILIHAN TIPE DISKON */}
+        <div className="grid gap-2">
+          <span className="text-sm">Diskon per Jumlah (per item)</span>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              className={`px-3 py-1.5 rounded-lg border ${lineForm.discountType === "rp" ? "bg-emerald-600 text-white border-emerald-600" : "bg-white hover:bg-gray-50"}`}
+              onClick={() => setLineForm((f) => ({ ...f, discountType: "rp" }))}
+              title="Diskon Rupiah per item"
+            >
+              Rp
+            </button>
+            <button
+              type="button"
+              className={`px-3 py-1.5 rounded-lg border ${lineForm.discountType === "pct" ? "bg-emerald-600 text-white border-emerald-600" : "bg-white hover:bg-gray-50"}`}
+              onClick={() => setLineForm((f) => ({ ...f, discountType: "pct" }))}
+              title="Diskon Persen per item"
+            >
+              %
+            </button>
+          </div>
 
+          {/* Input mengikuti tipe */}
+          {lineForm.discountType === "pct" ? (
+            <label className="grid gap-1">
+              <input
+                type="number"
+                min={0}
+                max={100}
+                value={lineForm.diskonPerQtyPct}
+                onChange={(e) => setLineForm((f) => ({ ...f, diskonPerQtyPct: e.target.value }))}
+                className="border rounded-lg px-3 py-2"
+                placeholder="0"
+              />
+              <span className="text-xs text-gray-500">Contoh: 10 berarti diskon 10% dari harga per item.</span>
+            </label>
+          ) : (
+            <label className="grid gap-1">
+              <input
+                type="number"
+                min={0}
+                value={lineForm.diskonPerQtyRp}
+                onChange={(e) => setLineForm((f) => ({ ...f, diskonPerQtyRp: e.target.value }))}
+                className="border rounded-lg px-3 py-2"
+                placeholder="0"
+              />
+              <span className="text-xs text-gray-500">Contoh: 500 berarti diskon Rp500 per item.</span>
+            </label>
+          )}
+        </div>
+
+        {/* Catatan */}
         <label className="grid gap-1">
           <span className="text-sm">Catatan Singkat</span>
           <input
             type="text"
             value={lineForm.note}
-            onChange={(e) =>
-              setLineForm((f) => ({ ...f, note: e.target.value }))
-            }
+            onChange={(e) => setLineForm((f) => ({ ...f, note: e.target.value }))}
             className="border rounded-lg px-3 py-2"
             placeholder="Opsional"
           />
         </label>
 
-        {/* pratinjau subtotal baris (opsional) */}
+        {/* Pratinjau subtotal baris */}
         <div className="p-3 bg-gray-50 rounded-lg text-sm">
           {(() => {
-            const qty = (cart.find((c) => c.id === lineForm.id)?.qty) || 1;
-            const harga = Math.max(0, Number(lineForm.harga || 0));
-            const diskon = Math.max(0, Number(lineForm.diskonPerQty || 0));
-            const sub = Math.max(0, qty * (harga - diskon));
+            const row = cart.find((c) => c.id === lineForm.id);
+            const qty = row ? Math.max(1, Number(row.qty || 1)) : 1;
+            const perItemDisc = calcPerItemDiscount(
+              lineForm.harga,
+              lineForm.discountType,
+              lineForm.diskonPerQtyRp,
+              lineForm.diskonPerQtyPct
+            );
+            const perItemAfter = Math.max(0, Number(lineForm.harga || 0) - perItemDisc);
+            const subtotal = Math.max(0, qty * perItemAfter);
             return (
-              <div className="flex items-center justify-between">
-                <span>Subtotal Baris (estimasi)</span>
-                <span className="font-semibold">{rp(sub)}</span>
-              </div>
+              <>
+                <div className="flex justify-between"><span>Diskon/Item</span><span className="font-medium">{rp(perItemDisc)}</span></div>
+                <div className="flex justify-between"><span>Harga/Item setelah diskon</span><span className="font-medium">{rp(perItemAfter)}</span></div>
+                <div className="flex justify-between"><span>Qty</span><span className="font-medium">{qty}</span></div>
+                <div className="flex justify-between border-t pt-2 mt-2">
+                  <span>Subtotal Baris (estimasi)</span>
+                  <span className="font-semibold">{rp(subtotal)}</span>
+                </div>
+              </>
             );
           })()}
         </div>
 
         <div className="flex justify-end gap-2 pt-1">
-          <button
-            className="px-4 py-2 rounded-lg border"
-            onClick={() => setLineEditOpen(false)}
-          >
-            Batal
-          </button>
-          <button
-            className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
-            onClick={saveLineEdit}
-          >
-            Simpan
-          </button>
+          <button className="px-4 py-2 rounded-lg border" onClick={() => setLineEditOpen(false)}>Batal</button>
+          <button className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700" onClick={saveLineEdit}>Simpan</button>
         </div>
       </div>
     </div>
   </div>
 )}
+
 
 
     </div>
