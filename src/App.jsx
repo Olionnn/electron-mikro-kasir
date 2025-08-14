@@ -59,7 +59,11 @@ import Laporanshift from "./pages/m_laporan/Laporanshift";
 import Riwayattransaksi from "./pages/m_laporan/Riwayattransaksi";
 import TrxSetting from "./pages/m_setting/TrxSetting";
 import DraftPembelianPage from "./pages/m_pembelisupplier/Draft";
+<<<<<<< Updated upstream
 import ManagementRole from "./pages/m_setting/ManajemenRole";
+=======
+import PromosiPage from "./pages/m_promosi/Promosi";
+>>>>>>> Stashed changes
 
 function App() {
   const [count, setCount] = useState(0);
@@ -131,6 +135,7 @@ function App() {
               <Route path="/laporan/laporan-neraca" element={<LaporanNeraca/>} />
               <Route path="/laporan/laporan-shift" element={<Laporanshift/>} />
               <Route path="/laporan/riwayat-transaksi" element={<Riwayattransaksi/>} />
+
             
 
               {/* Absensi */}
@@ -156,7 +161,7 @@ function App() {
               <Route path="/barang-jasa" element={<BarangAtwJasa />} />
               <Route path="/barang/tambah" element={<AddEditBarang />} />
               <Route path="/barang/edit/:id" element={<AddEditBarang />} />
-              <Route path="/promosi" element={<></>}/>
+              <Route path="/promosi" element={<PromosiPage/>}/>
 
 
               {/* Toko Online */}

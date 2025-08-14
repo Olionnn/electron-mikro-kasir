@@ -2,7 +2,6 @@ import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useNavbar } from "../../hooks/useNavbar";
 
-
 export default function App() {
   const [page, setPage] = useState("neraca"); // "neraca" atau "detail"
   const navigate = useNavigate();
@@ -15,10 +14,9 @@ export default function App() {
     backTo: onBack,
     actions: [],
   });
+
   return (
     <div className="min-h-screen bg-gray-100">
-
-
       {/* Content */}
       <div className="max-w-[1400px] mx-auto px-4 py-6">
         {page === "neraca" ? (
@@ -62,6 +60,7 @@ function LaporanNeraca({ onDetailClick }) {
         <thead className="bg-gray-50 border-b">
           <tr>
             <th className="px-3 py-2 text-left">No</th>
+            <th className="px-3 py-2 text-left">Kode Transaksi</th>
             <th className="px-3 py-2 text-left">Tanggal</th>
             <th className="px-3 py-2 text-left">Keterangan</th>
             <th className="px-3 py-2 text-left">Nominal</th>
@@ -71,6 +70,7 @@ function LaporanNeraca({ onDetailClick }) {
         <tbody>
           <tr className="border-b">
             <td className="px-3 py-2">1</td>
+            <td className="px-3 py-2">TRX-001</td>
             <td className="px-3 py-2">2025-08-13</td>
             <td className="px-3 py-2">Transaksi Penjualan</td>
             <td className="px-3 py-2">Rp 500.000</td>
@@ -104,6 +104,17 @@ function DetailHistoryTransaksi({ onBackClick }) {
         </button>
       </div>
 
+      {/* Info Transaksi */}
+      <div className="mb-4">
+        <p className="text-sm">
+          <span className="font-semibold">Kode Transaksi:</span> TRX-001
+        </p>
+        <p className="text-sm">
+          <span className="font-semibold">Tanggal:</span> 2025-08-13
+        </p>
+      </div>
+
+      {/* Tabel Produk */}
       <table className="w-full border text-sm">
         <thead className="bg-gray-50 border-b">
           <tr>
