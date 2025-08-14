@@ -3,9 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useNavbar } from "../../hooks/useNavbar";
 import {
   FiSearch,
-  FiMenu,
-  FiPlus,
   FiFilter,
+  FiPlus,
   FiTrash2,
   FiX,
   FiMinus,
@@ -14,7 +13,6 @@ import {
 } from "react-icons/fi";
 import { HiArrowsUpDown } from "react-icons/hi2";
 import { MdRefresh } from "react-icons/md";
-import { TbFileBarcode } from "react-icons/tb";
 import { BiBarcode } from "react-icons/bi";
 
 const LS_ITEMS = "pembelian.items";
@@ -23,65 +21,65 @@ const LS_LIST = "pembelian.list";
 const LS_CURRENT = "pembelian.current";
 
 const seedItems = [
-{ id: 302, kode: "GL1L", nama: "Gula 1KG", stok: 25, hargaBeli: 12000 },
-{ id: 303, kode: "GL5K", nama: "Gula 5KG", stok: 15, hargaBeli: 55000 },
-{ id: 304, kode: "TLPK", nama: "Telur Ayam 1KG", stok: 20, hargaBeli: 23000 },
-{ id: 305, kode: "TLPB", nama: "Telur Bebek 1KG", stok: 12, hargaBeli: 27000 },
-{ id: 306, kode: "MNY2L", nama: "Minyak 2L", stok: 18, hargaBeli: 34000 },
-{ id: 307, kode: "MNY5L", nama: "Minyak 5L", stok: 10, hargaBeli: 85000 },
-{ id: 308, kode: "KCPR", nama: "Kecap Refill", stok: 30, hargaBeli: 3500 },
-{ id: 309, kode: "SKM", nama: "Susu Kental Manis", stok: 40, hargaBeli: 8000 },
-{ id: 310, kode: "SKM2", nama: "Susu Kental Manis 2KG", stok: 15, hargaBeli: 15000 },
-{ id: 311, kode: "MSG", nama: "MSG 500gr", stok: 50, hargaBeli: 5000 },
-{ id: 312, kode: "MSG1", nama: "MSG 1KG", stok: 20, hargaBeli: 9000 },
-{ id: 313, kode: "TMBH", nama: "Tepung Terigu 1KG", stok: 25, hargaBeli: 12000 },
-{ id: 314, kode: "TMB5", nama: "Tepung Terigu 5KG", stok: 10, hargaBeli: 55000 },
-{ id: 315, kode: "KRN1", nama: "Kornet 1KG", stok: 15, hargaBeli: 45000 },
-{ id: 316, kode: "KRN2", nama: "Kornet 2KG", stok: 8, hargaBeli: 85000 },
-{ id: 317, kode: "SRP1", nama: "Sirup 1L", stok: 20, hargaBeli: 25000 },
-{ id: 318, kode: "SRP2", nama: "Sirup 2L", stok: 10, hargaBeli: 45000 },
-{ id: 319, kode: "KOP1", nama: "Kopi Sachet", stok: 100, hargaBeli: 2000 },
-{ id: 320, kode: "KOP2", nama: "Kopi Bubuk 1KG", stok: 15, hargaBeli: 60000 },
-{ id: 321, kode: "THT1", nama: "Teh Celup", stok: 50, hargaBeli: 5000 },
-{ id: 322, kode: "THT2", nama: "Teh Bubuk 1KG", stok: 20, hargaBeli: 40000 },
-{ id: 323, kode: "MKR1", nama: "Margarin 1KG", stok: 15, hargaBeli: 25000 },
-{ id: 324, kode: "MKR2", nama: "Margarin 2KG", stok: 10, hargaBeli: 45000 },
-{ id: 325, kode: "CKL1", nama: "Coklat Bubuk 1KG", stok: 10, hargaBeli: 70000 },
-{ id: 326, kode: "CKL2", nama: "Coklat Bubuk 2KG", stok: 5, hargaBeli: 130000 },
-{ id: 327, kode: "BHN1", nama: "Bumbu Nasi Goreng", stok: 30, hargaBeli: 5000 },
-{ id: 328, kode: "BHN2", nama: "Bumbu Ayam Goreng", stok: 25, hargaBeli: 6000 },
-{ id: 329, kode: "BHN3", nama: "Bumbu Soto", stok: 20, hargaBeli: 7000 },
-{ id: 330, kode: "BHN4", nama: "Bumbu Rendang", stok: 15, hargaBeli: 8000 },
-{ id: 331, kode: "BHN5", nama: "Bumbu Kari", stok: 10, hargaBeli: 9000 },
-{ id: 332, kode: "BHN6", nama: "Bumbu Opor", stok: 15, hargaBeli: 8500 },
-{ id: 333, kode: "BHN7", nama: "Bumbu Pecel", stok: 20, hargaBeli: 7500 },
-{ id: 334, kode: "BHN8", nama: "Bumbu Rawon", stok: 12, hargaBeli: 9500 },
-{ id: 335, kode: "BHN9", nama: "Bumbu Sate", stok: 18, hargaBeli: 8000 },
-{ id: 336, kode: "BHN10", nama: "Bumbu Sambal Goreng", stok: 25, hargaBeli: 7000 },
-{ id: 337, kode: "BHN11", nama: "Bumbu Soto Ayam", stok: 30, hargaBeli: 6500 },
-{ id: 338, kode: "BHN12", nama: "Bumbu Gulai", stok: 20, hargaBeli: 9000 },
-{ id: 339, kode: "BHN13", nama: "Bumbu Ayam Bakar", stok: 15, hargaBeli: 8500 },
-{ id: 340, kode: "BHN14", nama: "Bumbu Ikan Bakar", stok: 10, hargaBeli: 9500 },
-{ id: 341, kode: "BHN15", nama: "Bumbu Rica-Rica", stok: 12, hargaBeli: 8000 },
-{ id: 342, kode: "BHN16", nama: "Bumbu Ayam Goreng Kalasan", stok: 18, hargaBeli: 7500 },
-{ id: 343, kode: "BHN17", nama: "Bumbu Ayam Goreng Kremes", stok: 25, hargaBeli: 7000 },
-{ id: 344, kode: "BHN18", nama: "Bumbu Ayam Goreng Lengkuas", stok: 30, hargaBeli: 6500 },
-{ id: 345, kode: "BHN19", nama: "Bumbu Ayam Goreng Serundeng", stok: 20, hargaBeli: 9000 },
-{ id: 346, kode: "BHN20", nama: "Bumbu Ayam Goreng Padang", stok: 15, hargaBeli: 8500 },
-{ id: 347, kode: "BHN21", nama: "Bumbu Ayam Goreng Betutu", stok: 10, hargaBeli: 9500 },
-{ id: 348, kode: "BHN22", nama: "Bumbu Ayam Goreng Bali", stok: 12, hargaBeli: 8000 },
-{ id: 349, kode: "BHN23", nama: "Bumbu Ayam Goreng Taliwang", stok: 18, hargaBeli: 7500 },
-{ id: 350, kode: "BHN24", nama: "Bumbu Ayam Goreng Bumbu Rujak", stok: 25, hargaBeli: 7000 },
-{ id: 351, kode: "BHN25", nama: "Bumbu Ayam Goreng Bumbu Kuning", stok: 30, hargaBeli: 6500 },
-{ id: 352, kode: "BHN26", nama: "Bumbu Ayam Goreng Bumbu Merah", stok: 20, hargaBeli: 9000 },
-{ id: 353, kode: "BHN27", nama: "Bumbu Ayam Goreng Bumbu Hitam", stok: 15, hargaBeli: 8500 },
-{ id: 354, kode: "BHN28", nama: "Bumbu Ayam Goreng Bumbu Putih", stok: 10, hargaBeli: 9500 },
-{ id: 355, kode: "BHN29", nama: "Bumbu Ayam Goreng Bumbu Hijau", stok: 12, hargaBeli: 8000 },
-{ id: 356, kode: "BHN30", nama: "Bumbu Ayam Goreng Bumbu Ungu", stok: 18, hargaBeli: 7500 },
-{ id: 357, kode: "BHN31", nama: "Bumbu Ayam Goreng Bumbu Biru", stok: 25, hargaBeli: 7000 },
-{ id: 358, kode: "BHN32", nama: "Bumbu Ayam Goreng Bumbu Coklat", stok: 30, hargaBeli: 6500 },
-{ id: 359, kode: "BHN33", nama: "Bumbu Ayam Goreng Bumbu Pelangi", stok: 20, hargaBeli: 9000 },
-{ id: 360, kode: "BHN34", nama: "Bumbu Ayam Goreng Bumbu Nusantara", stok: 15, hargaBeli: 8500 },
+  { id: 302, kode: "GL1L", nama: "Gula 1KG", stok: 25, hargaBeli: 12000 },
+  { id: 303, kode: "GL5K", nama: "Gula 5KG", stok: 15, hargaBeli: 55000 },
+  { id: 304, kode: "TLPK", nama: "Telur Ayam 1KG", stok: 20, hargaBeli: 23000 },
+  { id: 305, kode: "TLPB", nama: "Telur Bebek 1KG", stok: 12, hargaBeli: 27000 },
+  { id: 306, kode: "MNY2L", nama: "Minyak 2L", stok: 18, hargaBeli: 34000 },
+  { id: 307, kode: "MNY5L", nama: "Minyak 5L", stok: 10, hargaBeli: 85000 },
+  { id: 308, kode: "KCPR", nama: "Kecap Refill", stok: 30, hargaBeli: 3500 },
+  { id: 309, kode: "SKM", nama: "Susu Kental Manis", stok: 40, hargaBeli: 8000 },
+  { id: 310, kode: "SKM2", nama: "Susu Kental Manis 2KG", stok: 15, hargaBeli: 15000 },
+  { id: 311, kode: "MSG", nama: "MSG 500gr", stok: 50, hargaBeli: 5000 },
+  { id: 312, kode: "MSG1", nama: "MSG 1KG", stok: 20, hargaBeli: 9000 },
+  { id: 313, kode: "TMBH", nama: "Tepung Terigu 1KG", stok: 25, hargaBeli: 12000 },
+  { id: 314, kode: "TMB5", nama: "Tepung Terigu 5KG", stok: 10, hargaBeli: 55000 },
+  { id: 315, kode: "KRN1", nama: "Kornet 1KG", stok: 15, hargaBeli: 45000 },
+  { id: 316, kode: "KRN2", nama: "Kornet 2KG", stok: 8, hargaBeli: 85000 },
+  { id: 317, kode: "SRP1", nama: "Sirup 1L", stok: 20, hargaBeli: 25000 },
+  { id: 318, kode: "SRP2", nama: "Sirup 2L", stok: 10, hargaBeli: 45000 },
+  { id: 319, kode: "KOP1", nama: "Kopi Sachet", stok: 100, hargaBeli: 2000 },
+  { id: 320, kode: "KOP2", nama: "Kopi Bubuk 1KG", stok: 15, hargaBeli: 60000 },
+  { id: 321, kode: "THT1", nama: "Teh Celup", stok: 50, hargaBeli: 5000 },
+  { id: 322, kode: "THT2", nama: "Teh Bubuk 1KG", stok: 20, hargaBeli: 40000 },
+  { id: 323, kode: "MKR1", nama: "Margarin 1KG", stok: 15, hargaBeli: 25000 },
+  { id: 324, kode: "MKR2", nama: "Margarin 2KG", stok: 10, hargaBeli: 45000 },
+  { id: 325, kode: "CKL1", nama: "Coklat Bubuk 1KG", stok: 10, hargaBeli: 70000 },
+  { id: 326, kode: "CKL2", nama: "Coklat Bubuk 2KG", stok: 5, hargaBeli: 130000 },
+  { id: 327, kode: "BHN1", nama: "Bumbu Nasi Goreng", stok: 30, hargaBeli: 5000 },
+  { id: 328, kode: "BHN2", nama: "Bumbu Ayam Goreng", stok: 25, hargaBeli: 6000 },
+  { id: 329, kode: "BHN3", nama: "Bumbu Soto", stok: 20, hargaBeli: 7000 },
+  { id: 330, kode: "BHN4", nama: "Bumbu Rendang", stok: 15, hargaBeli: 8000 },
+  { id: 331, kode: "BHN5", nama: "Bumbu Kari", stok: 10, hargaBeli: 9000 },
+  { id: 332, kode: "BHN6", nama: "Bumbu Opor", stok: 15, hargaBeli: 8500 },
+  { id: 333, kode: "BHN7", nama: "Bumbu Pecel", stok: 20, hargaBeli: 7500 },
+  { id: 334, kode: "BHN8", nama: "Bumbu Rawon", stok: 12, hargaBeli: 9500 },
+  { id: 335, kode: "BHN9", nama: "Bumbu Sate", stok: 18, hargaBeli: 8000 },
+  { id: 336, kode: "BHN10", nama: "Bumbu Sambal Goreng", stok: 25, hargaBeli: 7000 },
+  { id: 337, kode: "BHN11", nama: "Bumbu Soto Ayam", stok: 30, hargaBeli: 6500 },
+  { id: 338, kode: "BHN12", nama: "Bumbu Gulai", stok: 20, hargaBeli: 9000 },
+  { id: 339, kode: "BHN13", nama: "Bumbu Ayam Bakar", stok: 15, hargaBeli: 8500 },
+  { id: 340, kode: "BHN14", nama: "Bumbu Ikan Bakar", stok: 10, hargaBeli: 9500 },
+  { id: 341, kode: "BHN15", nama: "Bumbu Rica-Rica", stok: 12, hargaBeli: 8000 },
+  { id: 342, kode: "BHN16", nama: "Bumbu Ayam Goreng Kalasan", stok: 18, hargaBeli: 7500 },
+  { id: 343, kode: "BHN17", nama: "Bumbu Ayam Goreng Kremes", stok: 25, hargaBeli: 7000 },
+  { id: 344, kode: "BHN18", nama: "Bumbu Ayam Goreng Lengkuas", stok: 30, hargaBeli: 6500 },
+  { id: 345, kode: "BHN19", nama: "Bumbu Ayam Goreng Serundeng", stok: 20, hargaBeli: 9000 },
+  { id: 346, kode: "BHN20", nama: "Bumbu Ayam Goreng Padang", stok: 15, hargaBeli: 8500 },
+  { id: 347, kode: "BHN21", nama: "Bumbu Ayam Goreng Betutu", stok: 10, hargaBeli: 9500 },
+  { id: 348, kode: "BHN22", nama: "Bumbu Ayam Goreng Bali", stok: 12, hargaBeli: 8000 },
+  { id: 349, kode: "BHN23", nama: "Bumbu Ayam Goreng Taliwang", stok: 18, hargaBeli: 7500 },
+  { id: 350, kode: "BHN24", nama: "Bumbu Ayam Goreng Bumbu Rujak", stok: 25, hargaBeli: 7000 },
+  { id: 351, kode: "BHN25", nama: "Bumbu Ayam Goreng Bumbu Kuning", stok: 30, hargaBeli: 6500 },
+  { id: 352, kode: "BHN26", nama: "Bumbu Ayam Goreng Bumbu Merah", stok: 20, hargaBeli: 9000 },
+  { id: 353, kode: "BHN27", nama: "Bumbu Ayam Goreng Bumbu Hitam", stok: 15, hargaBeli: 8500 },
+  { id: 354, kode: "BHN28", nama: "Bumbu Ayam Goreng Bumbu Putih", stok: 10, hargaBeli: 9500 },
+  { id: 355, kode: "BHN29", nama: "Bumbu Ayam Goreng Bumbu Hijau", stok: 12, hargaBeli: 8000 },
+  { id: 356, kode: "BHN30", nama: "Bumbu Ayam Goreng Bumbu Ungu", stok: 18, hargaBeli: 7500 },
+  { id: 357, kode: "BHN31", nama: "Bumbu Ayam Goreng Bumbu Biru", stok: 25, hargaBeli: 7000 },
+  { id: 358, kode: "BHN32", nama: "Bumbu Ayam Goreng Bumbu Coklat", stok: 30, hargaBeli: 6500 },
+  { id: 359, kode: "BHN33", nama: "Bumbu Ayam Goreng Bumbu Pelangi", stok: 20, hargaBeli: 9000 },
+  { id: 360, kode: "BHN34", nama: "Bumbu Ayam Goreng Bumbu Nusantara", stok: 15, hargaBeli: 8500 },
 ];
 
 const seedSuppliers = [
@@ -120,7 +118,6 @@ const rp = (n) =>
 const PembeliSuplier = () => {
   const navigate = useNavigate();
 
-
   // Masters
   const [items] = useState(() => loadOrSeed(LS_ITEMS, seedItems));
   const [suppliers] = useState(() => loadOrSeed(LS_SUPPLIERS, seedSuppliers));
@@ -128,46 +125,62 @@ const PembeliSuplier = () => {
   // UI States
   const [query, setQuery] = useState("");
   const [supplierId, setSupplierId] = useState(suppliers[0]?.id || null);
+
+  const [sortKey, setSortKey] = useState("nama"); // 'nama' | 'kode' | 'stok'
   const [sortAsc, setSortAsc] = useState(true);
 
-  // Cart: {id, kode, nama, harga, qty}
+  const [searchMode, setSearchMode] = useState("nama"); // 'nama' | 'kode'
+
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifDetailOpen, setNotifDetailOpen] = useState(false);
+  const [notifCategory, setNotifCategory] = useState(null); // 'habis' | 'menipis' | 'semua'
+  const MENIPIS_THRESHOLD = 10;
+
   const [cart, setCart] = useState([]);
 
-  // Global diskon & pajak
   const [discType, setDiscType] = useState("rp"); // 'rp' | 'pct'
   const [discValue, setDiscValue] = useState(0);
   const [taxPct, setTaxPct] = useState(0);
 
-  // Biaya modal
   const [costOpen, setCostOpen] = useState(false);
   const [costForm, setCostForm] = useState({ name: "", amount: "", note: "" });
   const [costs, setCosts] = useState([]); // {id,name,amount,note}
 
-  // Filtered items
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    let data = !q
-      ? items
-      : items.filter(
-          (i) =>
-            i.nama.toLowerCase().includes(q) ||
-            (i.kode || "").toLowerCase().includes(q)
-        );
-    data = [...data].sort((a, b) =>
-      sortAsc
-        ? a.nama.localeCompare(b.nama)
-        : b.nama.localeCompare(a.nama)
-    );
-    return data;
-  }, [items, query, sortAsc]);
+    let data = items;
 
-  // Subtotal items
+    if (q) {
+      if (searchMode === "nama") {
+        data = data.filter((i) => i.nama.toLowerCase().includes(q));
+      } else {
+        data = data.filter((i) => (i.kode || "").toLowerCase().includes(q));
+      }
+    }
+
+    const getVal = (it) =>
+      sortKey === "nama"
+        ? (it.nama || "").toLowerCase()
+        : sortKey === "kode"
+        ? (it.kode || "").toLowerCase()
+        : Number(it.stok || 0);
+
+    data = [...data].sort((a, b) => {
+      const va = getVal(a);
+      const vb = getVal(b);
+      if (va < vb) return sortAsc ? -1 : 1;
+      if (va > vb) return sortAsc ? 1 : -1;
+      return 0;
+    });
+
+    return data;
+  }, [items, query, searchMode, sortKey, sortAsc]);
+
   const subItems = useMemo(
     () => cart.reduce((s, it) => s + it.harga * it.qty, 0),
     [cart]
   );
 
-  // Diskon
   const totalDiskon = useMemo(() => {
     if (!discValue) return 0;
     if (discType === "pct") {
@@ -176,25 +189,21 @@ const PembeliSuplier = () => {
     return Math.min(Number(discValue || 0), subItems);
   }, [discType, discValue, subItems]);
 
-  // Pajak dihitung dari (subtotal - diskon)
   const totalPajak = useMemo(() => {
     const base = Math.max(0, subItems - totalDiskon);
     return Math.round(base * (Number(taxPct || 0) / 100));
   }, [subItems, totalDiskon, taxPct]);
 
-  // Biaya tambahan
   const totalBiaya = useMemo(
     () => costs.reduce((s, c) => s + Number(c.amount || 0), 0),
     [costs]
   );
 
-  // Grand Total
   const grandTotal = useMemo(
     () => Math.max(0, subItems - totalDiskon) + totalPajak + totalBiaya,
     [subItems, totalDiskon, totalPajak, totalBiaya]
   );
 
-  // Actions: add to cart
   const addToCart = (it) => {
     setCart((prev) => {
       const found = prev.find((p) => p.id === it.id);
@@ -261,30 +270,27 @@ const PembeliSuplier = () => {
 
     const now = new Date().toISOString();
     const record = {
-      // ====== sesuai model 'pembelian' ======
       id: Date.now(),
       toko_id: 1,
       supplier_id: supplierId,
       tanggal_waktu: now,
-      total_harga: grandTotal,          // grand total
+      total_harga: grandTotal,
       total_diskon: totalDiskon,
       total_pajak: totalPajak,
-      nominal_bayar: grandTotal,        // yang harus dibayar
+      nominal_bayar: grandTotal,
       nominal_dibayar: isPay ? grandTotal : 0,
       nominal_biaya: totalBiaya,
       nominal_kembalian: 0,
       keterangan: "",
       no_struk: genNoStruk(),
       nama_biaya: costs.map((c) => c.name).join(", ") || null,
-      is_use_hutang: !isPay,            // contoh: draft dianggap hutang
+      is_use_hutang: !isPay,
       created_by: 1,
       updated_by: null,
       sync_at: null,
       status: true,
       created_at: now,
       updated_at: now,
-
-      // tambahan: detail item (agar mudah direview dari localStorage)
       items: cart.map((c) => ({
         barang_id: c.id,
         kode: c.kode,
@@ -302,8 +308,6 @@ const PembeliSuplier = () => {
     alert(isPay ? "Pembelian disimpan (Lunas)." : "Draft pembelian disimpan.");
   };
 
-
-
   // Keyboard shortcut biaya (Ctrl+B)
   useEffect(() => {
     const onKey = (e) => {
@@ -316,13 +320,9 @@ const PembeliSuplier = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-
-
   // Navbar
   const onSave = useCallback(() => handleSave(false), []); // draft
   const onBayar = useCallback(() => handleSave(true), []); // lunas
-
-  
 
   const resetAll = useCallback(() => {
     setCart([]);
@@ -331,6 +331,7 @@ const PembeliSuplier = () => {
     setCosts([]);
     clearCurrent();
   }, []);
+
   useNavbar(
     {
       variant: "page",
@@ -343,7 +344,7 @@ const PembeliSuplier = () => {
           onClick: navigate.bind(null, "/pembelian-supplier/draft"),
           label: "Draft",
           className:
-            "bg-white-400 text-yellow-500 text-xs px-3 py-1 rounded-xl hover:bg-yellow-50 border border-yellow-500",
+            "bg-white-400 text-yellow-600 text-xs px-3 py-1 rounded-xl hover:bg-yellow-50 border border-yellow-500",
         },
         {
           type: "button",
@@ -358,86 +359,139 @@ const PembeliSuplier = () => {
     [resetAll, navigate]
   );
 
+  // === Notif datasets ===
+  const stokHabis = useMemo(() => items.filter((i) => Number(i.stok || 0) === 0), [items]);
+  const stokMenipis = useMemo(
+    () => items.filter((i) => Number(i.stok || 0) > 0 && Number(i.stok) <= MENIPIS_THRESHOLD),
+    [items]
+  );
+  const stokSemua = items;
+
+  const openNotifCategory = (cat) => {
+    setNotifCategory(cat);
+    setNotifDetailOpen(true);
+  };
+
   return (
-    <div className="flex h-full w-full bg-white">
+    <div className="flex h-full w-full bg-gradient-to-br from-emerald-50 via-white to-sky-50">
       {/* LEFT: daftar barang */}
-      <div className="w-[60%] border-r border-gray-200 flex flex-col p-6 gap-4">
+      <div className="w-[60%] border-r border-emerald-100/70 bg-white/80 backdrop-blur-sm flex flex-col p-6 gap-4">
         {/* Toolbar */}
-        <div className="flex items-center gap-3">
-          <button
-            className="text-gray-600 inline-flex items-center justify-center w-12 h-12  border border-gray-600 rounded-xl hover:bg-gray-100"
-            title="Filter"
-          >
-            <FiFilter className="w-6 h-6" />
-          </button>
-          <button
-            className="text-gray-600 inline-flex items-center justify-center w-12 h-12  border border-gray-600 rounded-xl hover:bg-gray-100"
-            title="Notifikasi"
-          >
-            <FiBell className="w-6 h-6" />
-          </button>
-          <button
-            className="text-gray-600 inline-flex items-center justify-center w-12 h-12  border border-gray-600 rounded-xl hover:bg-gray-100"
-            title="Search"
-          >
-            <FiSearch className="w-6 h-6" />
-          </button>
-          <button
-            className="text-gray-600 inline-flex items-center justify-center w-12 h-12  border border-gray-600 rounded-xl hover:bg-gray-100"
-            title="Barcode Scanner"
-          >
-            <BiBarcode className="w-6 h-6" />
-          </button>
-          
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Filter dropdown */}
+          <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">
+            <FiFilter className="w-5 h-5 text-emerald-700" />
+            <select
+              className="bg-transparent text-sm outline-none"
+              value={sortKey}
+              onChange={(e) => setSortKey(e.target.value)}
+              title="Urut/Filter"
+            >
+              <option value="nama">Nama</option>
+              <option value="kode">Kode</option>
+              <option value="stok">Stok</option>
+            </select>
+            <button
+              className="text-xs inline-flex items-center gap-1 border border-emerald-300 rounded-full px-2 py-0.5 bg-white hover:bg-emerald-50"
+              onClick={() => setSortAsc((v) => !v)}
+              title="Urut naik/turun"
+            >
+              <HiArrowsUpDown /> {sortAsc ? "Asc" : "Desc"}
+            </button>
+          </div>
 
+          {/* Notifikasi stok */}
+          <button
+            className="relative text-emerald-700 inline-flex items-center gap-2 border border-emerald-300 bg-emerald-50 px-4 py-2 rounded-xl hover:bg-emerald-100"
+            title="Notifikasi Stok"
+            onClick={() => setNotifOpen(true)}
+          >
+            <FiBell className="w-5 h-5" />
 
+          </button>
+
+          {/* Toggle search mode (nama/kode) */}
+          <div className="flex items-center gap-2">
+            <button
+              className={`inline-flex items-center justify-center w-11 h-11 rounded-xl border ${
+                searchMode === "nama"
+                  ? "bg-emerald-600 text-white border-emerald-600"
+                  : "bg-white text-gray-700 hover:bg-gray-50 border-gray-300"
+              }`}
+              title="Cari Nama"
+              onClick={() => setSearchMode("nama")}
+            >
+              <FiSearch className="w-5 h-5" />
+            </button>
+            <button
+              className={`inline-flex items-center justify-center w-11 h-11 rounded-xl border ${
+                searchMode === "kode"
+                  ? "bg-emerald-600 text-white border-emerald-600"
+                  : "bg-white text-gray-700 hover:bg-gray-50 border-gray-300"
+              }`}
+              title="Cari Kode / Barcode"
+              onClick={() => setSearchMode("kode")}
+            >
+              <BiBarcode className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Input search */}
           <div className="flex-1 relative">
-            <FiSearch className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-green-600" />
+            <FiSearch className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-emerald-700" />
             <input
               type="text"
-              placeholder="Cari barang…"
+              placeholder={searchMode === "nama" ? "Cari nama barang…" : "Cari kode barang…"}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full border-2 border-green-500 rounded-full pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-200"
+              className="w-full border-2 border-emerald-400 rounded-full pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200"
             />
           </div>
 
           <button
-            className="text-green-600 inline-flex items-center justify-center w-12 h-12 border border-green-600 rounded-xl hover:bg-green-100"
+            className="text-emerald-700 inline-flex items-center justify-center w-12 h-12 border border-emerald-500 rounded-xl hover:bg-emerald-50"
             title="Refresh"
+            onClick={() => window.location.reload()}
           >
             <MdRefresh className="w-7 h-7" />
           </button>
         </div>
+
+        {/* Kategori dummy warna */}
         <div className="flex items-center gap-2">
-          <button className="border px-4 py-2 rounded-full text-sm hover:bg-gray-50">
+          <button className="border px-4 py-2 rounded-full text-sm hover:bg-emerald-50 border-emerald-300 text-emerald-700">
             Semua
           </button>
-          <button className="border px-4 py-2 rounded-full text-sm hover:bg-gray-50">
+          <button className="border px-4 py-2 rounded-full text-sm hover:bg-amber-50 border-amber-300 text-amber-700">
             Bahan Pokok
           </button>
-          <button className="border px-4 py-2 rounded-full text-sm hover:bg-gray-50">
+          <button className="border px-4 py-2 rounded-full text-sm hover:bg-sky-50 border-sky-300 text-sky-700">
             Bumbu Masak
           </button>
         </div>
 
         {/* Grid barang */}
-        <div className=" overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-3 pr-1">
+        <div className="overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-3 pr-1">
           {filtered.map((it) => (
             <button
               key={it.id}
               onClick={() => addToCart(it)}
-              className="text-left rounded-xl border hover:shadow-sm transition p-3"
+              className="text-left rounded-xl border border-emerald-200 hover:shadow-md transition p-3 bg-white/70"
               title="Tambah ke keranjang"
             >
               <div className="flex items-center gap-3">
-                <div className="bg-gray-100 rounded-xl w-12 h-12 flex items-center justify-center text-xs font-bold">
+                <div className="bg-gradient-to-br from-emerald-50 to-white border border-emerald-200 rounded-xl w-12 h-12 flex items-center justify-center text-[10px] font-bold text-emerald-700">
                   {it.kode}
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold">{it.nama}</div>
-                  <div className="text-xs text-gray-500">
-                    Stok {it.stok} • {rp(it.hargaBeli)}
+                  <div className="font-semibold text-emerald-800">{it.nama}</div>
+                  <div className="text-xs text-gray-500 flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded-full bg-sky-50 border border-sky-200 text-sky-700">
+                      Stok {it.stok}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700">
+                      {rp(it.hargaBeli)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -446,8 +500,8 @@ const PembeliSuplier = () => {
         </div>
 
         <div>
-          <button className="flex items-center gap-3 text-green-700 hover:text-green-900 text-sm">
-            <span className="w-10 h-10 bg-green-50 border border-green-200 rounded-full flex items-center justify-center">
+          <button className="flex items-center gap-3 text-emerald-700 hover:text-emerald-900 text-sm">
+            <span className="w-10 h-10 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center">
               <FiPlus className="text-lg" />
             </span>
             <span className="font-semibold">Tambah Barang Baru</span>
@@ -455,12 +509,13 @@ const PembeliSuplier = () => {
         </div>
       </div>
 
+      {/* RIGHT: ringkasan */}
       <div className="w-[40%] flex flex-col p-6 gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-          <button
+            <button
               onClick={openCost}
-              className="text-xs inline-flex items-center gap-2 border px-3 py-1.5 rounded-full hover:bg-gray-50"
+              className="text-xs inline-flex items-center gap-2 border px-3 py-1.5 rounded-full hover:bg-emerald-50 border-emerald-300 text-emerald-700 bg-white"
               title="Tambah biaya (ongkir/jasa)"
             >
               + Biaya (Ctrl+B)
@@ -468,18 +523,18 @@ const PembeliSuplier = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-600">Urut:</label>
+            <label className="text-sm text-gray-700">Urut:</label>
             <button
-              className="text-xs border px-3 py-1 rounded-full hover:bg-gray-50 inline-flex items-center gap-1"
+              className="text-xs border border-emerald-300 px-3 py-1 rounded-full hover:bg-emerald-50 inline-flex items-center gap-1 bg-white text-emerald-700"
               onClick={() => setSortAsc((v) => !v)}
-              title="Urut nama"
+              title="Urut"
             >
-              <HiArrowsUpDown /> Nama
+              <HiArrowsUpDown /> {sortKey === "nama" ? "Nama" : sortKey === "kode" ? "Kode" : "Stok"}
             </button>
           </div>
         </div>
 
-        <div className="rounded-xl border p-3 grid gap-3">
+        <div className="rounded-xl border border-emerald-200 p-3 grid gap-3 bg-white/80">
           <label className="grid gap-1">
             <span className="text-xs text-gray-600">Supplier</span>
             <select
@@ -495,7 +550,7 @@ const PembeliSuplier = () => {
             </select>
           </label>
 
-          <div className="grid grid-cols-2 gap-3 ">
+          <div className="grid grid-cols-2 gap-3">
             <label className="grid gap-1">
               <span className="text-xs text-gray-600">Diskon</span>
               <div className="flex gap-2">
@@ -524,7 +579,6 @@ const PembeliSuplier = () => {
               <input
                 type="text"
                 inputMode="numeric"
-
                 className="border rounded-lg px-3 py-2 text-sm w-full"
                 min={0}
                 value={taxPct}
@@ -535,7 +589,6 @@ const PembeliSuplier = () => {
           </div>
 
           <div>
-
             <div className="mt-2 flex flex-wrap gap-2">
               {costs.map((c) => (
                 <span
@@ -557,7 +610,7 @@ const PembeliSuplier = () => {
           </div>
         </div>
 
-        <div className="flex-1 rounded-xl border p-3 overflow-auto">
+        <div className="flex-1 rounded-xl border border-emerald-200 p-3 overflow-auto bg-white/80">
           {cart.length === 0 ? (
             <div className="h-full border-2 border-dashed rounded-xl flex items-center justify-center text-gray-500 text-sm">
               Belum ada barang yang dipilih
@@ -567,10 +620,11 @@ const PembeliSuplier = () => {
               {cart.map((row) => (
                 <div
                   key={row.id}
-                  className="border rounded-lg p-2 flex items-center justify-between"
+                  className="border rounded-lg p-2 flex items-center justify-between bg-gradient-to-r from-white to-emerald-50"
+                  onClick={() => {console.log("APALAh")}} // Click to add more
                 >
                   <div className="min-w-0">
-                    <div className="font-medium text-sm truncate">
+                    <div className="font-medium text-sm truncate text-emerald-800">
                       {row.nama}
                     </div>
                     <div className="text-xs text-gray-500">
@@ -621,8 +675,8 @@ const PembeliSuplier = () => {
           )}
         </div>
 
-        <div className="rounded-xl border overflow-hidden">
-          <div className="bg-white px-4 py-3 grid gap-1 text-sm">
+        <div className="rounded-xl border border-emerald-300 overflow-hidden bg-white">
+          <div className="px-4 py-3 grid gap-1 text-sm">
             <div className="flex justify-between">
               <span>Subtotal</span>
               <span className="font-medium">{rp(subItems)}</span>
@@ -641,28 +695,27 @@ const PembeliSuplier = () => {
             </div>
             <div className="border-t pt-2 flex justify-between">
               <span className="font-semibold text-xl">Total</span>
-              <span className="font-bold text-green-700 text-xl">{rp(grandTotal)}</span>
+              <span className="font-bold text-emerald-700 text-xl">{rp(grandTotal)}</span>
             </div>
           </div>
-          <div className="flex items-center justify-between px-4 py-4">
-          <button
-            onClick={() => handleSave(false)}
-            className=" border-2 w-40 border-yellow-600 text-yellow-700 py-3 hover:bg-yellow-50 text-sm font-semibold rounded-xl"
-          >
-            SIMPAN
-          </button>
-          <button
-            onClick={() => handleSave(true)}
-            className="border-2 w-50 border-green-600 text-green-700 py-3 hover:bg-green-50 text-sm font-semibold rounded-xl"
-          >
-            Bayar (F12)
-          </button>
-            
+          <div className="flex items-center justify-between px-4 py-4 bg-emerald-50">
+            <button
+              onClick={() => handleSave(false)}
+              className="border-2 w-40 border-amber-600 text-amber-700 py-3 hover:bg-amber-50 text-sm font-semibold rounded-xl"
+            >
+              SIMPAN
+            </button>
+            <button
+              onClick={() => handleSave(true)}
+              className="border-2 w-48 border-emerald-600 text-emerald-700 py-3 hover:bg-emerald-100 text-sm font-semibold rounded-xl"
+            >
+              Bayar (F12)
+            </button>
           </div>
-
         </div>
       </div>
 
+      {/* MODAL: BIAYA */}
       {costOpen && (
         <div className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center p-4">
           <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-5">
@@ -727,7 +780,7 @@ const PembeliSuplier = () => {
                 </button>
                 <button
                   onClick={saveCost}
-                  className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+                  className="px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
                 >
                   Simpan
                 </button>
@@ -736,6 +789,150 @@ const PembeliSuplier = () => {
           </div>
         </div>
       )}
+
+      {/* MODAL: NOTIFIKASI STOK (utama) */}
+      {notifOpen && (
+        <div className="fixed inset-0 bg-black/30 z-40 flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-5">
+            <div className="flex items-center justify-between mb-3">
+              <div className="font-semibold text-lg">Notifikasi Stok</div>
+              <button
+                onClick={() => setNotifOpen(false)}
+                className="w-8 h-8 rounded-full hover:bg-gray-100"
+                title="Tutup"
+              >
+                <FiX />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <button
+                className="w-full border rounded-lg p-3 text-left hover:bg-red-50 border-red-200 flex items-center justify-between"
+                onClick={() => openNotifCategory("habis")}
+              >
+                <div>
+                  <div className="font-medium text-red-700">1. Stok barang habis</div>
+                  <div className="text-xs text-gray-500">
+                    Barang dengan stok = 0
+                  </div>
+                </div>
+                <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">
+                  {stokHabis.length}
+                </span>
+              </button>
+
+              <button
+                className="w-full border rounded-lg p-3 text-left hover:bg-amber-50 border-amber-200 flex items-center justify-between"
+                onClick={() => openNotifCategory("menipis")}
+              >
+                <div>
+                  <div className="font-medium text-amber-700">2. Stok barang menipis</div>
+                  <div className="text-xs text-gray-500">
+                    Stok &le; {MENIPIS_THRESHOLD}
+                  </div>
+                </div>
+                <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded-full">
+                  {stokMenipis.length}
+                </span>
+              </button>
+
+              <button
+                className="w-full border rounded-lg p-3 text-left hover:bg-sky-50 border-sky-200 flex items-center justify-between"
+                onClick={() => openNotifCategory("semua")}
+              >
+                <div>
+                  <div className="font-medium text-sky-700">3. Stok barang semua</div>
+                  <div className="text-xs text-gray-500">
+                    Lihat semua daftar barang dan stoknya
+                  </div>
+                </div>
+                <span className="text-xs bg-sky-500 text-white px-2 py-0.5 rounded-full">
+                  {stokSemua.length}
+                </span>
+              </button>
+            </div>
+
+            {/* Modal detail di dalam modal */}
+            {notifDetailOpen && (
+              <div className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center p-4">
+                <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="font-semibold">
+                      {notifCategory === "habis"
+                        ? "Detail: Stok Habis"
+                        : notifCategory === "menipis"
+                        ? "Detail: Stok Menipis"
+                        : "Detail: Semua Stok"}
+                    </div>
+                    <button
+                      onClick={() => setNotifDetailOpen(false)}
+                      className="w-8 h-8 rounded-full hover:bg-gray-100"
+                      title="Tutup"
+                    >
+                      <FiX />
+                    </button>
+                  </div>
+
+                  <div className="max-h-[60vh] overflow-auto space-y-2">
+                    {(notifCategory === "habis"
+                      ? stokHabis
+                      : notifCategory === "menipis"
+                      ? stokMenipis
+                      : stokSemua
+                    ).map((i) => (
+                      <div
+                        key={i.id}
+                        className="flex items-center justify-between border rounded-lg p-2 bg-white hover:bg-gray-50"
+                      >
+                        <div>
+                          <div className="font-medium text-sm">{i.nama}</div>
+                          <div className="text-xs text-gray-500">
+                            {i.kode} • Stok:{" "}
+                            <span
+                              className={
+                                i.stok === 0
+                                  ? "text-red-600"
+                                  : i.stok <= MENIPIS_THRESHOLD
+                                  ? "text-amber-700"
+                                  : "text-emerald-700"
+                              }
+                            >
+                              {i.stok}
+                            </span>{" "}
+                            • {rp(i.hargaBeli)}
+                          </div>
+                        </div>
+                        <button
+                          className="text-xs border px-3 py-1 rounded-full bg-emerald-50 border-emerald-300 text-emerald-700 hover:bg-emerald-100"
+                          onClick={() => addToCart(i)}
+                        >
+                          + Keranjang
+                        </button>
+                      </div>
+                    ))}
+                    {((notifCategory === "habis" && stokHabis.length === 0) ||
+                      (notifCategory === "menipis" && stokMenipis.length === 0)) && (
+                      <div className="text-center text-sm text-gray-500 py-4">
+                        Tidak ada data.
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      onClick={() => setNotifDetailOpen(false)}
+                      className="px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
+                    >
+                      Tutup
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
