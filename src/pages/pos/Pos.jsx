@@ -123,7 +123,7 @@ const Pos = () => {
   const [cart, setCart] = useState(() => loadCart());
   const [selectedIcon, setSelectedIcon] = useState("search");
 
-  const [currentTrxCode, setCurrentTrxCode] = useState("TRX-NEW");
+  const [currentTrxCode, setCurrentTrxCode] = useState("TRX-NEW-001");
   const [editingTrxId, setEditingTrxId] = useState(null);
 
   const [editOpen, setEditOpen] = useState(false);
@@ -248,12 +248,26 @@ const Pos = () => {
     setTaxMode("default"); setCustomTax({ name: "", pct: "" });
   }, []);
 
+  const waitingCount = 20;
+
+
   useNavbar(
     {
       variant: "pos",
       title: "Transaksi",
       actions: [
-        { type: "link", to: "/pesanan", title: "Pesanan", className: "bg-orange-400 text-white rounded-full w-12 h-12", icon: <FaConciergeBell size={22} /> },
+        { type: "link", to: "/pesanan", title: "Pesanan", className: "relative p-3 bg-orange-400 text-white rounded-full w-12 h-12", icon: 
+        
+        <>
+            <IoReceiptOutline size={20} />  
+            {waitingCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                {waitingCount}
+              </span>
+            )}
+        </>
+      
+      },
         { type: "button", title: "Favorit", onClick: () => console.log("favorit"), className: "bg-green-600 text-white rounded-full w-12 h-12", icon: <BsStarFill size={18} /> },
         { type: "button", title: "Batalkan", onClick: onCancel, label: "Batalkan", className: "border border-red-500 text-red-500 px-6 py-2 rounded-full font-semibold text-lg" },
         { type: "button", title: "Pengaturan", onClick: () => navigate("/pengaturan/pos"), className: "rounded-full w-12 h-12 text-gray-700 hover:bg-gray-100", icon: <MdSettings size={22} /> },
@@ -466,15 +480,22 @@ const Pos = () => {
           {/* Quick actions */}
           <div className="mt-4 flex flex-wrap gap-2">
             <button className="px-4 py-2 rounded-full border bg-white hover:bg-gray-50 text-sm">Semua</button>
-            <button onClick={() => setOpenTitipan(true)} className="px-4 py-2 rounded-full border bg-white hover:bg-gray-50 text-sm">
-              Barang Titipan
-            </button>
-            <button onClick={() => setOpenDiskon(true)} className="px-4 py-2 rounded-full border bg-white hover:bg-gray-50 text-sm">
-              Diskon
-            </button>
-            <button onClick={() => setOpenPajak(true)} className="px-4 py-2 rounded-full border bg-white hover:bg-gray-50 text-sm">
-              Pajak
-            </button>
+            {selectedIcon === "receipt" ? ( <></> ) : (
+              <>
+                <button onClick={() => setOpenTitipan(true)} className="px-4 py-2 rounded-full border bg-white hover:bg-gray-50 text-sm">
+                  Barang Titipan
+                </button>
+                <button onClick={() => setOpenDiskon(true)} className="px-4 py-2 rounded-full border bg-white hover:bg-gray-50 text-sm">
+                  Diskon
+                </button>
+                <button onClick={() => setOpenPajak(true)} className="px-4 py-2 rounded-full border bg-white hover:bg-gray-50 text-sm">
+                  Pajak
+                </button>
+              </>
+
+              )}
+
+
           </div>
         </div>
 
@@ -527,8 +548,7 @@ const Pos = () => {
         {/* Header keranjang */}
         <div className="bg-white p-5 border-b">
           <div className="flex items-center justify-between">
-            <div className="flex flex-wrap items-center gap-2">
-              <button
+          <button
                 onClick={openCostModal}
                 className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl shadow-sm"
                 title="Tambah biaya (ongkir/jasa/dll)"
@@ -536,21 +556,8 @@ const Pos = () => {
                 <span className="text-lg leading-none">＋</span> Biaya
               </button>
 
-              <span className="text-sm">
-                <b>Diskon:</b>{" "}
-                {globalDiscount
-                  ? (globalDiscount.type === "pct"
-                      ? `${globalDiscount.value}%`
-                      : `Rp ${formatCurrency(globalDiscount.value)}`) + ` (${globalDiscount.name})`
-                  : "-"}
-              </span>
-              <span className="text-sm">
-                <b>Pajak:</b> {globalTax ? `${globalTax.name} ${globalTax.pct}%` : "-"}
-              </span>
-            </div>
-
-            <div className="text-sm text-gray-600">
-              Kode: <span className="font-semibold">{currentTrxCode}</span>
+            <div className="text-sm text-black border border-black rounded-xl p-2">
+              No Transaksi: <span className="font-bold">{currentTrxCode}</span>
             </div>
           </div>
 
@@ -600,7 +607,7 @@ const Pos = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">
-                  Diskon Global{globalDiscount?.type === "pct" ? ` (${globalDiscount.value}%)` : ""}
+                  Diskon {globalDiscount?.type === "pct" ? ` (${globalDiscount.value}%)` : ""}
                 </span>
                 <span className="font-medium text-amber-700">
                   - Rp {formatCurrency(Math.max(0, subtotalItems - afterGlobalDisc))}

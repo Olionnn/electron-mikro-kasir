@@ -6,21 +6,18 @@ import {
   MdShield,
   MdMail,
   MdPhone,
-  MdMoreVert,
-  MdDelete,
   MdEdit,
+  MdDelete,
   MdClose,
 } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useNavbar } from "../../hooks/useNavbar";
 
 /* -------------------------------------------
-   SIMPLE LOCAL STORAGE STORE
+   SIMPLE LOCAL STORAGE STORE (USERS ONLY)
 -------------------------------------------- */
 const LS_KEYS = {
   USERS: "kp_users",
-  SIDEbars: "kp_sidebars",
-  AKSES: "kp_sidebar_akses",
 };
 
 // seed data sekali (jika kosong)
@@ -67,69 +64,16 @@ const seedIfEmpty = () => {
     ];
     localStorage.setItem(LS_KEYS.USERS, JSON.stringify(users));
   }
-  if (!localStorage.getItem(LS_KEYS.SIDEbars)) {
-    const now = new Date().toISOString();
-    const sidebars = [
-      { id: 1, parent_id: 0, nama: "Dashboard", route: "/dashboard", kode: "DASH", icon: "MdSpaceDashboard", indexing: 1, keterangan: null, sync_at: null, status: true, created_at: now, updated_at: now },
-      { id: 2, parent_id: 0, nama: "POS", route: "/pos", kode: "POS", icon: "MdPointOfSale", indexing: 2, keterangan: null, sync_at: null, status: true, created_at: now, updated_at: now },
-      { id: 3, parent_id: 0, nama: "Produk", route: "/produk", kode: "PROD", icon: "MdInventory", indexing: 3, keterangan: null, sync_at: null, status: true, created_at: now, updated_at: now },
-      { id: 4, parent_id: 0, nama: "Laporan", route: "/laporan", kode: "RPT", icon: "MdAssessment", indexing: 4, keterangan: null, sync_at: null, status: true, created_at: now, updated_at: now },
-      { id: 5, parent_id: 0, nama: "Pengaturan", route: "/pengaturan", kode: "SET", icon: "MdSettings", indexing: 5, keterangan: null, sync_at: null, status: true, created_at: now, updated_at: now },
-    ];
-    localStorage.setItem(LS_KEYS.SIDEbars, JSON.stringify(sidebars));
-  }
-  if (!localStorage.getItem(LS_KEYS.AKSES)) {
-    // default role: owner full, kasir read POS & Produk
-    const now = new Date().toISOString();
-    const sidebars = JSON.parse(localStorage.getItem(LS_KEYS.SIDEbars) || "[]");
-    const akses = [];
-    // owner
-    sidebars.forEach((s) => {
-      akses.push({
-        id: akses.length + 1,
-        toko_id: 1,
-        sidebar_id: s.id,
-        role: "owner",
-        can_read: true,
-        can_create: true,
-        can_update: true,
-        can_delete: true,
-        created_at: now,
-        updated_at: now,
-      });
-    });
-    // kasir (read POS, Produk)
-    sidebars.forEach((s) => {
-      const canRead = [2, 3].includes(s.id);
-      akses.push({
-        id: akses.length + 1,
-        toko_id: 1,
-        sidebar_id: s.id,
-        role: "kasir",
-        can_read: canRead,
-        can_create: s.id === 2, // POS create
-        can_update: s.id === 2,
-        can_delete: false,
-        created_at: now,
-        updated_at: now,
-      });
-    });
-
-    localStorage.setItem(LS_KEYS.AKSES, JSON.stringify(akses));
-  }
 };
 
 const store = {
   getUsers: () => JSON.parse(localStorage.getItem(LS_KEYS.USERS) || "[]"),
   setUsers: (rows) => localStorage.setItem(LS_KEYS.USERS, JSON.stringify(rows)),
-  getSidebars: () => JSON.parse(localStorage.getItem(LS_KEYS.SIDEbars) || "[]"),
-  getAkses: () => JSON.parse(localStorage.getItem(LS_KEYS.AKSES) || "[]"),
-  setAkses: (rows) => localStorage.setItem(LS_KEYS.AKSES, JSON.stringify(rows)),
   nextId: (rows) => (rows.length ? Math.max(...rows.map((r) => r.id)) + 1 : 1),
 };
 
 /* -------------------------------------------
-   FORM MODAL (Tambah / Edit)
+   FORM MODAL (Tambah / Edit Staff)
 -------------------------------------------- */
 function StaffFormModal({ open, onClose, onSubmit, initial }) {
   const [form, setForm] = useState(
@@ -173,10 +117,7 @@ function StaffFormModal({ open, onClose, onSubmit, initial }) {
   if (!open) return null;
 
   const handleChange = (k, v) => setForm((p) => ({ ...p, [k]: v }));
-
-  const submit = () => {
-    onSubmit(form);
-  };
+  const submit = () => onSubmit(form);
 
   return (
     <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
@@ -212,6 +153,8 @@ function StaffFormModal({ open, onClose, onSubmit, initial }) {
             <label className="block text-gray-600 mb-1">Alamat</label>
             <input className="w-full border rounded-lg px-3 py-2" value={form.alamat} onChange={(e) => handleChange("alamat", e.target.value)} />
           </div>
+
+          {/* HANYA PILIH ROLE */}
           <div>
             <label className="block text-gray-600 mb-1">Role</label>
             <select className="w-full border rounded-lg px-3 py-2" value={form.role} onChange={(e) => handleChange("role", e.target.value)}>
@@ -221,6 +164,7 @@ function StaffFormModal({ open, onClose, onSubmit, initial }) {
               <option value="staf">staf</option>
             </select>
           </div>
+
           <div className="flex items-center gap-2 mt-6">
             <input type="checkbox" checked={form.status} onChange={(e) => handleChange("status", e.target.checked)} />
             <span>Aktif</span>
@@ -238,15 +182,13 @@ function StaffFormModal({ open, onClose, onSubmit, initial }) {
 }
 
 /* -------------------------------------------
-   MAIN PAGE
+   MAIN PAGE (TANPA MATRIX AKSES)
 -------------------------------------------- */
 export default function ManajemenStaff() {
   const navigate = useNavigate();
 
   // state data
   const [users, setUsers] = useState([]);
-  const [sidebars, setSidebars] = useState([]);
-  const [akses, setAkses] = useState([]);
   const [q, setQ] = useState("");
   const [selected, setSelected] = useState(null);
 
@@ -258,8 +200,6 @@ export default function ManajemenStaff() {
   useEffect(() => {
     seedIfEmpty();
     setUsers(store.getUsers());
-    setSidebars(store.getSidebars());
-    setAkses(store.getAkses());
   }, []);
 
   // Handlers navbar
@@ -310,33 +250,20 @@ export default function ManajemenStaff() {
     );
   }, [users, q]);
 
-  // akses by role + sidebar_id -> record
-  const aksesMap = useMemo(() => {
-    const m = new Map();
-    akses.forEach((a) => m.set(`${a.role}_${a.sidebar_id}`, a));
-    return m;
-  }, [akses]);
-
   // CRUD users
   const saveUser = (payload) => {
     const now = new Date().toISOString();
     if (editData) {
-      // update
       const rows = users.map((u) =>
         u.id === editData.id ? { ...u, ...payload, id: u.id, updated_at: now } : u
       );
       setUsers(rows);
       store.setUsers(rows);
+      if (selected?.id === editData.id) setSelected({ ...editData, ...payload });
     } else {
-      // create
       const rows = [...users];
       const id = store.nextId(rows);
-      rows.push({
-        ...payload,
-        id,
-        created_at: now,
-        updated_at: now,
-      });
+      rows.push({ ...payload, id, created_at: now, updated_at: now });
       setUsers(rows);
       store.setUsers(rows);
     }
@@ -351,30 +278,16 @@ export default function ManajemenStaff() {
     if (selected?.id === id) setSelected(null);
   };
 
-  // toggle akses
-  const toggleAkses = (role, sidebar_id, key) => {
+  // QUICK: ubah role dari panel kanan
+  const updateRoleSelected = (newRole) => {
+    if (!selected) return;
     const now = new Date().toISOString();
-    const idx = akses.findIndex((a) => a.role === role && a.sidebar_id === sidebar_id);
-    const rows = [...akses];
-    if (idx >= 0) {
-      rows[idx] = { ...rows[idx], [key]: !rows[idx][key], updated_at: now };
-    } else {
-      // jika belum ada record, buat baru
-      rows.push({
-        id: store.nextId(rows),
-        toko_id: 1,
-        sidebar_id,
-        role,
-        can_read: key === "can_read",
-        can_create: key === "can_create",
-        can_update: key === "can_update",
-        can_delete: key === "can_delete",
-        created_at: now,
-        updated_at: now,
-      });
-    }
-    setAkses(rows);
-    store.setAkses(rows);
+    const rows = users.map((u) =>
+      u.id === selected.id ? { ...u, role: newRole, updated_at: now } : u
+    );
+    setUsers(rows);
+    store.setUsers(rows);
+    setSelected((s) => ({ ...s, role: newRole, updated_at: now }));
   };
 
   return (
@@ -413,7 +326,7 @@ export default function ManajemenStaff() {
                   </div>
                   <h3 className="mt-4 text-base font-semibold">Belum ada staff</h3>
                   <p className="text-sm text-gray-500 mt-1">
-                    Tambahkan staff untuk mulai mengatur akses & peran.
+                    Tambahkan staff untuk mulai mengatur peran/role.
                   </p>
                   <button
                     onClick={onAddStaff}
@@ -436,7 +349,10 @@ export default function ManajemenStaff() {
                     }`}
                   >
                     <div>
-                      <div className="font-medium">{u.nama} <span className="text-xs text-gray-500">({u.role || "-"})</span></div>
+                      <div className="font-medium">
+                        {u.nama}{" "}
+                        <span className="text-xs text-gray-500">({u.role || "-"})</span>
+                      </div>
                       <div className="text-xs text-gray-500 flex items-center gap-3 mt-1">
                         {u.email && (
                           <span className="inline-flex items-center gap-1"><MdMail /> {u.email}</span>
@@ -476,7 +392,7 @@ export default function ManajemenStaff() {
           </div>
         </aside>
 
-        {/* RIGHT DETAIL + ACCESS */}
+        {/* RIGHT DETAIL — HANYA PILIH/GANTI ROLE */}
         <section className="w-full md:w-3/5 bg-white">
           {!selected ? (
             <div className="h-full flex items-center justify-center p-10">
@@ -486,7 +402,7 @@ export default function ManajemenStaff() {
                 </div>
                 <h3 className="mt-6 text-lg font-semibold">Pilih staff</h3>
                 <p className="text-sm text-gray-500 mt-1">
-                  Detail staff & akses akan tampil di sini setelah dipilih.
+                  Detail staff & pilihan role akan tampil di sini.
                 </p>
               </div>
             </div>
@@ -497,13 +413,19 @@ export default function ManajemenStaff() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-lg font-semibold">{selected.nama}</div>
-                    <div className="text-xs text-gray-500">{selected.username} • {selected.role || "-"}</div>
+                    <div className="text-xs text-gray-500">
+                      {selected.username} • {selected.role || "-"}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`px-2 py-1 rounded-full text-xs ${selected.status ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-                      {selected.status ? "Aktif" : "Nonaktif"}
-                    </span>
-                  </div>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs ${
+                      selected.status
+                        ? "bg-green-100 text-green-700"
+                        : "bg-gray-100 text-gray-500"
+                    }`}
+                  >
+                    {selected.status ? "Aktif" : "Nonaktif"}
+                  </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 text-sm mt-4">
@@ -513,48 +435,23 @@ export default function ManajemenStaff() {
                 </div>
               </div>
 
-              {/* Akses Matrix */}
-              <div className="border rounded-2xl">
-                <div className="px-4 py-3 border-b font-semibold">Hak Akses ({selected.role || "-"})</div>
-                <div className="overflow-auto">
-                  <table className="min-w-full text-sm">
-                    <thead className="bg-gray-50">
-                      <tr className="text-left text-gray-600">
-                        <th className="px-4 py-2">Menu</th>
-                        <th className="px-4 py-2">Baca</th>
-                        <th className="px-4 py-2">Tambah</th>
-                        <th className="px-4 py-2">Ubah</th>
-                        <th className="px-4 py-2">Hapus</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sidebars
-                        .sort((a, b) => a.indexing - b.indexing)
-                        .map((sb) => {
-                          const key = `${selected.role}_${sb.id}`;
-                          const row = aksesMap.get(key);
-                          const can = (k) => row ? !!row[k] : false;
-                          const toggle = (k) => toggleAkses(selected.role || "staf", sb.id, k);
-                          return (
-                            <tr key={sb.id} className="border-t">
-                              <td className="px-4 py-2">{sb.nama}</td>
-                              <td className="px-4 py-2">
-                                <input type="checkbox" checked={can("can_read")} onChange={() => toggle("can_read")} />
-                              </td>
-                              <td className="px-4 py-2">
-                                <input type="checkbox" checked={can("can_create")} onChange={() => toggle("can_create")} />
-                              </td>
-                              <td className="px-4 py-2">
-                                <input type="checkbox" checked={can("can_update")} onChange={() => toggle("can_update")} />
-                              </td>
-                              <td className="px-4 py-2">
-                                <input type="checkbox" checked={can("can_delete")} onChange={() => toggle("can_delete")} />
-                              </td>
-                            </tr>
-                          );
-                        })}
-                    </tbody>
-                  </table>
+              {/* Ganti Role Saja */}
+              <div className="border rounded-2xl p-4">
+                <div className="font-semibold mb-3">Pengaturan Role</div>
+                <div className="flex items-center gap-3">
+                  <select
+                    className="border rounded-lg px-3 py-2"
+                    value={selected.role || "staf"}
+                    onChange={(e) => updateRoleSelected(e.target.value)}
+                  >
+                    <option value="owner">owner</option>
+                    <option value="admin">admin</option>
+                    <option value="kasir">kasir</option>
+                    <option value="staf">staf</option>
+                  </select>
+                  <span className="text-sm text-gray-500">
+                    Perubahan disimpan otomatis.
+                  </span>
                 </div>
               </div>
             </div>

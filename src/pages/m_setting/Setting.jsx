@@ -33,6 +33,7 @@
   import Profil from "./Profil";
   import Lainnya from "./Lainnya";
   import ManajemenStaf from "./ManajemenStaf";
+import ManagementRole from "./ManajemenRole";
 
   /** Semua icon sudah berupa element React */
   const menuItems = [
@@ -75,6 +76,15 @@
       status: "Kosong",
       component: "ManajemenStaf",
       route: "/users/staff"            // ⬅️ tambahkan route
+    },
+    {
+      icon: <MdGroup />,
+      label: "Manajemen Role",
+      id: "Role",
+      description: "Kelola akses dan hak Role",
+      status: "Kosong",
+      component: "ManajemenRole",
+      route: "/pengaturan/roles"            // ⬅️ tambahkan route
     },
     // { icon: <MdGroup />, label: "Manajemen Staff", id: "staff", description: "Kelola akses dan hak staff", status: "Kosong", component: "ManajemenStaf" },
     { icon: <MdCreditCard />, label: "Metode Pembayaran", id: "payment", description: "Atur metode pembayaran yang diterima", status: "9 Aktif", component: "MetPem" },
@@ -148,7 +158,8 @@
         EDC: <EDC />,
         EditToko: <EditToko />,
         Bantuan: <Bantuan />,
-        Lainnya: <Lainnya />
+        Lainnya: <Lainnya />,
+        ManagementRole: <ManagementRole />,
       };
 
       return <div className="">{map[selectedMenu] || <div className="flex items-center justify-center h-full text-gray-500">Komponen tidak ditemukan</div>}</div>;

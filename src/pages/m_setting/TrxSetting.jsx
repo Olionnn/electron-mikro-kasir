@@ -130,7 +130,7 @@ const TrxSetting = () => {
     {
       variant: "page",
       title: "Pengaturan Transaksi",
-      backTo: "/pengaturan",
+      backTo: onBack,
       actions: [
         {
           type: "button",

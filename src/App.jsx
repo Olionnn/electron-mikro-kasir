@@ -59,6 +59,7 @@ import Laporanshift from "./pages/m_laporan/Laporanshift";
 import Riwayattransaksi from "./pages/m_laporan/Riwayattransaksi";
 import TrxSetting from "./pages/m_setting/TrxSetting";
 import DraftPembelianPage from "./pages/m_pembelisupplier/Draft";
+import ManagementRole from "./pages/m_setting/ManajemenRole";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -114,6 +115,9 @@ function App() {
               <Route path="/pengaturan/pos" element={<TrxSetting/>} />
               <Route path="/pengaturan/printsetting" element={<CountPrint />} />
               <Route path="/pengaturan/struksetting" element={<CountStruk />} />
+              <Route path="/pengaturan/roles" element={<ManagementRole />} />
+
+
               {/* Keuangan */}
               <Route path="/keuangan" element={<Keuangan />} />
 
