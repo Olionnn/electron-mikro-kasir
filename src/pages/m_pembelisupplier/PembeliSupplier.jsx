@@ -10,10 +10,13 @@ import {
   FiX,
   FiMinus,
   FiPlus as FiPlusSm,
+  FiBell,
 } from "react-icons/fi";
 import { HiArrowsUpDown } from "react-icons/hi2";
+import { MdRefresh } from "react-icons/md";
+import { TbFileBarcode } from "react-icons/tb";
+import { BiBarcode } from "react-icons/bi";
 
-/* ======================= LocalStorage Keys & Seed ======================= */
 const LS_ITEMS = "pembelian.items";
 const LS_SUPPLIERS = "pembelian.suppliers";
 const LS_LIST = "pembelian.list";
@@ -117,36 +120,6 @@ const rp = (n) =>
 const PembeliSuplier = () => {
   const navigate = useNavigate();
 
-  // Navbar
-  const onSave = useCallback(() => handleSave(false), []); // draft
-  const onBayar = useCallback(() => handleSave(true), []); // lunas
-
-  useNavbar(
-    {
-      variant: "page",
-      title: "Pembelian Supplier",
-      backTo: null,
-      actions: [
-        {
-          type: "button",
-          title: "Simpan",
-          onClick: onSave,
-          label: "Simpan",
-          className:
-            "inline-flex items-center gap-2 border border-green-600 text-green-700 px-4 py-2 rounded-lg text-sm hover:bg-green-50",
-        },
-        {
-          type: "button",
-          title: "Bayar",
-          onClick: onBayar,
-          label: "Bayar",
-          className:
-            "inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700",
-        },
-      ],
-    },
-    [onSave, onBayar]
-  );
 
   // Masters
   const [items] = useState(() => loadOrSeed(LS_ITEMS, seedItems));
@@ -322,7 +295,6 @@ const PembeliSuplier = () => {
       })),
     };
 
-    // simpan ke list
     const list = loadList();
     saveList([record, ...list]);
     saveCurrent(record);
@@ -330,14 +302,7 @@ const PembeliSuplier = () => {
     alert(isPay ? "Pembelian disimpan (Lunas)." : "Draft pembelian disimpan.");
   };
 
-  // Batalkan draft
-  const resetAll = () => {
-    setCart([]);
-    setDiscValue(0);
-    setTaxPct(0);
-    setCosts([]);
-    clearCurrent();
-  };
+
 
   // Keyboard shortcut biaya (Ctrl+B)
   useEffect(() => {
@@ -351,18 +316,80 @@ const PembeliSuplier = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+
+
+  // Navbar
+  const onSave = useCallback(() => handleSave(false), []); // draft
+  const onBayar = useCallback(() => handleSave(true), []); // lunas
+
+  
+
+  const resetAll = useCallback(() => {
+    setCart([]);
+    setDiscValue(0);
+    setTaxPct(0);
+    setCosts([]);
+    clearCurrent();
+  }, []);
+  useNavbar(
+    {
+      variant: "page",
+      title: "Pembelian Supplier",
+      backTo: null,
+      actions: [
+        {
+          type: "button",
+          title: "Draft",
+          onClick: navigate.bind(null, "/pembelian-supplier/draft"),
+          label: "Draft",
+          className:
+            "bg-white-400 text-yellow-500 text-xs px-3 py-1 rounded-xl hover:bg-yellow-50 border border-yellow-500",
+        },
+        {
+          type: "button",
+          title: "Batalkan",
+          onClick: resetAll,
+          label: "Batalkan",
+          className:
+            "text-xs text-red-600 border border-red-400 px-3 py-1 rounded-full hover:bg-red-50",
+        },
+      ],
+    },
+    [resetAll, navigate]
+  );
+
   return (
     <div className="flex h-full w-full bg-white">
       {/* LEFT: daftar barang */}
       <div className="w-[60%] border-r border-gray-200 flex flex-col p-6 gap-4">
         {/* Toolbar */}
         <div className="flex items-center gap-3">
-          <button className="border px-4 py-2 rounded-full text-sm hover:bg-gray-50">
-            Semua
+          <button
+            className="text-gray-600 inline-flex items-center justify-center w-12 h-12  border border-gray-600 rounded-xl hover:bg-gray-100"
+            title="Filter"
+          >
+            <FiFilter className="w-6 h-6" />
           </button>
-          <button className="border px-4 py-2 rounded-full text-sm hover:bg-gray-50">
-            Bahan Pokok
+          <button
+            className="text-gray-600 inline-flex items-center justify-center w-12 h-12  border border-gray-600 rounded-xl hover:bg-gray-100"
+            title="Notifikasi"
+          >
+            <FiBell className="w-6 h-6" />
           </button>
+          <button
+            className="text-gray-600 inline-flex items-center justify-center w-12 h-12  border border-gray-600 rounded-xl hover:bg-gray-100"
+            title="Search"
+          >
+            <FiSearch className="w-6 h-6" />
+          </button>
+          <button
+            className="text-gray-600 inline-flex items-center justify-center w-12 h-12  border border-gray-600 rounded-xl hover:bg-gray-100"
+            title="Barcode Scanner"
+          >
+            <BiBarcode className="w-6 h-6" />
+          </button>
+          
+
 
           <div className="flex-1 relative">
             <FiSearch className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-green-600" />
@@ -376,15 +403,26 @@ const PembeliSuplier = () => {
           </div>
 
           <button
-            className="text-green-600 inline-flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100"
-            title="Filter"
+            className="text-green-600 inline-flex items-center justify-center w-12 h-12 border border-green-600 rounded-xl hover:bg-green-100"
+            title="Refresh"
           >
-            <FiMenu className="w-6 h-6" />
+            <MdRefresh className="w-7 h-7" />
+          </button>
+        </div>
+        <div className="flex items-center gap-2">
+          <button className="border px-4 py-2 rounded-full text-sm hover:bg-gray-50">
+            Semua
+          </button>
+          <button className="border px-4 py-2 rounded-full text-sm hover:bg-gray-50">
+            Bahan Pokok
+          </button>
+          <button className="border px-4 py-2 rounded-full text-sm hover:bg-gray-50">
+            Bumbu Masak
           </button>
         </div>
 
         {/* Grid barang */}
-        <div className="flex overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-3 pr-1">
+        <div className=" overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-3 pr-1">
           {filtered.map((it) => (
             <button
               key={it.id}
@@ -420,17 +458,12 @@ const PembeliSuplier = () => {
       <div className="w-[40%] flex flex-col p-6 gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            {/* <span className="bg-yellow-400 text-white text-xs px-3 py-1 rounded-full">
-              Draft
-            </span> */}
-            <Link to={"/pembelian-supplier/draft"} className="bg-yellow-400 text-white text-xs px-3 py-1 rounded-full">
-              Draft
-            </Link>
-            <button
-              className="text-xs text-red-600 border border-red-400 px-3 py-1 rounded-full hover:bg-red-50"
-              onClick={resetAll}
+          <button
+              onClick={openCost}
+              className="text-xs inline-flex items-center gap-2 border px-3 py-1.5 rounded-full hover:bg-gray-50"
+              title="Tambah biaya (ongkir/jasa)"
             >
-              Batalkan
+              + Biaya (Ctrl+B)
             </button>
           </div>
 
@@ -462,7 +495,7 @@ const PembeliSuplier = () => {
             </select>
           </label>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 ">
             <label className="grid gap-1">
               <span className="text-xs text-gray-600">Diskon</span>
               <div className="flex gap-2">
@@ -475,11 +508,12 @@ const PembeliSuplier = () => {
                   <option value="pct">%</option>
                 </select>
                 <input
-                  type="number"
-                  className="flex-1 border rounded-lg px-3 py-2 text-sm"
+                  type="text"
+                  inputMode="numeric"
+                  className="flex-1 border rounded-lg px-3 py-2 text-sm w-full"
                   min={0}
                   value={discValue}
-                  onChange={(e) => setDiscValue(e.target.value)}
+                  onChange={(e) => setDiscValue(e.target.value.replace(/[^0-9]/g, ""))}
                   placeholder="0"
                 />
               </div>
@@ -488,24 +522,20 @@ const PembeliSuplier = () => {
             <label className="grid gap-1">
               <span className="text-xs text-gray-600">Pajak (%)</span>
               <input
-                type="number"
-                className="border rounded-lg px-3 py-2 text-sm"
+                type="text"
+                inputMode="numeric"
+
+                className="border rounded-lg px-3 py-2 text-sm w-full"
                 min={0}
                 value={taxPct}
-                onChange={(e) => setTaxPct(e.target.value)}
+                onChange={(e) => setTaxPct(e.target.value.replace(/[^0-9]/g, ""))}
                 placeholder="0"
               />
             </label>
           </div>
 
           <div>
-            <button
-              onClick={openCost}
-              className="text-xs inline-flex items-center gap-2 border px-3 py-1.5 rounded-full hover:bg-gray-50"
-              title="Tambah biaya (ongkir/jasa)"
-            >
-              + Biaya (Ctrl+B)
-            </button>
+
             <div className="mt-2 flex flex-wrap gap-2">
               {costs.map((c) => (
                 <span
@@ -609,24 +639,27 @@ const PembeliSuplier = () => {
               <span>Biaya</span>
               <span className="font-medium text-teal-700">{rp(totalBiaya)}</span>
             </div>
-          </div>
-          <div className="flex items-center justify-between bg-green-600 text-white px-4 py-4">
-            <span className="text-xl font-bold">{rp(grandTotal)}</span>
-            <div className="flex gap-2">
-              <button
-                onClick={() => handleSave(true)}
-                className="text-sm font-bold bg-white/10 hover:bg-white/20 rounded-full px-4 py-2"
-              >
-                Bayar (F12)
-              </button>
+            <div className="border-t pt-2 flex justify-between">
+              <span className="font-semibold text-xl">Total</span>
+              <span className="font-bold text-green-700 text-xl">{rp(grandTotal)}</span>
             </div>
           </div>
+          <div className="flex items-center justify-between px-4 py-4">
           <button
             onClick={() => handleSave(false)}
-            className="w-full border-2 border-green-600 text-green-700 py-3 hover:bg-green-50 text-sm font-semibold rounded-b-xl"
+            className=" border-2 w-40 border-yellow-600 text-yellow-700 py-3 hover:bg-yellow-50 text-sm font-semibold rounded-xl"
           >
             SIMPAN
           </button>
+          <button
+            onClick={() => handleSave(true)}
+            className="border-2 w-50 border-green-600 text-green-700 py-3 hover:bg-green-50 text-sm font-semibold rounded-xl"
+          >
+            Bayar (F12)
+          </button>
+            
+          </div>
+
         </div>
       </div>
 
