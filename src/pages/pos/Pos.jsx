@@ -268,7 +268,7 @@ const Pos = () => {
         </>
       
       },
-        { type: "button", title: "Favorit", onClick: () => console.log("favorit"), className: "bg-green-600 text-white rounded-full w-12 h-12", icon: <BsStarFill size={18} /> },
+        { type: "button", title: "Daftar Member", onClick: () => console.log("Daftar Member"), className: "bg-green-600 text-white rounded-full w-12 h-12", icon: <BsStarFill size={18} /> },
         { type: "button", title: "Batalkan", onClick: onCancel, label: "Batalkan", className: "border border-red-500 text-red-500 px-6 py-2 rounded-full font-semibold text-lg" },
         { type: "button", title: "Pengaturan", onClick: () => navigate("/pengaturan/pos"), className: "rounded-full w-12 h-12 text-gray-700 hover:bg-gray-100", icon: <MdSettings size={22} /> },
       ],
@@ -278,9 +278,9 @@ const Pos = () => {
 
   const renderSelectedIcon = () => {
     switch (selectedIcon) {
-      case "search": return <IoSearch size={30} className="text-gray-500" />;
-      case "barcode": return <IoBarcode size={30} className="text-gray-500" />;
-      case "receipt": return <IoReceiptOutline size={30} className="text-gray-500" />;
+      case "search": return <IoSearch size={30} className="text-gray-500" title="Search"/>;
+      case "barcode": return <IoBarcode size={30} className="text-gray-500" title="Barcode" />;
+      case "receipt": return <IoReceiptOutline size={30} className="text-gray-500" title="Riwayat Transaksi"/>;
       default: return <MdOutlineSearch size={30} className="text-gray-500" />;
     }
   };
@@ -458,7 +458,7 @@ const Pos = () => {
               </button>
             </div>
 
-            <div className="flex items-center flex-1 border rounded-2xl px-4 py-2 bg-gray-50">
+            <div className="flex items-center flex-1 border rounded-2xl px-4 py-2 bg-gray-50" title="asd" >
               {renderSelectedIcon()}
               <input
                 type="text"
@@ -472,8 +472,9 @@ const Pos = () => {
             <button
               className="inline-flex items-center gap-2 px-3 py-3 rounded-xl border hover:bg-gray-50"
               onClick={handleRefresh}
+              title="Refresh daftar barang"
             >
-              <MdOutlineRefresh size={23} />
+              <MdOutlineRefresh size={23} title="Refresh" />
             </button>
           </div>
 
