@@ -183,8 +183,40 @@ const Transaksi = () => {
                   handleClearAmount();
                 } else if (!isNaN(val)) {
                   setPaidAmount(prev => prev * 10 + parseInt(val));
+                } else if (val === '00') {
+                  setPaidAmount(prev => prev * 100);
+                } else if (val === '000') {
+                  setPaidAmount(prev => prev * 1000);
+                } else if (val === '.') {
+                  // No-op untuk titik, karena paidAmount sudah integer
+                } else if (val === <FaBackspace />) {
+                  setPaidAmount(prev => Math.floor(prev / 10)); // hapus digit terakhir
+                } else if (val === <FaMoneyBillAlt />) {
+                  handleAddAmount(checkoutOrder?.total || 0); // bayar dengan uang pas
                 }
-                // Ikon/teks lain tetap no-op (sesuai fungsi sekarang)
+
+
+                switch (val) {
+                  case 'C':
+                    handleClearAmount();
+                    break;
+                  case '.':
+                    // No-op, paidAmount sudah integer
+                  case '00':
+                    setPaidAmount((prev) => prev * 100);
+                  case '000':
+                    setPaidAmount((prev) => prev * 1000);
+                  case <FaBackspace />:
+                    setPaidAmount((prev) => Math.floor(prev / 10)); // hapus digit terakhir
+                  case <FaMoneyBillAlt />:
+                    handleAddAmount(checkoutOrder?.total || 0); // bayar dengan uang pas
+                    break;
+                  case !isNaN(val):
+                    setPaidAmount((prev) => prev * 10 + parseInt(val));
+                    break;
+                  default:
+                    break;
+                }
               }}
               className="bg-gray-100 hover:bg-gray-200 py-6 rounded text-2xl font-bold flex items-center justify-center border border-gray-200"
             >
