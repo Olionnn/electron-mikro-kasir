@@ -18,6 +18,7 @@ const STORAGE_KEY_HISTORY = "pos.history";
 const STORAGE_KEY_DISCOUNTS = "pos.discounts";
 const STORAGE_KEY_TAXDEF = "pos.taxDefault";
 const COSTS_KEY = "pos.costs";
+const STORAGE_KEY_CUSTOMERS = "pos.pelanggan";
 
 const seedItems = [
   { id: 1, nama: "Beras Ramos 5kg", hargaDasar: 70000, hargaJual: 72000, stok: 8, kode: "BR5K" },
@@ -31,6 +32,13 @@ const seedItems = [
   { id: 9, nama: "Sabun Mandi Batang", hargaJual: 6000, stok: 30, kode: "SMBT" },
   { id: 10, nama: "Shampoo Sachet", hargaJual: 3000, stok: 70, kode: "SHSC" },
 ];
+
+const seedCustomers = [
+  { id: 1, toko_id: 1, nama: "Umum", poin: 0, kode: "CUST-000", email: "", no_telp: "", alamat: "", image: "", created_by: null, updated_by: null, sync_at: null, status: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 2, toko_id: 1, nama: "Andi", poin: 120, kode: "CUST-001", email: "andi@mail.com", no_telp: "0812345678", alamat: "Jl. Kenanga", image: "", created_by: null, updated_by: null, sync_at: null, status: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 3, toko_id: 1, nama: "Sinta", poin: 55, kode: "CUST-002", email: "", no_telp: "", alamat: "", image: "", created_by: null, updated_by: null, sync_at: null, status: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+];
+
 
 const seedHistory = [
   {
@@ -227,6 +235,137 @@ const Pos = () => {
 
   useEffect(() => { localStorage.setItem(COSTS_KEY, JSON.stringify(costs)); }, [costs]);
 
+
+
+const loadCustomers = () => {
+  const raw = localStorage.getItem(STORAGE_KEY_CUSTOMERS);
+  if (raw) {
+    try { return JSON.parse(raw); } catch {}
+  }
+  localStorage.setItem(STORAGE_KEY_CUSTOMERS, JSON.stringify(seedCustomers));
+  return seedCustomers;
+};
+const saveCustomers = (rows) =>
+  localStorage.setItem(STORAGE_KEY_CUSTOMERS, JSON.stringify(rows));
+
+
+/* ---- Customers modal state ---- */
+const [memberOpen, setMemberOpen] = useState(false);
+const [customers, setCustomers] = useState(() => loadCustomers());
+const [customerQ, setCustomerQ] = useState("");
+const [editingCust, setEditingCust] = useState(null); // object atau null
+const [custForm, setCustForm] = useState({
+  nama: "",
+  poin: 0,
+  kode: "",
+  email: "",
+  no_telp: "",
+  alamat: "",
+  status: true,
+});
+const [currentCustomer, setCurrentCustomer] = useState({ id: 1, nama: "Umum" });
+
+const filteredCustomers = useMemo(() => {
+  const q = customerQ.trim().toLowerCase();
+  if (!q) return customers;
+  return customers.filter(
+    (c) =>
+      c.nama.toLowerCase().includes(q) ||
+      (c.kode || "").toLowerCase().includes(q) ||
+      (c.email || "").toLowerCase().includes(q) ||
+      (c.no_telp || "").toLowerCase().includes(q)
+  );
+}, [customers, customerQ]);
+
+const openAddCustomer = () => {
+  setEditingCust(null);
+  setCustForm({
+    nama: "",
+    poin: 0,
+    kode: "",
+    email: "",
+    no_telp: "",
+    alamat: "",
+    status: true,
+  });
+};
+
+const openEditCustomer = (c) => {
+  setEditingCust(c);
+  setCustForm({
+    nama: c.nama || "",
+    poin: c.poin || 0,
+    kode: c.kode || "",
+    email: c.email || "",
+    no_telp: c.no_telp || "",
+    alamat: c.alamat || "",
+    status: !!c.status,
+  });
+};
+
+const submitCustomer = () => {
+  const nama = custForm.nama.trim();
+  if (!nama) return alert("Nama pelanggan wajib diisi.");
+  const now = new Date().toISOString();
+
+  if (editingCust) {
+    const rows = customers.map((c) =>
+      c.id === editingCust.id
+        ? {
+            ...c,
+            ...custForm,
+            poin: Number(custForm.poin || 0),
+            updated_at: now,
+          }
+        : c
+    );
+    setCustomers(rows);
+    saveCustomers(rows);
+  } else {
+    const newId =
+      customers.length ? Math.max(...customers.map((c) => Number(c.id))) + 1 : 1;
+    const row = {
+      id: newId,
+      toko_id: 1,
+      ...custForm,
+      poin: Number(custForm.poin || 0),
+      created_by: null,
+      updated_by: null,
+      sync_at: null,
+      status: !!custForm.status,
+      created_at: now,
+      updated_at: now,
+    };
+    const rows = [...customers, row];
+    setCustomers(rows);
+    saveCustomers(rows);
+  }
+  setEditingCust(null);
+  setCustForm({
+    nama: "",
+    poin: 0,
+    kode: "",
+    email: "",
+    no_telp: "",
+    alamat: "",
+    status: true,
+  });
+};
+
+const deleteCustomer = (id) => {
+  if (!window.confirm("Hapus pelanggan ini?")) return;
+  const rows = customers.filter((c) => c.id !== id);
+  setCustomers(rows);
+  saveCustomers(rows);
+  if (currentCustomer?.id === id) setCurrentCustomer({ id: 1, nama: "Umum" });
+};
+
+const selectCustomer = (c) => {
+  setCurrentCustomer({ id: c.id, nama: c.nama });
+  setMemberOpen(false);
+};
+
+
   const openCostModal = () => { setCostForm({ name: "", note: "", amount: "" }); setCostModalOpen(true); };
   const resetCostForm = () => setCostForm({ name: "", note: "", amount: "" });
 
@@ -268,7 +407,11 @@ const Pos = () => {
         </>
       
       },
-        { type: "button", title: "Daftar Member", onClick: () => console.log("Daftar Member"), className: "bg-green-600 text-white rounded-full w-12 h-12", icon: <BsStarFill size={18} /> },
+      { type: "button",
+        title: "Daftar Member",
+        onClick: () => setMemberOpen(true),
+        className: "bg-green-600 text-white rounded-full w-12 h-12",
+        icon: <BsStarFill size={18} /> },
         { type: "button", title: "Batalkan", onClick: onCancel, label: "Batalkan", className: "border border-red-500 text-red-500 px-6 py-2 rounded-full font-semibold text-lg" },
         { type: "button", title: "Pengaturan", onClick: () => navigate("/pengaturan/pos"), className: "rounded-full w-12 h-12 text-gray-700 hover:bg-gray-100", icon: <MdSettings size={22} /> },
       ],
@@ -998,6 +1141,121 @@ const Pos = () => {
           </div>
         </div>
       )}
+
+{memberOpen && (
+  <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4">
+    <div className="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden">
+      {/* Header */}
+      <div className="px-5 py-4 border-b flex items-center justify-between">
+        <div>
+          <div className="text-lg font-semibold">Daftar Pelanggan</div>
+          <div className="text-xs text-gray-500">
+            Pilih pelanggan untuk transaksi ini atau tambah pelanggan baru.
+          </div>
+        </div>
+        <button
+          onClick={() => setMemberOpen(false)}
+          className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center"
+          title="Tutup"
+        >
+          ✕
+        </button>
+      </div>
+
+      {/* Toolbar */}
+      <div className="px-5 py-3 border-b flex items-center gap-3">
+        <div className="flex items-center gap-2 px-3 py-2 border rounded-xl flex-1 focus-within:ring-2 focus-within:ring-green-500">
+          <span className="text-gray-400">🔎</span>
+          <input
+            type="text"
+            value={customerQ}
+            onChange={(e) => setCustomerQ(e.target.value)}
+            placeholder="Cari nama/kode/email/no telp…"
+            className="w-full outline-none text-sm"
+          />
+        </div>
+        <button
+          onClick={openAddCustomer}
+          className="px-4 py-2 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-700"
+        >
+          + Tambah
+        </button>
+      </div>
+
+      {/* Body */}
+      <div className="grid md:grid-cols-2 gap-0">
+        {/* List */}
+        <div className="md:col-span-2 max-h-[60vh] overflow-auto divide-y">
+          {filteredCustomers.map((c) => (
+            <div
+              key={c.id}
+              className="px-5 py-3 hover:bg-gray-50 flex items-center justify-between"
+            >
+              <div>
+                <div className="font-medium">
+                  {c.nama}{" "}
+                  <span className="text-xs text-gray-500">({c.kode || "—"})</span>
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  Poin: <b>{c.poin}</b>{" "}
+                  {c.email ? <>• {c.email}</> : null}{" "}
+                  {c.no_telp ? <>• {c.no_telp}</> : null}
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => selectCustomer(c)}
+                  className="px-3 py-1.5 rounded-lg border text-sm hover:bg-green-50"
+                  title="Pilih"
+                >
+                  Pilih
+                </button>
+                <button
+                  onClick={() => openEditCustomer(c)}
+                  className="px-3 py-1.5 rounded-lg border text-sm hover:bg-gray-50"
+                  title="Edit"
+                >
+                  Edit
+                </button>
+                {c.id !== 1 && (
+                  <button
+                    onClick={() => deleteCustomer(c.id)}
+                    className="px-3 py-1.5 rounded-lg border text-sm text-red-600 hover:bg-red-50"
+                    title="Hapus"
+                  >
+                    Hapus
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+          {filteredCustomers.length === 0 && (
+            <div className="p-6 text-center text-sm text-gray-500">
+              Tidak ada data pelanggan.
+            </div>
+          )}
+        </div>
+
+       
+      </div>
+
+      {/* Footer current selection */}
+      <div className="px-5 py-3 border-t bg-gray-50 flex items-center justify-between">
+        <div className="text-sm">
+          Terpilih: <b>{currentCustomer?.nama || "Umum"}</b>
+        </div>
+        <button
+          onClick={() => setMemberOpen(false)}
+          className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 text-sm"
+        >
+          Selesai
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 };
