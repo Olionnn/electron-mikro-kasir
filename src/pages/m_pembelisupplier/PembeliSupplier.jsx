@@ -146,6 +146,41 @@ const PembeliSuplier = () => {
   const [costForm, setCostForm] = useState({ name: "", amount: "", note: "" });
   const [costs, setCosts] = useState([]); // {id,name,amount,note}
 
+  const [lineEditOpen, setLineEditOpen] = useState(false);
+  const [lineForm, setLineForm] = useState({
+    id: null,
+    harga: 0,          // harga beli per item
+    diskonPerQty: 0,   // diskon rupiah per item
+    note: "",          // catatan singkat
+  });
+
+  const openLineEdit = (row) => {
+    setLineForm({
+      id: row.id,
+      harga: Number(row.harga || 0),
+      diskonPerQty: Number(row.diskonPerQty || 0),
+      note: row.note || "",
+    });
+    setLineEditOpen(true);
+  };
+
+
+  const saveLineEdit = () => {
+    setCart((prev) =>
+      prev.map((p) =>
+        p.id === lineForm.id
+          ? {
+              ...p,
+              harga: Math.max(0, Number(lineForm.harga || 0)),
+              diskonPerQty: Math.max(0, Number(lineForm.diskonPerQty || 0)),
+              note: lineForm.note || "",
+            }
+          : p
+      )
+    );
+    setLineEditOpen(false);
+  };
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     let data = items;
@@ -522,7 +557,7 @@ const PembeliSuplier = () => {
             </button>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <label className="text-sm text-gray-700">Urut:</label>
             <button
               className="text-xs border border-emerald-300 px-3 py-1 rounded-full hover:bg-emerald-50 inline-flex items-center gap-1 bg-white text-emerald-700"
@@ -531,7 +566,7 @@ const PembeliSuplier = () => {
             >
               <HiArrowsUpDown /> {sortKey === "nama" ? "Nama" : sortKey === "kode" ? "Kode" : "Stok"}
             </button>
-          </div>
+          </div> */}
         </div>
 
         <div className="rounded-xl border border-emerald-200 p-3 grid gap-3 bg-white/80">
@@ -618,59 +653,70 @@ const PembeliSuplier = () => {
           ) : (
             <div className="grid gap-2">
               {cart.map((row) => (
-                <div
-                  key={row.id}
-                  className="border rounded-lg p-2 flex items-center justify-between bg-gradient-to-r from-white to-emerald-50"
-                  onClick={() => {console.log("APALAh")}} // Click to add more
-                >
-                  <div className="min-w-0">
-                    <div className="font-medium text-sm truncate text-emerald-800">
-                      {row.nama}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {row.kode} • {rp(row.harga)}
-                    </div>
+              <div
+                key={row.id}
+                className="border rounded-lg p-2 flex items-center justify-between bg-gradient-to-r from-white to-emerald-50 cursor-pointer"
+                onClick={() => openLineEdit(row)} // klik baris => buka modal
+                title="Klik untuk edit baris"
+              >
+                <div className="min-w-0">
+                  <div className="font-medium text-sm truncate text-emerald-800">
+                    {row.nama}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      className="w-8 h-8 rounded-full border hover:bg-gray-50 flex items-center justify-center"
-                      onClick={() => decQty(row.id)}
-                      title="Kurangi"
-                    >
-                      <FiMinus />
-                    </button>
-                    <input
-                      type="number"
-                      min={1}
-                      value={row.qty}
-                      onChange={(e) =>
-                        setCart((prev) =>
-                          prev.map((p) =>
-                            p.id === row.id
-                              ? { ...p, qty: Math.max(1, Number(e.target.value || 1)) }
-                              : p
-                          )
-                        )
-                      }
-                      className="w-14 text-center border rounded-md py-1 text-sm"
-                    />
-                    <button
-                      className="w-8 h-8 rounded-full border hover:bg-gray-50 flex items-center justify-center"
-                      onClick={() => incQty(row.id)}
-                      title="Tambah"
-                    >
-                      <FiPlusSm />
-                    </button>
-                    <button
-                      className="w-8 h-8 rounded-full border hover:bg-red-50 text-red-600 flex items-center justify-center"
-                      onClick={() => removeLine(row.id)}
-                      title="Hapus baris"
-                    >
-                      <FiTrash2 />
-                    </button>
+                  <div className="text-xs text-gray-500">
+                    {row.kode} • {rp(row.harga)}
+                    {Number(row.diskonPerQty || 0) > 0 && (
+                      <span className="ml-2 text-emerald-700">
+                        • Diskon/qty: {rp(row.diskonPerQty)}
+                      </span>
+                    )}
+                    {row.note && <span className="ml-2 text-gray-400">• {row.note}</span>}
                   </div>
                 </div>
-              ))}
+
+                <div className="flex items-center gap-2">
+                  <button
+                    className="w-8 h-8 rounded-full border hover:bg-gray-50 flex items-center justify-center"
+                    onClick={(e) => { e.stopPropagation(); decQty(row.id); }}
+                    title="Kurangi"
+                  >
+                    <FiMinus />
+                  </button>
+
+                  <input
+                    type="number"
+                    min={1}
+                    value={row.qty}
+                    onChange={(e) => {
+                      const val = Math.max(1, Number(e.target.value || 1));
+                      setCart((prev) =>
+                        prev.map((p) => (p.id === row.id ? { ...p, qty: val } : p))
+                      );
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="w-14 text-center border rounded-md py-1 text-sm"
+                    title="Ubah jumlah"
+                  />
+
+                  <button
+                    className="w-8 h-8 rounded-full border hover:bg-gray-50 flex items-center justify-center"
+                    onClick={(e) => { e.stopPropagation(); incQty(row.id); }}
+                    title="Tambah"
+                  >
+                    <FiPlusSm />
+                  </button>
+
+                  <button
+                    className="w-8 h-8 rounded-full border hover:bg-red-50 text-red-600 flex items-center justify-center"
+                    onClick={(e) => { e.stopPropagation(); removeLine(row.id); }}
+                    title="Hapus baris"
+                  >
+                    <FiTrash2 />
+                  </button>
+                </div>
+              </div>
+            ))}
+
             </div>
           )}
         </div>
@@ -932,6 +978,102 @@ const PembeliSuplier = () => {
           </div>
         </div>
       )}
+
+
+{lineEditOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+    <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-5">
+      <div className="flex items-center justify-between mb-3">
+        <div className="font-semibold text-lg">Edit Baris</div>
+        <button
+          onClick={() => setLineEditOpen(false)}
+          className="w-8 h-8 rounded-full hover:bg-gray-100"
+          title="Tutup"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div className="space-y-3">
+        <label className="grid gap-1">
+          <span className="text-sm">Harga Beli (per item)</span>
+          <input
+            type="number"
+            min={0}
+            value={lineForm.harga}
+            onChange={(e) =>
+              setLineForm((f) => ({ ...f, harga: e.target.value }))
+            }
+            className="border rounded-lg px-3 py-2"
+            placeholder="0"
+          />
+        </label>
+
+        <label className="grid gap-1">
+          <span className="text-sm">Diskon per Jumlah (Rp / item)</span>
+          <input
+            type="number"
+            min={0}
+            value={lineForm.diskonPerQty}
+            onChange={(e) =>
+              setLineForm((f) => ({ ...f, diskonPerQty: e.target.value }))
+            }
+            className="border rounded-lg px-3 py-2"
+            placeholder="0"
+          />
+          <span className="text-xs text-gray-500">
+            Contoh: isi 500 berarti setiap item didiskon Rp 500.
+          </span>
+        </label>
+
+        <label className="grid gap-1">
+          <span className="text-sm">Catatan Singkat</span>
+          <input
+            type="text"
+            value={lineForm.note}
+            onChange={(e) =>
+              setLineForm((f) => ({ ...f, note: e.target.value }))
+            }
+            className="border rounded-lg px-3 py-2"
+            placeholder="Opsional"
+          />
+        </label>
+
+        {/* pratinjau subtotal baris (opsional) */}
+        <div className="p-3 bg-gray-50 rounded-lg text-sm">
+          {(() => {
+            const qty = (cart.find((c) => c.id === lineForm.id)?.qty) || 1;
+            const harga = Math.max(0, Number(lineForm.harga || 0));
+            const diskon = Math.max(0, Number(lineForm.diskonPerQty || 0));
+            const sub = Math.max(0, qty * (harga - diskon));
+            return (
+              <div className="flex items-center justify-between">
+                <span>Subtotal Baris (estimasi)</span>
+                <span className="font-semibold">{rp(sub)}</span>
+              </div>
+            );
+          })()}
+        </div>
+
+        <div className="flex justify-end gap-2 pt-1">
+          <button
+            className="px-4 py-2 rounded-lg border"
+            onClick={() => setLineEditOpen(false)}
+          >
+            Batal
+          </button>
+          <button
+            className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+            onClick={saveLineEdit}
+          >
+            Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
 
     </div>
   );

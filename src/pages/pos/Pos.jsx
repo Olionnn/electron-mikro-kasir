@@ -10,6 +10,11 @@ import PosCartItem from "../../component/poscartitem";
 import { useNavbar } from "../../hooks/useNavbar";
 import { IoSearch, IoBarcode, IoReceiptOutline } from "react-icons/io5";
 import Modal from "../../component/Modal";
+import {
+
+  FiPlus,
+
+} from "react-icons/fi";
 
 /* ---------------- storage helpers ---------------- */
 const STORAGE_KEY_ITEMS = "pos.barangList";
@@ -665,29 +670,34 @@ const selectCustomer = (c) => {
                     </div>
                   </button>
                 );
-              })}
-              {filteredHistory.length === 0 && (
+                })}
+                {filteredHistory.length === 0 && (
                 <div className="text-gray-400 text-sm">Tidak ada riwayat</div>
+                )}
+              </div>
+              ) : (
+              <>
+                <div className="space-y-2">
+                {filteredItems.map((item, index) => (
+                  <PosItemCard key={item.id} item={item} index={index} onAddItem={handleAddItemToCart} />
+                ))}
+                </div>
+                <div className="fixed bottom-0 left-0 w-[60%] bg-white border border-gray-200 p-4">
+                <Link
+                  to="/barang/tambah"
+                  className="flex items-center gap-3 text-emerald-700 hover:text-emerald-900 text-sm"
+                >
+                  <span className="w-10 h-10 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center">
+                  <FiPlus className="text-lg" />
+                  </span>
+                  <span className="font-semibold">Tambah Barang Baru</span>
+                </Link>
+                </div>
+              </>
               )}
             </div>
-          ) : (
-            <div className="space-y-2">
-              {filteredItems.map((item, index) => (
-                <PosItemCard key={item.id} item={item} index={index} onAddItem={handleAddItemToCart} />
-              ))}
-              <Link
-                to="/barang/tambah"
-                className="inline-flex items-center gap-3 text-green-700 hover:text-green-800 font-medium mt-2"
-              >
-                <span className="text-2xl bg-green-50 border border-green-200 rounded-lg w-10 h-10 grid place-items-center">+</span>
-                Tambah Barang Baru
-              </Link>
             </div>
-          )}
-        </div>
-      </div>
 
-      {/* RIGHT: Keranjang & Ringkasan */}
       <div className="w-2/5 flex flex-col">
         {/* Header keranjang */}
         <div className="bg-white p-5 border-b">
