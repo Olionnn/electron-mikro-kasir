@@ -138,6 +138,7 @@ function App() {
 
               {/* Pembelian Supplier */}
               <Route path="/pembelian-supplier" element={<PembeliSuplier />} />
+              <Route path="/pembelian-supplier/draft" element={<div>Draft Pembelian Page</div>} />
 
 
               {/* Management */}

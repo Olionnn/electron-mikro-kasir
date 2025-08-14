@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useNavbar } from "../../hooks/useNavbar";
 import {
   FiSearch,
@@ -420,9 +420,12 @@ const PembeliSuplier = () => {
       <div className="w-[40%] flex flex-col p-6 gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="bg-yellow-400 text-white text-xs px-3 py-1 rounded-full">
+            {/* <span className="bg-yellow-400 text-white text-xs px-3 py-1 rounded-full">
               Draft
-            </span>
+            </span> */}
+            <Link to={"/pembelian-supplier/draft"} className="bg-yellow-400 text-white text-xs px-3 py-1 rounded-full">
+              Draft
+            </Link>
             <button
               className="text-xs text-red-600 border border-red-400 px-3 py-1 rounded-full hover:bg-red-50"
               onClick={resetAll}
