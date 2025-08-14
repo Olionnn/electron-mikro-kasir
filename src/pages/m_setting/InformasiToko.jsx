@@ -1,89 +1,98 @@
 import React from "react";
-import { MdEdit } from "react-icons/md";
+import {
+  MdEdit,
+  MdStore,
+  MdPerson,
+  MdPhone,
+  MdFlag,
+  MdMap,
+  MdLocationCity,
+  MdLanguage,
+  MdAttachMoney,
+  MdTextFields,
+  MdPercent,
+  MdInfo
+} from "react-icons/md";
 import { Link } from "react-router-dom";
 
 const InformasiToko = () => {
   const infoToko = [
-    { label: "Jenis Usaha", value: "pilih jenis usaha ..." },
-    { label: "Nama Toko", value: "Abror G4nteng" },
-    { label: "Pajak Default", value: "0%" },
-    { label: "Nama Pemilik / Owner", value: "beastbeeme2" },
-    { label: "Nomor Telepon", value: "+62085707896575" },
+    { label: "Jenis Usaha", value: "pilih jenis usaha ...", icon: <MdStore /> },
+    { label: "Nama Toko", value: "Abror G4nteng", icon: <MdStore /> },
+    { label: "Pajak Default", value: "0%", icon: <MdPercent /> },
+    { label: "Nama Pemilik / Owner", value: "beastbeeme2", icon: <MdPerson /> },
+    { label: "Nomor Telepon", value: "+62085707896575", icon: <MdPhone /> },
   ];
 
   const lokasi = [
-    { label: "Negara", value: "Indonesia" },
-    { label: "Provinsi", value: "JAMBI" },
-    { label: "Kota", value: "KABUPATEN KERINCI" },
-    { label: "Detail Lokasi", value: "-" },
+    { label: "Negara", value: "Indonesia", icon: <MdFlag /> },
+    { label: "Provinsi", value: "JAMBI", icon: <MdMap /> },
+    { label: "Kota", value: "KABUPATEN KERINCI", icon: <MdLocationCity /> },
+    { label: "Detail Lokasi", value: "-", icon: <MdInfo /> },
   ];
 
   const preferensi = [
-    { label: "Bahasa", value: "Bahasa Indonesia" },
-    { label: "Mata Uang", value: "Indonesian Rupiah" },
-    { label: "Motto", value: "Melayani dengan sepenuh hati" },
-    { label: "Metode Akuntansi", value: "Kas" },
-    { label: "Status Olshopin", value: "Aktif" },
+    { label: "Bahasa", value: "Bahasa Indonesia", icon: <MdLanguage /> },
+    { label: "Mata Uang", value: "Indonesian Rupiah", icon: <MdAttachMoney /> },
+    { label: "Motto", value: "Melayani dengan sepenuh hati", icon: <MdTextFields /> },
+    { label: "Metode Akuntansi", value: "Kas", icon: <MdInfo /> },
+    { label: "Status Olshopin", value: "Aktif", icon: <MdInfo /> },
   ];
 
-  const Section = ({ title, items }) => (
-    <section>
-      <div className="px-6 pt-6">
-        <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-      </div>
-      <div className="mt-2">
-        {items.map((row, i) => (
-          <div key={i}>
-            <div className="px-6 py-4">
-              <div className="text-sm text-gray-500">{row.label}</div>
-              <div className="text-base md:text-lg font-semibold text-gray-900">
-                {row.value}
-              </div>
-            </div>
-            {i < items.length - 1 && <div className="h-px bg-gray-200" />}
+  const Section = ({ items }) => (
+    <div className="bg-white rounded-xl shadow-md overflow-hidden divide-y">
+      {items.map((item, idx) => (
+        <div
+          key={idx}
+          className="flex items-center gap-4 px-4 py-3 hover:bg-gray-50 transition-colors"
+        >
+          <span className="text-green-600 text-2xl">{item.icon}</span>
+          <div>
+            <div className="text-sm text-gray-500">{item.label}</div>
+            <div className="font-semibold text-gray-900">{item.value}</div>
           </div>
-        ))}
-      </div>
-      <div className="h-3 bg-gray-100" />
-    </section>
+        </div>
+      ))}
+    </div>
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-green-50 to-white">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b">
-        <h1 className="text-2xl font-bold tracking-tight">INFORMASI TOKO</h1>
-        {/* <button
-          className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold transition-colors"
-          title="Edit Toko"
+      <div className="flex items-center justify-between px-6 py-4 bg-white shadow-md">
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
+          INFORMASI TOKO
+        </h2>
+        <Link
+          to={"/pengaturan/edittoko"}
+          className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 hover:bg-green-200 rounded-lg text-green-700 font-semibold text-sm md:text-base transition-all"
         >
-          <MdEdit className="text-lg" />
-          Edit Toko
-        </button> */}
-        <Link to={"/pengaturan/edittoko"}
-          className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold transition-colors"
-          title="Edit Toko"
-        >
-          <MdEdit className="text-lg" />
+          <MdEdit className="text-lg md:text-xl" />
           Edit Toko
         </Link>
-
       </div>
 
-      {/* Avatar / Icon */}
-      <div className="flex flex-col items-center py-8">
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png"
-          alt="Store Icon"
-          className="w-24 h-24 rounded-full ring-2 ring-green-100"
-        />
+      {/* Avatar / Logo */}
+      <div className="flex flex-col items-center py-8 relative">
+        <div className="relative group">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png"
+            className="w-28 h-28 md:w-32 md:h-32 rounded-full ring-4 ring-green-100 shadow-lg transform group-hover:scale-105 transition-transform"
+            alt="Store Logo"
+          />
+          <span className="absolute bottom-0 right-0 bg-green-500 text-white p-2 rounded-full shadow-md">
+            <MdEdit />
+          </span>
+        </div>
+        <p className="mt-4 text-lg font-bold text-gray-800">Abror G4nteng</p>
+        <p className="text-sm text-gray-500">Toko UMKM</p>
       </div>
 
-      {/* Sections (tanpa card/container) */}
-      <div className="flex-1">
-        <Section title="Info Toko" items={infoToko} />
-        <Section title="Lokasi" items={lokasi} />
-        <Section title="Bahasa & Mata Uang" items={preferensi} />
+      {/* Info Sections */}
+      <div className="flex flex-col gap-6 px-6 pb-8">
+        <Section items={infoToko} />
+        <Section items={lokasi} />
+        <Section items={preferensi} />
       </div>
     </div>
   );

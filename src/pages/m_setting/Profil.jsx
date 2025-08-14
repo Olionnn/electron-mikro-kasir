@@ -1,71 +1,77 @@
 import React from "react";
-import { MdEdit, MdLogout, MdBlock } from "react-icons/md";
+import { MdEdit, MdLogout, MdBlock, MdEmail, MdPhone, MdPerson, MdLocationOn, MdCode } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 const ProfilePage = () => {
+  const profileInfo = [
+    { label: "Nama", value: "beastbeeme2", icon: <MdPerson /> },
+    { label: "Kode Referral", value: "-", icon: <MdCode /> },
+    { label: "Role User", value: "Owner", icon: <MdPerson /> },
+    { label: "Email", value: "beastbeeme2@gmail.com", icon: <MdEmail /> },
+    { label: "Telepon", value: "+62085707896575", icon: <MdPhone /> },
+    { label: "Alamat", value: "-", icon: <MdLocationOn /> },
+  ];
+
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-green-50 to-white">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b">
+      <div className="flex items-center justify-between px-6 py-4 bg-white shadow-md">
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
           PROFIL
         </h2>
-{/*         
-        <button
-          className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-base md:text-lg transition-colors"
-          title="Edit Profil"
+        <Link
+          to={"/pengaturan/editprofil"}
+          className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 hover:bg-green-200 rounded-lg text-green-700 font-semibold text-sm md:text-base transition-all"
         >
           <MdEdit className="text-lg md:text-xl" />
           Edit Profil
-        </button> */}
-        <Link to={"/pengaturan/editprofil"} className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-base md:text-lg transition-colors">
-          <MdEdit className="text-lg md:text-xl" />
-          Edit Profil
         </Link>
-        
       </div>
 
       {/* Avatar */}
-      <div className="flex flex-col items-center py-8">
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png"
-          className="w-24 h-24 md:w-28 md:h-28 rounded-full ring-2 ring-green-100"
-          alt="Profile"
-        />
+      <div className="flex flex-col items-center py-8 relative">
+        <div className="relative group">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png"
+            className="w-28 h-28 md:w-32 md:h-32 rounded-full ring-4 ring-green-100 shadow-lg transform group-hover:scale-105 transition-transform"
+            alt="Profile"
+          />
+          <span className="absolute bottom-0 right-0 bg-green-500 text-white p-2 rounded-full shadow-md">
+            <MdEdit />
+          </span>
+        </div>
+        <p className="mt-4 text-lg font-bold text-gray-800">beastbeeme2</p>
+        <p className="text-sm text-gray-500">Owner</p>
       </div>
 
       {/* Info Profil */}
-      <div className="flex-1 text-base md:text-lg">
-        {[
-          { label: "Nama", value: "beastbeeme2" },
-          { label: "Kode Referral", value: "-" },
-          { label: "Role User", value: "Owner" },
-          { label: "Email", value: "beastbeeme2@gmail.com" },
-          { label: "Telepon", value: "+62085707896575" },
-          { label: "Alamat", value: "-" },
-        ].map((item, idx) => (
-          <div key={idx}>
-            <div className="px-6 py-4">
-              <div className="text-sm text-gray-500">{item.label}</div>
-              <div className="font-semibold text-gray-900">{item.value}</div>
+      <div className="flex-1 px-6">
+        <div className="bg-white rounded-xl shadow-md overflow-hidden divide-y">
+          {profileInfo.map((item, idx) => (
+            <div
+              key={idx}
+              className="flex items-center gap-4 px-4 py-3 hover:bg-gray-50 transition-colors"
+            >
+              <span className="text-green-600 text-2xl">{item.icon}</span>
+              <div>
+                <div className="text-sm text-gray-500">{item.label}</div>
+                <div className="font-semibold text-gray-900">{item.value}</div>
+              </div>
             </div>
-            {idx < 5 && <div className="h-px bg-gray-200" />}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Tombol Aksi */}
       <div className="px-6 py-8 space-y-4">
         <button
-          className="w-full bg-white border border-gray-300 text-green-700 hover:bg-gray-50 hover:border-gray-400 font-semibold py-3 rounded-xl flex items-center justify-center gap-3 text-lg transition-colors"
-          title="Logout"
+          className="w-full bg-white border border-gray-300 text-green-700 hover:bg-green-50 hover:shadow font-semibold py-3 rounded-xl flex items-center justify-center gap-3 text-lg transition-all"
         >
           <MdLogout className="text-2xl" />
           Logout Aplikasi
         </button>
         <button
-          className="w-full bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 hover:border-red-300 font-semibold py-3 rounded-xl flex items-center justify-center gap-3 text-lg transition-colors"
-          title="Nonaktifkan Akun"
+          className="w-full bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 hover:shadow font-semibold py-3 rounded-xl flex items-center justify-center gap-3 text-lg transition-all"
         >
           <MdBlock className="text-2xl" />
           Nonaktifkan Akun

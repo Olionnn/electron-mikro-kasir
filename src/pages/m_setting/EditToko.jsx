@@ -1,101 +1,120 @@
-import React from 'react';
+// src/pages/FormToko.jsx
+import React, { useState, useCallback } from "react";
+import { useNavbar } from "../../hooks/useNavbar";
+import { useNavigate } from "react-router-dom";
+
 
 const FormToko = () => {
+  const navigate = useNavigate();
+  const [namaToko, setNamaToko] = useState("Abror G4nteng");
+  const [jenisUsaha, setJenisUsaha] = useState("");
+  const [pajak, setPajak] = useState(0);
+  const [pemilik, setPemilik] = useState("beastbeeme2");
+  const [address, setAddress] = useState("");
+
+     const onBack = useCallback(() => navigate(-1), [navigate]);
+  useNavbar({
+    variant: "page",
+    title: "Edit Toko",
+    backTo: onBack,
+    actions: [
+      {
+        label: "Simpan",
+        onClick: () => {
+          console.log("Data toko:", { namaToko, jenisUsaha, pajak, pemilik });
+          alert("Perubahan toko berhasil disimpan!");
+        },
+        className:
+          "bg-green-600 text-white px-4 py-2 rounded-full shadow hover:bg-green-700 transition text-sm font-semibold",
+      },
+    ],
+  }, [namaToko, jenisUsaha, pajak, pemilik]);
+
   return (
-    <div className="w-full h-full p-8">
-      {/* Judul */}
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-4">
-          <span className="material-icons text-[28px]">arrow_back</span>
-          <h1 className="text-3xl font-bold">TOKO</h1>
-        </div>
-      </div>
-      <hr className="mb-6" />
+    <div className="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+      {/* Konten scrollable */}
+      <div className="flex-1 overflow-y-auto px-6 py-10">
+        {/* Foto Profil Toko */}
+        <div className="flex flex-col items-center">
+          <div className="relative group">
+            <img
+              src="https://via.placeholder.com/150"
+              alt="Foto Toko"
+              className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+            <button className="absolute bottom-2 right-2 bg-white border rounded-full p-2 shadow-md hover:shadow-lg transition">
+              <span className="material-icons text-green-600">image</span>
+            </button>
 
-      {/* Gambar Profil */}
-      <div className="flex items-center justify-center mb-6">
-        <div className="relative">
-          <div className="w-28 h-28 rounded-full bg-green-100"></div>
-          <span className="material-icons absolute top-[35%] left-[35%] text-5xl text-green-700">image</span>
+            {/* Overlay ganti foto */}
+            <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+              <span className="text-white font-semibold">Ganti Foto</span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Olshopin */}
-      <div className="bg-gray-100 rounded-xl p-6 mb-8 w-full">
-        <h2 className="font-semibold text-2xl mb-2">Olshopin</h2>
-        <p className="text-gray-600 text-[20px] mb-4">
-          Pilih "Tampilkan" agar pembeli dapat mengakses toko anda melalui marketplace{' '}
-          <span className="text-green-600 font-semibold">olshopin.</span>
-        </p>
-        <div className="space-y-4 text-[20px]">
-          <label className="flex items-center gap-3">
-            <input type="radio" name="olshopin" className="w-5 h-5" />
-            Tampilkan sebagai Katalog
-          </label>
-          <label className="flex items-center gap-3">
-            <input type="radio" name="olshopin" defaultChecked className="w-5 h-5" />
-            Tampilkan Katalog dan Terima Order
-          </label>
-          <label className="flex items-center gap-3">
-            <input type="radio" name="olshopin" className="w-5 h-5" />
-            Nonaktifkan Olshopin
-          </label>
-        </div>
-      </div>
-
-      {/* Form Data Usaha */}
-      <div className="bg-gray-100 rounded-xl p-6 mb-10 text-[20px]">
-        <div className="grid md:grid-cols-2 gap-6">
+        {/* Form */}
+        <form className="mt-10 space-y-6 text-lg">
           {/* Jenis Usaha */}
           <div>
-            <label className="block font-semibold mb-1">Jenis Usaha</label>
-            <select className="w-full p-4 border rounded-lg">
-              <option>pilih jenis usaha ...</option>
+            <label className="block mb-2 font-semibold text-gray-700">Jenis Usaha</label>
+            <select
+              value={jenisUsaha}
+              onChange={(e) => setJenisUsaha(e.target.value)}
+              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-green-400 focus:outline-none shadow-sm"
+            >
+              <option value="">Pilih jenis usaha...</option>
+              <option value="makanan">Makanan</option>
+              <option value="fashion">Fashion</option>
+              <option value="elektronik">Elektronik</option>
             </select>
           </div>
 
           {/* Nama Toko */}
           <div>
-            <label className="block font-semibold mb-1">Nama Toko/Usaha</label>
-            <input type="text" className="w-full p-4 border rounded-lg" defaultValue="Abror G4nteng" />
+            <label className="block mb-2 font-semibold text-gray-700">Nama Toko</label>
+            <input
+              type="text"
+              value={namaToko}
+              onChange={(e) => setNamaToko(e.target.value)}
+              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-green-400 focus:outline-none shadow-sm"
+            />
           </div>
 
-          {/* Pajak Default */}
+          {/* Pajak */}
           <div>
-            <label className="block font-semibold mb-1">Pajak Default %</label>
-            <input type="number" className="w-full p-4 border rounded-lg" defaultValue="0" />
+            <label className="block mb-2 font-semibold text-gray-700">Pajak Default (%)</label>
+            <input
+              type="number"
+              value={pajak}
+              onChange={(e) => setPajak(e.target.value)}
+              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-green-400 focus:outline-none shadow-sm"
+            />
           </div>
 
-          {/* Nama Pemilik */}
+          {/* Pemilik */}
           <div>
-            <label className="block font-semibold mb-1">Nama Pemilik/Owner</label>
-            <input type="text" className="w-full p-4 border rounded-lg" defaultValue="beastbeeme2" />
+            <label className="block mb-2 font-semibold text-gray-700">Nama Pemilik</label>
+            <input
+              type="text"
+              value={pemilik}
+              onChange={(e) => setPemilik(e.target.value)}
+              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-green-400 focus:outline-none shadow-sm"
+            />
           </div>
 
           {/* No. Telepon */}
-          <div className="col-span-2 flex gap-4 items-start">
-            <div className="flex-1">
-              <label className="block font-semibold mb-1">No. Telepon</label>
-              <input
-                type="text"
-                className="w-full p-4 border rounded-lg bg-gray-100"
-                defaultValue="+62085707896575"
-                disabled
-              />
-              <p className="text-sm text-red-600 mt-1">*Belum Verifikasi</p>
-            </div>
-            <button className="bg-green-100 text-green-700 px-6 py-3 rounded-lg font-semibold border border-green-300 mt-8">
-              Verifikasi
-            </button>
+          <div>
+            <label className="block mb-2 font-semibold text-gray-700">No. Telepon</label>
+            <input
+              type="text"
+              value="+62085707896575"
+              disabled
+              className="w-full border rounded-lg px-4 py-3 bg-gray-100 text-lg cursor-not-allowed shadow-sm"
+            />
+            <p className="text-sm text-red-600 mt-1">*Belum Verifikasi</p>
           </div>
-        </div>
-      </div>
-
-      {/* Tombol Simpan */}
-      <div className="w-full">
-        <button className="w-full bg-green-600 text-white py-5 rounded-full text-2xl font-bold">
-          Simpan
-        </button>
+        </form>
       </div>
     </div>
   );

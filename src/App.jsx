@@ -58,6 +58,7 @@ import LaporanNeraca from "./pages/m_laporan/laporanneraca";
 import Laporanshift from "./pages/m_laporan/Laporanshift";
 import Riwayattransaksi from "./pages/m_laporan/Riwayattransaksi";
 import TrxSetting from "./pages/m_setting/TrxSetting";
+import DraftPembelianPage from "./pages/m_pembelisupplier/Draft";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -138,7 +139,7 @@ function App() {
 
               {/* Pembelian Supplier */}
               <Route path="/pembelian-supplier" element={<PembeliSuplier />} />
-              <Route path="/pembelian-supplier/draft" element={<div>Draft Pembelian Page</div>} />
+              <Route path="/pembelian-supplier/draft" element={<DraftPembelianPage/>} />
 
 
               {/* Management */}

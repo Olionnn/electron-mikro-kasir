@@ -182,7 +182,7 @@
     const isActive = (item) => selectedMenu === item.component || expandedMenu === item.id;
 
     return (
-      <div className="h-full bg-gray-100">
+      <div className="h-[50%] bg-gray-100">
         {/* Header lokal (biarkan ada; Navbar utama diatur via useNavbar) */}
 
 
