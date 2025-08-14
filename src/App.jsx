@@ -152,6 +152,7 @@ function App() {
               <Route path="/barang-jasa" element={<BarangAtwJasa />} />
               <Route path="/barang/tambah" element={<AddEditBarang />} />
               <Route path="/barang/edit/:id" element={<AddEditBarang />} />
+              <Route path="/promosi" element={<></>}/>
 
 
               {/* Toko Online */}

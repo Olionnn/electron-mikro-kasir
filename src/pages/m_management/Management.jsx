@@ -15,6 +15,7 @@ export default function ManagementPage() {
           { icon: 'money.png', label: 'Biaya', link: '/biaya' },
           { icon: 'stock.png', label: 'Stok', link: '/stok' },
           { icon: 'stock-opname.png', label: 'Stok Opname', link: '/stokopname' },
+          { icon: 'promotion.png', label: 'Promosi Events', link: '/promosi' },
         ].map((item, index) => (
           <Link
             to={item.link}
