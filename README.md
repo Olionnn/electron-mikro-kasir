@@ -16,13 +16,26 @@ If you are developing a production application, we recommend using TypeScript wi
 
 
 ## todo 
-- [ ] Memnambah fitur dihalaman Pembelian Ke Supplier
-- [ ] Membenarkan Tampilan Tombol Sesusai Halaman yang dibutuhkan
-- [ ] Menebenarkan Layout Pos (Text Diskon dan pajak kecil tidak bold, code trx diberi border nama diganti No Transaksi, warna lebih petang, setiap icons diberi tooltip, hasil diskon tanpa keterangan sama diberi box menjadi satu biaya diskon dan pajak)
-- [ ]  Setiap Table Ada Pagination dan Search di halaman laporan neraca
-- [ ]  Ditambahkan code no transaksi dan dihalaman detail juga.
-- [ ]  Mengatur Management Role (Membuat role : role -> akses level, role -> user )
-- [ ]  Menambah Halaman Management Role yang berisi Role, Akses Level
-- [ ]  Text CreditCard Diganti Cicilan.
+- [X] Memnambah fitur dihalaman Pembelian Ke Supplier
+- [X] Membenarkan Tampilan Tombol Sesusai Halaman yang dibutuhkan
+- [X] Menebenarkan Layout Pos (Text Diskon dan pajak kecil tidak bold, code trx diberi border nama diganti No Transaksi, warna lebih petang, setiap icons diberi tooltip, hasil diskon tanpa keterangan sama diberi box menjadi satu biaya diskon dan pajak)
+- [X] Setiap Table Ada Pagination dan Search di halaman laporan neraca
+- [X] Ditambahkan code no transaksi dan dihalaman detail juga.
+- [X] Mengatur Management Role (Membuat role : role -> akses level, role -> user )
+- [X] Menambah Halaman Management Role yang berisi Role, Akses Level
+- [X] Text CreditCard Diganti Cicilan.
+- [X] Pengaturan Profil Dan Toko Edit Profil Edit Toko
+- [X] Membuat Halaman Promosi
+- [X] Membuat Modal Pelanggan
+
+- [X] Percantik Halaman Setting dan componentnya
+- [X] Logo Bisa Ditekan di Sidebar
+- [ ] Simpan Dan Bayar Di Pembelian Ke Supplier
+- [X] Halaman Piutang Hutang
+- [ ] FIX Size Halaman (Responsive)
+- [ ] Remove DevTool (Ctrl Shift I) (Cmd Option I)
+- [ ] 
+
+
 
 
