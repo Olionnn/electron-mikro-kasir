@@ -1,28 +1,75 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import Modal from "../../component/Modal";
 import { useNavbar } from "../../hooks/useNavbar";
-import { MdAdd, MdRefresh, MdFilterList } from "react-icons/md";
+import { MdAdd, MdRefresh, MdFilterList, MdSearch, MdArrowForward } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
-/* --- DUMMY DATA: stok_opname master (samakan pola dengan sebelumnya) --- */
+/* --- DUMMY DATA --- */
 const dummyData = [
   { id: 1, toko_id: 101, keterangan: "Opname Gudang A", created_by: "Admin 1", status: true,  created_at: "2025-08-10", updated_at: "2025-08-10" },
   { id: 2, toko_id: 102, keterangan: "Opname Gudang B", created_by: "Admin 2", status: true,  created_at: "2025-08-11", updated_at: "2025-08-11" },
   { id: 3, toko_id: 101, keterangan: "Opname Display",  created_by: "Admin 3", status: false, created_at: "2025-08-12", updated_at: "2025-08-12" },
 ];
 
-/* --- UI Helpers (samakan gaya dengan contoh BarangStokPage) --- */
-function Th({ children }) {
-  return <th className="px-3 py-2">{children}</th>;
+/* --- Small UI helpers --- */
+function Th({ children, w, right }) {
+  return (
+    <th
+      className={`px-3 py-2 text-left font-semibold text-gray-700 ${right ? "text-right" : ""}`}
+      style={w ? { width: w } : undefined}
+    >
+      {children}
+    </th>
+  );
 }
-function Td({ children }) {
-  return <td className="px-3 py-2">{children}</td>;
+function Td({ children, right }) {
+  return <td className={`px-3 py-2 ${right ? "text-right" : ""}`}>{children}</td>;
 }
 function Group({ label, children }) {
   return (
     <label className="flex flex-col gap-1">
-      <span className="text-sm">{label}</span>
+      <span className="text-sm text-gray-600">{label}</span>
       {children}
     </label>
+  );
+}
+function Pagination({ page, totalPages, onPrev, onNext, onGoto, compact = false }) {
+  const pages = useMemo(() => {
+    const win = 2;
+    const s = Math.max(1, page - win);
+    const e = Math.min(totalPages, page + win);
+    const arr = [];
+    for (let i = s; i <= e; i++) arr.push(i);
+    if (!arr.includes(1)) arr.unshift(1);
+    if (!arr.includes(totalPages)) arr.push(totalPages);
+    return Array.from(new Set(arr)).sort((a, b) => a - b);
+  }, [page, totalPages]);
+
+  if (totalPages <= 1) return null;
+
+  return (
+    <div className="flex items-center gap-1">
+      <button onClick={onPrev} disabled={page === 1} className="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-50">
+        Prev
+      </button>
+      {!compact &&
+        pages.map((p, idx) => (
+          <React.Fragment key={`${p}-${idx}`}>
+            {idx > 0 && pages[idx - 1] + 1 !== p && <span className="px-1">…</span>}
+            <button
+              onClick={() => onGoto(p)}
+              className={`px-3 py-1.5 rounded-lg border text-sm ${
+                p === page ? "bg-green-600 text-white border-green-600" : "hover:bg-gray-50"
+              }`}
+            >
+              {p}
+            </button>
+          </React.Fragment>
+        ))}
+      <button onClick={onNext} disabled={page === totalPages} className="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-50">
+        Next
+      </button>
+    </div>
   );
 }
 
@@ -35,7 +82,14 @@ export default function StokOpnamePage() {
   const [openFilter, setOpenFilter] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  // form tambah
+  // filter
+  const [filterForm, setFilterForm] = useState({
+    status: "",     // "", "aktif", "nonaktif"
+    toko: "",       // filter by toko_id
+    tanggal: "",    // yyyy-mm-dd (exact created_at)
+  });
+
+  // tambah
   const [form, setForm] = useState({
     toko_id: "",
     keterangan: "",
@@ -43,14 +97,12 @@ export default function StokOpnamePage() {
     status: true,
   });
 
-  // form filter (menyerupai pola di contoh)
-  const [filterForm, setFilterForm] = useState({
-    status: "",     // "", "aktif", "nonaktif"
-    toko: "",       // filter by toko_id
-    tanggal: "",    // filter exact date (yyyy-mm-dd)
-  });
+  // pagination
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
+  const pageSizeOptions = [10, 25, 50, 100];
 
-  // Navbar (disamakan: Filter, Tambah, Refresh)
+  // navbar actions
   const openTambah = useCallback(() => setOpenModal(true), []);
   const doRefresh = useCallback(() => setRows((prev) => [...prev]), []);
 
@@ -84,10 +136,7 @@ export default function StokOpnamePage() {
     [openTambah, doRefresh]
   );
 
-  useNavbar(
-    { variant: "page", title: "Stok Opname", backTo: "/management", actions },
-    [actions]
-  );
+  useNavbar({ variant: "page", title: "Stok Opname", backTo: "/management", actions }, [actions]);
 
   // debounce search
   useEffect(() => {
@@ -95,44 +144,40 @@ export default function StokOpnamePage() {
     return () => clearTimeout(t);
   }, [search]);
 
-  // filter & search (pola sama dengan contohmu)
+  // filtering + search
   const filtered = useMemo(() => {
     let data = [...rows];
 
-    // search
     const q = debounced.trim().toLowerCase();
     if (q) {
       data = data.filter((r) =>
-        [
-          r.id,
-          r.toko_id,
-          r.keterangan,
-          r.created_by,
-          r.created_at,
-          r.updated_at,
-          r.status ? "aktif" : "nonaktif",
-        ]
+        [r.id, r.toko_id, r.keterangan, r.created_by, r.created_at, r.updated_at, r.status ? "aktif" : "nonaktif"]
           .map((v) => String(v ?? "").toLowerCase())
           .some((t) => t.includes(q))
       );
     }
-
-    // filter status
     if (filterForm.status) {
       const isActive = filterForm.status === "aktif";
       data = data.filter((r) => r.status === isActive);
     }
-    // filter toko
     if (filterForm.toko) {
       data = data.filter((r) => String(r.toko_id) === String(filterForm.toko));
     }
-    // filter tanggal (exact)
     if (filterForm.tanggal) {
       data = data.filter((r) => r.created_at === filterForm.tanggal);
     }
-
     return data;
   }, [rows, debounced, filterForm]);
+
+  // reset halaman saat filter berubah
+  useEffect(() => {
+    setPage(1);
+  }, [debounced, filterForm, pageSize]);
+
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const start = (page - 1) * pageSize;
+  const paged = filtered.slice(start, start + pageSize);
 
   // handlers
   const handleAdd = async (e) => {
@@ -170,84 +215,137 @@ export default function StokOpnamePage() {
     setFilterForm((f) => ({ ...f, [name]: value }));
   };
 
+  const navigate = useNavigate();
+  const goDetail = (id) => navigate(`/opname/${id}`); // sesuaikan route detail
+
   return (
-    <div className="w-full flex-1 flex flex-col bg-white">
-      {/* Toolbar / Search (serupa) */}
-      <div className="p-4 md:p-6 border-b sticky top-0 bg-white z-10">
+    <div className="w-full h-full flex flex-col bg-white">
+      {/* Toolbar / Search */}
+      <div className="p-4 md:p-6 border-b bg-white sticky top-0 z-10">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="relative w-full md:max-w-xl">
+            <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
             <input
               type="text"
               placeholder="Cari opname…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-4 pr-10 border border-gray-300 rounded-xl px-4 py-3"
+              className="w-full pl-10 pr-10 border border-gray-300 rounded-xl px-4 py-3"
             />
             {search && (
               <button
                 onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800"
                 title="Bersihkan"
               >
                 ✕
               </button>
             )}
           </div>
+
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gray-200 bg-gray-50">
-              {filtered.length} entri
+              {total} entri
             </span>
           </div>
         </div>
+
+        {/* Controls bawah toolbar */}
+        <div className="mt-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600">Tampilkan</span>
+            <select
+              value={pageSize}
+              onChange={(e) => setPageSize(parseInt(e.target.value))}
+              className="border rounded-lg px-2 py-1 text-sm"
+            >
+              {pageSizeOptions.map((opt) => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+            <span className="text-sm text-gray-600">per halaman</span>
+          </div>
+
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPrev={() => setPage((p) => Math.max(1, p - 1))}
+            onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
+            onGoto={(p) => setPage(p)}
+          />
+        </div>
       </div>
 
-      {/* Table */}
+      {/* Table (scroll di komponen ini saja) */}
       <div className="flex-1 overflow-hidden">
         <div className="h-full overflow-auto p-4 md:p-6">
-          <table className="w-full text-sm border">
-            <thead className="bg-green-50 sticky top-0">
-              <tr>
-                <Th>ID</Th>
-                <Th>Toko</Th>
-                <Th>Keterangan</Th>
-                <Th>Dibuat Oleh</Th>
-                <Th>Status</Th>
-                <Th>Created At</Th>
-                <Th>Updated At</Th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="p-6 text-center text-gray-500">
-                    Tidak ada data.
-                  </td>
-                </tr>
-              ) : (
-                filtered.map((item) => (
-                  <tr key={item.id} className="odd:bg-gray-50">
-                    <Td>{item.id}</Td>
-                    <Td>{item.toko_id}</Td>
-                    <Td>{item.keterangan}</Td>
-                    <Td>{item.created_by}</Td>
-                    <Td>
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-xs ${
-                          item.status
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {item.status ? "Aktif" : "Nonaktif"}
-                      </span>
-                    </Td>
-                    <Td>{item.created_at}</Td>
-                    <Td>{item.updated_at}</Td>
+          <div className="bg-white border rounded-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-green-50 sticky top-0">
+                  <tr>
+                    <Th w="80">#</Th>
+                    <Th w="120">ID</Th>
+                    <Th w="140">Toko</Th>
+                    <Th>Keterangan</Th>
+                    <Th w="160">Dibuat Oleh</Th>
+                    <Th w="120">Status</Th>
+                    <Th w="140">Created At</Th>
+                    <Th w="140">Updated At</Th>
+                    {/* <Th w="120">Aksi</Th> */}
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {paged.length === 0 ? (
+                    <tr>
+                      <td colSpan={9} className="p-6 text-center text-gray-500">Tidak ada data.</td>
+                    </tr>
+                  ) : (
+                    paged.map((item, idx) => (
+                      <tr key={item.id} className="border-t">
+                        <Td>{start + idx + 1}</Td>
+                        <Td>{item.id}</Td>
+                        <Td>{item.toko_id}</Td>
+                        <Td className="max-w-[420px]"><span className="line-clamp-2">{item.keterangan}</span></Td>
+                        <Td>{item.created_by}</Td>
+                        <Td>
+                          <span className={`px-2 py-0.5 rounded-full text-xs ${item.status ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                            {item.status ? "Aktif" : "Nonaktif"}
+                          </span>
+                        </Td>
+                        <Td>{item.created_at}</Td>
+                        <Td>{item.updated_at}</Td>
+                        {/* <Td>
+                          <button
+                            onClick={() => goDetail(item.id)}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border hover:bg-gray-50"
+                            title="Lihat detail opname"
+                          >
+                            <MdArrowForward /> Detail
+                          </button>
+                        </Td> */}
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Footer table */}
+            <div className="px-4 py-3 bg-gray-50 text-sm text-gray-600 flex items-center justify-between">
+              <div>
+                Menampilkan <strong>{paged.length}</strong> dari <strong>{total}</strong> entri
+              </div>
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                onPrev={() => setPage((p) => Math.max(1, p - 1))}
+                onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
+                onGoto={(p) => setPage(p)}
+                compact
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -285,7 +383,7 @@ export default function StokOpnamePage() {
               className="border rounded-lg px-3 py-2"
             />
           </Group>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 pt-1">
             <button
               type="button"
               className="px-4 py-2 rounded-lg border"
@@ -343,28 +441,15 @@ export default function StokOpnamePage() {
             />
           </Group>
           <label className="inline-flex items-center gap-2 mt-1">
-            <input
-              type="checkbox"
-              name="status"
-              checked={form.status}
-              onChange={handleFormChange}
-            />
+            <input type="checkbox" name="status" checked={form.status} onChange={handleFormChange} />
             <span className="text-sm">Aktif</span>
           </label>
 
           <div className="flex justify-end gap-2 pt-2">
-            <button
-              type="button"
-              className="px-4 py-2 rounded-lg border"
-              onClick={() => setOpenModal(false)}
-            >
+            <button type="button" className="px-4 py-2 rounded-lg border" onClick={() => setOpenModal(false)}>
               Batal
             </button>
-            <button
-              type="submit"
-              disabled={saving}
-              className="px-4 py-2 rounded-lg bg-green-600 text-white disabled:opacity-50"
-            >
+            <button type="submit" disabled={saving} className="px-4 py-2 rounded-lg bg-green-600 text-white disabled:opacity-50">
               {saving ? "Menyimpan..." : "Simpan"}
             </button>
           </div>

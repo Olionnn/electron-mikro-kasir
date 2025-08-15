@@ -1,32 +1,41 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { BiCategory, BiBox, BiUser,BiPackage,BiSolidDiscount,BiMoneyWithdraw, BiMoney, BiSolidOffer } from "react-icons/bi";
+import { 
+  FaBoxes,        
+} from 'react-icons/fa';
+import { 
+  MdInventory,    // Clipboard dengan checkmark
+  MdWarehouse,    // Warehouse building
+  MdStorage,      // Storage/database icon
+} from 'react-icons/md';
+import { useNavbar } from '../../hooks/useNavbar';
+
 
 export default function ManagementPage() {
+  useNavbar({ variant: "page", title: "Management", backTo: null,  }, []);
+
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col h-full bg-white">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
         {[
-          { icon: 'box--v1.png', label: 'Barang atau Jasa', link: '/barang-jasa' },
-          { icon: 'grid.png', label: 'Kategori Barang', link: '/kategori-barang' },
-          { icon: 'user.png', label: 'Pelanggan', link: '/pelanggan' },
-          { icon: 'conference.png', label: 'Supplier', link: '/supplier' },
-          { icon: 'sale.png', label: 'Diskon', link: '/diskon' },
-          { icon: 'tax.png', label: 'Pajak', link: '/pajak' },
-          { icon: 'money.png', label: 'Biaya', link: '/biaya' },
-          { icon: 'stock.png', label: 'Stok', link: '/stok' },
-          { icon: 'stock-opname.png', label: 'Stok Opname', link: '/stokopname' },
-          { icon: 'promotion.png', label: 'Promosi Events', link: '/promosi' },
+          { icon: <BiBox size={30} />, label: 'Barang atau Jasa', link: '/barang-jasa' },
+          { icon: <BiCategory size={30}/>, label: 'Kategori Barang', link: '/kategori-barang' },
+          { icon: <BiUser size={30}/>, label: 'Pelanggan', link: '/pelanggan' },
+          { icon: <BiPackage size={30}/>, label: 'Supplier', link: '/supplier' },
+          { icon: <BiSolidDiscount size={30}/>, label: 'Diskon', link: '/diskon' },
+          { icon: <BiMoneyWithdraw size={30}/>, label: 'Pajak', link: '/pajak' },
+          { icon: <BiMoney size={30}/>, label: 'Biaya', link: '/biaya' },
+          { icon: <FaBoxes size={30}/>, label: 'Stok', link: '/stok' },
+          { icon: <MdStorage size={30}/>, label: 'Stok Opname', link: '/stokopname' },
+          { icon: <BiSolidOffer size={30}/>, label: 'Promosi Events', link: '/promosi' },
         ].map((item, index) => (
           <Link
             to={item.link}
             key={index}
             className="p-6 rounded-lg shadow-md border flex flex-col items-start gap-4 hover:shadow-lg transition bg-white text-lg font-semibold text-green-700 border-green-200"
           >
-            <img
-              src={`https://img.icons8.com/ios/64/000000/${item.icon}`}
-              className="w-8 h-8 icon"  
-              alt={item.label}
-            />
+            {item.icon}
             <span>{item.label}</span>
           </Link>
         ))}

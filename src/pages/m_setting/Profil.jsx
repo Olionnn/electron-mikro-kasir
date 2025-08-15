@@ -1,6 +1,7 @@
-import React from "react";
+import React, { act } from "react";
 import { MdEdit, MdLogout, MdBlock, MdEmail, MdPhone, MdPerson, MdLocationOn, MdCode } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useNavbar } from "../../hooks/useNavbar"; // Assuming you have a custom hook for navbar
 
 const ProfilePage = () => {
   const profileInfo = [
@@ -12,23 +13,25 @@ const ProfilePage = () => {
     { label: "Alamat", value: "-", icon: <MdLocationOn /> },
   ];
 
+  // Set navbar for this page
+  useNavbar({
+    variant: "page",
+    title: "Profil",
+    backTo: null, 
+    actions: [
+      {
+        type: "link",
+        title: "Edit Profil",
+        to: "/pengaturan/editprofil",
+        className: "bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg flex items-center gap-2",
+        icon: <MdEdit className="text-lg" />,
+      },
+    ],
+  });
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-green-50 to-white">
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white shadow-md">
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
-          PROFIL
-        </h2>
-        <Link
-          to={"/pengaturan/editprofil"}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 hover:bg-green-200 rounded-lg text-green-700 font-semibold text-sm md:text-base transition-all"
-        >
-          <MdEdit className="text-lg md:text-xl" />
-          Edit Profil
-        </Link>
-      </div>
 
-      {/* Avatar */}
       <div className="flex flex-col items-center py-8 relative">
         <div className="relative group">
           <img

@@ -97,16 +97,15 @@ import ManagementRole from "./ManajemenRole";
   export default function SettingsPage() {
     const [selectedMenu, setSelectedMenu] = useState(null);
     const [expandedMenu, setExpandedMenu] = useState(null);
-
+  
     const navigate = useNavigate();
     const onBack = useCallback(() => navigate(-1), [navigate]);
-
-    // Implement useNavbar
+  
     useNavbar(
       {
         variant: "page",
         title: "Pengaturan",
-        backTo: null, // kalau mau tombol back: set ke path string atau gunakan actions dengan onBack
+        backTo: null,
         actions: [
           {
             type: "span",
@@ -120,19 +119,18 @@ import ManagementRole from "./ManajemenRole";
             className: "px-2 py-1 rounded-full bg-gray-50 text-gray-700 border border-gray-200",
             label: "DB 12",
           },
-        
-            ],
+        ],
       },
-      [onBack]
+      
     );
-
+  
     const getStatusColor = (status) => {
       if (status.includes("Aktif") || status.includes("Tersinkron")) return "text-green-700 bg-green-100 border border-green-200";
       if (status.includes("Perlu") || status.includes("Belum")) return "text-orange-700 bg-orange-100 border border-orange-200";
       if (status.includes("Kosong")) return "text-red-700 bg-red-100 border border-red-200";
       return "text-blue-700 bg-blue-100 border border-blue-200";
     };
-
+  
     const renderComponent = () => {
       if (!selectedMenu) {
         return (
@@ -145,7 +143,7 @@ import ManagementRole from "./ManajemenRole";
           </div>
         );
       }
-
+  
       const map = {
         Profil: <Profil />,
         InformasiToko: <InformasiToko />,
@@ -161,122 +159,108 @@ import ManagementRole from "./ManajemenRole";
         Lainnya: <Lainnya />,
         ManagementRole: <ManagementRole />,
       };
-
-      return <div className="">{map[selectedMenu] || <div className="flex items-center justify-center h-full text-gray-500">Komponen tidak ditemukan</div>}</div>;
+  
+      return map[selectedMenu] || (
+        <div className="flex items-center justify-center h-full text-gray-500">
+          Komponen tidak ditemukan
+        </div>
+      );
     };
-
-
+  
     const handleMenuClick = (item) => {
-      if (item.route) {
-        navigate(item.route);
-        return;
-      }
-      if (item.hasSubmenu) {
-        setExpandedMenu(expandedMenu === item.id ? null : item.id);
-        return;
-      }
+      if (item.route) return navigate(item.route);
+      if (item.hasSubmenu) return setExpandedMenu(expandedMenu === item.id ? null : item.id);
       if (item.component) {
         setSelectedMenu(item.component);
         setExpandedMenu(null);
       }
     };
-    
+  
     const handleSubmenuClick = (sub) => {
-      if (sub.route) {
-        navigate(sub.route);
-        return;
-      }
-      if (sub.component) {
-        setSelectedMenu(sub.component);
-      }
+      if (sub.route) return navigate(sub.route);
+      if (sub.component) setSelectedMenu(sub.component);
     };
+  
     const isActive = (item) => selectedMenu === item.component || expandedMenu === item.id;
-
+  
     return (
-      <div className="h-[50%] bg-gray-100">
-        {/* Header lokal (biarkan ada; Navbar utama diatur via useNavbar) */}
-
-
-        {/* Container */}
-        <div className="flex flex-col lg:flex-row h-[calc(100vh-72px)]">
-          {/* Sidebar */}
-          <aside className="w-full lg:w-2/5 bg-white border-r border-gray-200 overflow-y-auto">
-            <div className="p-6 space-y-4">
-              {/* Info Akun */}
-              <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-green-500 to-green-600 text-white shadow-sm">
-                <div className="bg-white/20 p-3 rounded-xl">
-                  <MdOutlinePointOfSale size={22} />
-                </div>
-                <div className="min-w-0">
-                  <p className="font-semibold truncate">beastbeeme2@gmail.com</p>
-                  <p className="text-xs text-green-100">version 2.7.0 • db version 12</p>
-                </div>
+      <div className="h-full bg-gray-100 flex overflow-hidden">
+        {/* Sidebar */}
+        <aside className="w-full lg:w-2/5 bg-white border-r border-gray-200 flex flex-col">
+          <div className="p-6">
+            {/* Info Akun */}
+            <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-green-500 to-green-600 text-white shadow-sm">
+              <div className="bg-white/20 p-3 rounded-xl">
+                <MdOutlinePointOfSale size={22} />
               </div>
-
-              {/* Menu */}
-              <nav className="space-y-2">
-                {menuItems.map((item) => (
-                  <div key={item.id}>
-                    <button
-                      onClick={() => handleMenuClick(item)}
-                      className={[
-                        "group w-full text-left p-4 rounded-2xl border transition-all",
-                        "focus:outline-none focus:ring-2 focus:ring-green-500/40",
-                        isActive(item) ? "bg-green-50 border-green-200 shadow-sm" : "bg-white hover:bg-gray-50 border-gray-200",
-                      ].join(" ")}
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-3 min-w-0">
-                          <span className={["text-[22px] shrink-0", isActive(item) ? "text-green-600" : "text-gray-500"].join(" ")}>
-                            {item.icon}
-                          </span>
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium">{item.label}</span>
-                              {isActive(item) && <span className="h-1 w-3 rounded-full bg-green-500 inline-block" />}
-                            </div>
-                            <p className="text-sm text-gray-500 line-clamp-1">{item.description}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col items-end gap-1 shrink-0">
-                          <span className={["text-lg transition-transform", item.hasSubmenu && expandedMenu === item.id ? "rotate-180" : "", isActive(item) ? "text-green-600" : "text-gray-400"].join(" ")}>
-                            {item.hasSubmenu ? <GoChevronDown /> : <GoChevronRight />}
-                          </span>
-                          <span className={`text-[10px] px-2 py-1 rounded-full ${getStatusColor(item.status)}`}>{item.status}</span>
-                        </div>
-                      </div>
-                    </button>
-
-                    {item.hasSubmenu && expandedMenu === item.id && (
-                      <div className="ml-4 mt-2 pl-4 border-l border-gray-200 space-y-1">
-                        {item.submenu.map((sub) => (
-                          <button
-                            key={sub.id || sub.label}         // gunakan label bila id tidak ada
-                            onClick={() => handleSubmenuClick(sub)}
-                            className={[
-                              "w-full text-left p-3 rounded-xl transition-colors",
-                              "hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500/30",
-                              selectedMenu === sub.component ? "bg-green-100 text-green-700" : "text-gray-700",
-                            ].join(" ")}
-                          >
-                            <div className="flex items-center gap-2">
-                              <MdSubdirectoryArrowRight className="text-gray-400" size={16} />
-                              <span className="text-sm font-medium">{sub.label}</span>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </nav>
+              <div className="min-w-0">
+                <p className="font-semibold truncate">beastbeeme2@gmail.com</p>
+                <p className="text-xs text-green-100">version 2.7.0 • db version 12</p>
+              </div>
             </div>
-          </aside>
-
-          {/* Right Panel */}
-          <section className="flex-1 bg-gray-50 overflow-y-auto">{renderComponent()}</section>
-        </div>
+          </div>
+  
+          {/* Menu scrollable */}
+          <nav className="flex-1 overflow-y-auto px-6 pb-6 space-y-2">
+            {menuItems.map((item) => (
+              <div key={item.id}>
+                <button
+                  onClick={() => handleMenuClick(item)}
+                  className={[
+                    "group w-full text-left p-4 rounded-2xl border transition-all",
+                    "focus:outline-none focus:ring-2 focus:ring-green-500/40",
+                    isActive(item) ? "bg-green-50 border-green-200 shadow-sm" : "bg-white hover:bg-gray-50 border-gray-200",
+                  ].join(" ")}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className={["text-[22px] shrink-0", isActive(item) ? "text-green-600" : "text-gray-500"].join(" ")}>
+                        {item.icon}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{item.label}</span>
+                          {isActive(item) && <span className="h-1 w-3 rounded-full bg-green-500 inline-block" />}
+                        </div>
+                        <p className="text-sm text-gray-500 line-clamp-1">{item.description}</p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-1 shrink-0">
+                      <span className={["text-lg transition-transform", item.hasSubmenu && expandedMenu === item.id ? "rotate-180" : "", isActive(item) ? "text-green-600" : "text-gray-400"].join(" ")}>
+                        {item.hasSubmenu ? <GoChevronDown /> : <GoChevronRight />}
+                      </span>
+                      <span className={`text-[10px] px-2 py-1 rounded-full ${getStatusColor(item.status)}`}>{item.status}</span>
+                    </div>
+                  </div>
+                </button>
+  
+                {item.hasSubmenu && expandedMenu === item.id && (
+                  <div className="ml-4 mt-2 pl-4 border-l border-gray-200 space-y-1">
+                    {item.submenu.map((sub) => (
+                      <button
+                        key={sub.id || sub.label}
+                        onClick={() => handleSubmenuClick(sub)}
+                        className={[
+                          "w-full text-left p-3 rounded-xl transition-colors",
+                          "hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500/30",
+                          selectedMenu === sub.component ? "bg-green-100 text-green-700" : "text-gray-700",
+                        ].join(" ")}
+                      >
+                        <div className="flex items-center gap-2">
+                          <MdSubdirectoryArrowRight className="text-gray-400" size={16} />
+                          <span className="text-sm font-medium">{sub.label}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </nav>
+        </aside>
+  
+        {/* Content */}
+        <section className="flex-1 overflow-y-auto">{renderComponent()}</section>
       </div>
     );
   }

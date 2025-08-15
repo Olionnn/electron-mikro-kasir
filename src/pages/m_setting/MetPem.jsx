@@ -6,6 +6,7 @@ import {
   MdCreditCard,
   MdLink,
 } from "react-icons/md";
+import { useNavbar } from "../../hooks/useNavbar";
 
 const MetodePembayaran = () => {
   const [paymentMethods, setPaymentMethods] = useState([
@@ -28,6 +29,30 @@ const MetodePembayaran = () => {
       )
     );
   };
+
+
+  useNavbar(
+    {
+      variant: "page",
+      title: "Pengaturan",
+      backTo: null,
+      actions: [
+        {
+          type: "span",
+          title: "Versi Aplikasi",
+          className: "px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200",
+          label: "v2.7.0",
+        },
+        {
+          type: "span",
+          title: "Versi Database",
+          className: "px-2 py-1 rounded-full bg-gray-50 text-gray-700 border border-gray-200",
+          label: "DB 12",
+        },
+      ],
+    },
+    
+  );
 
   return (
     <div className="h-full w-full bg-white flex flex-col overflow-hidden">

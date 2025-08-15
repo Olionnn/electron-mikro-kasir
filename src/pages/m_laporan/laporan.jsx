@@ -42,11 +42,12 @@ export default function LaporanPage() {
     { icon: "📈", title: "Laporan Neraca" },
     { icon: "⏳", title: "Laporan Shift" },
     { icon: "📅", title: "Riwayat Transaksi" },
+    { icon: "📋", title: "Laporan Utang Piutang" },
 ,
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="h-full bg-gray-50">
       {/* Banner / Carousel */}
       <div className="flex gap-4 overflow-x-auto p-4 pb-2 hide-scrollbar">
         {banners.map((b, i) => (

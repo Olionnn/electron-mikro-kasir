@@ -14,6 +14,7 @@ import {
   MdInfo
 } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useNavbar } from "../../hooks/useNavbar"; // Assuming you have a custom hook for navbar 
 
 const InformasiToko = () => {
   const infoToko = [
@@ -56,21 +57,24 @@ const InformasiToko = () => {
     </div>
   );
 
+    // Set navbar for this page
+    useNavbar({
+      variant: "page",
+      title: "Informasi Toko",
+      backTo: null, 
+      actions: [
+        {
+          type: "link",
+          title: "Edit Toko",
+          to: "/pengaturan/edittoko",
+          className: "bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg flex items-center gap-2",
+          icon: <MdEdit className="text-lg" />,
+        },
+      ],
+    });
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-green-50 to-white">
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white shadow-md">
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
-          INFORMASI TOKO
-        </h2>
-        <Link
-          to={"/pengaturan/edittoko"}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 hover:bg-green-200 rounded-lg text-green-700 font-semibold text-sm md:text-base transition-all"
-        >
-          <MdEdit className="text-lg md:text-xl" />
-          Edit Toko
-        </Link>
-      </div>
 
       {/* Avatar / Logo */}
       <div className="flex flex-col items-center py-8 relative">

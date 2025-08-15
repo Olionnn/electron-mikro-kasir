@@ -11,7 +11,6 @@ import {
   MdSave,
 } from "react-icons/md";
 
-/** Toggle minimal (tanpa lib tambahan) */
 function Toggle({ checked, onChange }) {
   return (
     <button
@@ -36,7 +35,6 @@ function Toggle({ checked, onChange }) {
 export default function PengaturanStruk() {
   const navigate = useNavigate();
 
-  // dummy state untuk contoh (boleh dihubungkan dengan store kamu)
   const [showLogo, setShowLogo] = useState(true);
   const [logoChars, setLogoChars] = useState("16");
   const [logoCanvas, setLogoCanvas] = useState("16");
@@ -76,7 +74,7 @@ export default function PengaturanStruk() {
     {
       variant: "page",
       title: "Pengaturan Struk",
-      backTo: null, // pakai action back custom biar animasi/riwayat tetap
+      backTo: onBack, // pakai action back custom biar animasi/riwayat tetap
       actions: [
         {
           type: "button",

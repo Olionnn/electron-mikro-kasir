@@ -1,5 +1,6 @@
 import React from "react";
 import { MdSync } from "react-icons/md";
+import { useNavbar } from "../../hooks/useNavbar";
 
 const SyncPage = () => {
   const syncItems = [
@@ -7,6 +8,29 @@ const SyncPage = () => {
     "Biaya", "Pesanan", "Draft Pembelian", "Kategori", "Staff",
     "Promosi", "Shift", "Gambar Produk"
   ];
+
+  useNavbar(
+    {
+      variant: "page",
+      title: "Pengaturan",
+      backTo: null,
+      actions: [
+        {
+          type: "span",
+          title: "Versi Aplikasi",
+          className: "px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200",
+          label: "v2.7.0",
+        },
+        {
+          type: "span",
+          title: "Versi Database",
+          className: "px-2 py-1 rounded-full bg-gray-50 text-gray-700 border border-gray-200",
+          label: "DB 12",
+        },
+      ],
+    },
+    
+  );
 
   return (
     <div className="h-screen bg-white p-8 overflow-y-auto">

@@ -94,7 +94,6 @@ export default function PelangganPage() {
 
   return (
     <div className="flex h-full bg-gray-50">
-      {/* KIRI: Search + List (list saja yang scroll) */}
       <div className="w-1/2 border-r flex flex-col bg-white">
         <div className="p-4 border-b sticky top-0 z-10 bg-white/90 backdrop-blur">
           <div className="relative">
@@ -104,21 +103,21 @@ export default function PelangganPage() {
               placeholder="Cari nama / email / telp / kode…"
               className="w-full h-11 pl-4 pr-24 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {search && (
-              <button
-                onClick={() => setSearch("")}
-                className="absolute right-24 top-1/2 -translate-y-1/2 text-sm text-gray-600 hover:text-gray-800"
-              >
-                Bersihkan
-              </button>
-            )}
-            <button
+            {/* {search && (
+                // <button
+                //   onClick={() => setSearch("")}
+                //   className="absolute right-24 top-1/2 -translate-y-1/2 text-sm text-gray-600 hover:text-gray-800"
+                // >
+                //   Bersihkan
+                // </button>
+            )} */}
+            {/* <button
               onClick={doRefresh}
               className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg border text-gray-700 hover:bg-gray-100"
               title="Refresh"
             >
               <FiRefreshCw />
-            </button>
+            </button> */}
           </div>
           <div className="mt-2 text-xs text-gray-500">
             Menampilkan <b>{filtered.length}</b> dari {customers.length} pelanggan
@@ -170,11 +169,9 @@ export default function PelangganPage() {
         </div>
       </div>
 
-      {/* KANAN: Detail — TANPA CARD */}
       <div className="w-1/2 p-6">
         {selectedCustomer ? (
           <div className="space-y-6">
-            {/* Header: foto + nama + aksi edit */}
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-4">
                 {selectedCustomer.image ? (
