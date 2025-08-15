@@ -3,7 +3,7 @@ import { useNavbar } from "../../hooks/useNavbar";
 import { Card } from "../../component/SimpleCard";
 import { Badge } from "../../component/SimpleBadge";
 
-// 👉 Recharts
+
 import {
   ResponsiveContainer,
   LineChart,
@@ -15,14 +15,13 @@ import {
   Legend,
 } from "recharts";
 
-// Util kecil
+
 const fmtIDR = (n) =>
   new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(n);
 const toISO = (d) => (typeof d === "string" ? d : d.toISOString().slice(0, 10));
 const toLabel = (iso) =>
   new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short" });
 
-// === DUMMY DATA ===
 const DUMMY_POS = [
   { id: "TX-001", date: "2025-08-11", revenue: 120000, profit: 35000 },
   { id: "TX-002", date: "2025-08-11", revenue: 250000, profit: 70000 },
@@ -31,7 +30,7 @@ const DUMMY_POS = [
   { id: "TX-005", date: "2025-08-13", revenue: 220000, profit: 65000 },
 ];
 
-// per barang
+
 const DUMMY_SALES_BY_ITEM = [
   { date: "2025-08-13", code: "BRG-001", name: "Beras 5Kg", qty: 2, trxCount: 2, profit: 40000, revenue: 140000 },
   { date: "2025-08-13", code: "BRG-002", name: "Minyak 1L", qty: 4, trxCount: 3, profit: 30000, revenue: 76000 },
@@ -39,14 +38,12 @@ const DUMMY_SALES_BY_ITEM = [
   { date: "2025-08-12", code: "BRG-001", name: "Beras 5Kg", qty: 1, trxCount: 1, profit: 20000, revenue: 70000 },
 ];
 
-// per staff
 const DUMMY_SALES_BY_STAFF = [
   { date: "2025-08-13", email: "kasir1@toko.id", trxCount: 2, profit: 55000, revenue: 180000 },
   { date: "2025-08-13", email: "kasir2@toko.id", trxCount: 1, profit: 50000, revenue: 190000 },
   { date: "2025-08-12", email: "kasir1@toko.id", trxCount: 1, profit: 45000, revenue: 175000 },
 ];
 
-// stok
 const DUMMY_STOCK_MOVES = [
   { date: "2025-08-13", name: "Beras 5Kg", in: 0, out: 2, stock: 18, email: "kasir1@toko.id", mode: "POS", note: "Terjual" },
   { date: "2025-08-13", name: "Minyak 1L", in: 5, out: 1, stock: 24, email: "admin@toko.id", mode: "Pembelian", note: "Restok" },
@@ -54,7 +51,7 @@ const DUMMY_STOCK_MOVES = [
 ];
 
 export default function DashboardKasir() {
-  // Navbar
+
   useNavbar(
     {
       variant: "page",
@@ -117,7 +114,6 @@ export default function DashboardKasir() {
     [activeDate]
   );
 
-  // Tooltip custom kecil
   const Tip = ({ active, payload, label, valueFmt = (v) => v }) => {
     if (!active || !payload || !payload.length) return null;
     return (
@@ -135,7 +131,7 @@ export default function DashboardKasir() {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-gray-100 overflow-hidden">
+    <div className="h-full w-screen flex flex-col bg-gray-100 overflow-hidden">
       <div className="flex-1 overflow-auto">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-6 py-4 grid grid-cols-12 gap-4">
           <main className="col-span-12">
