@@ -10,7 +10,13 @@
             "name": "Debug Electron:Dev",
             "command": "npm run electron:dev",
             "cwd": "${workspaceFolder}",
-
-        }
+        },
+        {
+            "type": "node-terminal",
+            "request": "launch",
+            "name": "Web Debug",
+            "command": "npm run dev",
+            "cwd": "${workspaceFolder}",
+        },
     ]
 }
