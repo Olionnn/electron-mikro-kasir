@@ -1,32 +1,50 @@
-import { app, BrowserWindow } from 'electron';
-import path from 'node:path';
-import started from 'electron-squirrel-startup';
 // import initDatabase from '../../backend/ipc/bootstrap.js';
 // import '../../backend/ipc/barangIpc.js';
 
+import { app, BrowserWindow } from 'electron';
+import path from 'node:path';
+import { fileURLToPath } from 'url';
+import started from 'electron-squirrel-startup';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
 }
 
+
+const isDev = process.env.NODE_ENV === 'development';
+
 function createWindow() {
-    const mainWindow = new BrowserWindow({
-      width: 1200,
-      height: 800,
-        autoHideMenuBar: false,
-      webPreferences: {
-        nodeIntegration: false,
-        contextIsolation: true
-      }
-    })
-  
-    // Load the app
-      mainWindow.loadURL('http://localhost:5173')
-      mainWindow.webContents.openDevTools()
- 
+  const mainWindow = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    autoHideMenuBar: true,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, '../preload/index.js')
+    },
+    icon: path.join(__dirname, '../../public/icon.png')
+  });
+
+
+  if (isDev) {
+    mainWindow.loadURL('http://localhost:5173');
+    mainWindow.webContents.openDevTools();
+  } else {
+    mainWindow.loadFile(path.join(__dirname, '../../dist/index.html'));
   }
+
+  mainWindow.webContents.on('did-fail-load', () => {
+    if (!isDev) {
+      mainWindow.loadFile(path.join(__dirname, '../../dist/index.html'));
+    }
+  });
+ 
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
