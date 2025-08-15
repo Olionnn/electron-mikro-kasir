@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FaStore,
   FaSync,
@@ -34,6 +34,7 @@ const bottomMenuItems = [
 ];
 
 const SidebarItem = ({ icon, text, link, isActive }) => (
+
   <li>
     <Link
       to={link}
@@ -48,6 +49,8 @@ const SidebarItem = ({ icon, text, link, isActive }) => (
 );
 
 export default function Sidebar({ isOpen }) {
+  const navigate = useNavigate();
+
   const location = useLocation();
 
   return (
@@ -57,7 +60,7 @@ export default function Sidebar({ isOpen }) {
       }`}
     >
       {/* Header */}
-      <div className="bg-green-600 text-white p-4 flex flex-col items-center">
+      <div className="bg-green-600 text-white p-4 flex flex-col items-center" onClick={() => {navigate("/pengaturan/profil"); }}>
         <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-2">
           <FaStore className="text-green-600 text-3xl" />
         </div>
