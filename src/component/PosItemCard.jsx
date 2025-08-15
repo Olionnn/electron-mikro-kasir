@@ -10,7 +10,7 @@ const PosItemCard = ({ item, index, onAddItem  }) => {
   }).format(item.hargaJual);
 
   return (
-    <div onClick={() => onAddItem(item)} className="flex items-center p-3  cursor-pointer hover:bg-gray-100 transition">
+    <div onClick={() => onAddItem(item)} className="flex items-center p-3  cursor-pointer hover:bg-gray-100 transition border border-black rounded-xl">
       <div className="w-12 h-12 bg-gray-200 rounded-sm flex items-center justify-center mr-4">
         <span className="font-bold text-gray-600">{formattedId}</span>
       </div>
