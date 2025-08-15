@@ -24,16 +24,46 @@ const seedItems = [
   { id: 302, kode: "GL1L", nama: "Gula 1KG", stok: 25, hargaBeli: 12000 },
   { id: 303, kode: "GL5K", nama: "Gula 5KG", stok: 15, hargaBeli: 55000 },
   { id: 304, kode: "TLPK", nama: "Telur Ayam 1KG", stok: 20, hargaBeli: 23000 },
-  { id: 305, kode: "TLPB", nama: "Telur Bebek 1KG", stok: 12, hargaBeli: 27000 },
+  {
+    id: 305,
+    kode: "TLPB",
+    nama: "Telur Bebek 1KG",
+    stok: 12,
+    hargaBeli: 27000,
+  },
   { id: 306, kode: "MNY2L", nama: "Minyak 2L", stok: 18, hargaBeli: 34000 },
   { id: 307, kode: "MNY5L", nama: "Minyak 5L", stok: 10, hargaBeli: 85000 },
   { id: 308, kode: "KCPR", nama: "Kecap Refill", stok: 30, hargaBeli: 3500 },
-  { id: 309, kode: "SKM", nama: "Susu Kental Manis", stok: 40, hargaBeli: 8000 },
-  { id: 310, kode: "SKM2", nama: "Susu Kental Manis 2KG", stok: 15, hargaBeli: 15000 },
+  {
+    id: 309,
+    kode: "SKM",
+    nama: "Susu Kental Manis",
+    stok: 40,
+    hargaBeli: 8000,
+  },
+  {
+    id: 310,
+    kode: "SKM2",
+    nama: "Susu Kental Manis 2KG",
+    stok: 15,
+    hargaBeli: 15000,
+  },
   { id: 311, kode: "MSG", nama: "MSG 500gr", stok: 50, hargaBeli: 5000 },
   { id: 312, kode: "MSG1", nama: "MSG 1KG", stok: 20, hargaBeli: 9000 },
-  { id: 313, kode: "TMBH", nama: "Tepung Terigu 1KG", stok: 25, hargaBeli: 12000 },
-  { id: 314, kode: "TMB5", nama: "Tepung Terigu 5KG", stok: 10, hargaBeli: 55000 },
+  {
+    id: 313,
+    kode: "TMBH",
+    nama: "Tepung Terigu 1KG",
+    stok: 25,
+    hargaBeli: 12000,
+  },
+  {
+    id: 314,
+    kode: "TMB5",
+    nama: "Tepung Terigu 5KG",
+    stok: 10,
+    hargaBeli: 55000,
+  },
   { id: 315, kode: "KRN1", nama: "Kornet 1KG", stok: 15, hargaBeli: 45000 },
   { id: 316, kode: "KRN2", nama: "Kornet 2KG", stok: 8, hargaBeli: 85000 },
   { id: 317, kode: "SRP1", nama: "Sirup 1L", stok: 20, hargaBeli: 25000 },
@@ -44,10 +74,34 @@ const seedItems = [
   { id: 322, kode: "THT2", nama: "Teh Bubuk 1KG", stok: 20, hargaBeli: 40000 },
   { id: 323, kode: "MKR1", nama: "Margarin 1KG", stok: 15, hargaBeli: 25000 },
   { id: 324, kode: "MKR2", nama: "Margarin 2KG", stok: 10, hargaBeli: 45000 },
-  { id: 325, kode: "CKL1", nama: "Coklat Bubuk 1KG", stok: 10, hargaBeli: 70000 },
-  { id: 326, kode: "CKL2", nama: "Coklat Bubuk 2KG", stok: 5, hargaBeli: 130000 },
-  { id: 327, kode: "BHN1", nama: "Bumbu Nasi Goreng", stok: 30, hargaBeli: 5000 },
-  { id: 328, kode: "BHN2", nama: "Bumbu Ayam Goreng", stok: 25, hargaBeli: 6000 },
+  {
+    id: 325,
+    kode: "CKL1",
+    nama: "Coklat Bubuk 1KG",
+    stok: 10,
+    hargaBeli: 70000,
+  },
+  {
+    id: 326,
+    kode: "CKL2",
+    nama: "Coklat Bubuk 2KG",
+    stok: 5,
+    hargaBeli: 130000,
+  },
+  {
+    id: 327,
+    kode: "BHN1",
+    nama: "Bumbu Nasi Goreng",
+    stok: 30,
+    hargaBeli: 5000,
+  },
+  {
+    id: 328,
+    kode: "BHN2",
+    nama: "Bumbu Ayam Goreng",
+    stok: 25,
+    hargaBeli: 6000,
+  },
   { id: 329, kode: "BHN3", nama: "Bumbu Soto", stok: 20, hargaBeli: 7000 },
   { id: 330, kode: "BHN4", nama: "Bumbu Rendang", stok: 15, hargaBeli: 8000 },
   { id: 331, kode: "BHN5", nama: "Bumbu Kari", stok: 10, hargaBeli: 9000 },
@@ -55,31 +109,175 @@ const seedItems = [
   { id: 333, kode: "BHN7", nama: "Bumbu Pecel", stok: 20, hargaBeli: 7500 },
   { id: 334, kode: "BHN8", nama: "Bumbu Rawon", stok: 12, hargaBeli: 9500 },
   { id: 335, kode: "BHN9", nama: "Bumbu Sate", stok: 18, hargaBeli: 8000 },
-  { id: 336, kode: "BHN10", nama: "Bumbu Sambal Goreng", stok: 25, hargaBeli: 7000 },
-  { id: 337, kode: "BHN11", nama: "Bumbu Soto Ayam", stok: 30, hargaBeli: 6500 },
+  {
+    id: 336,
+    kode: "BHN10",
+    nama: "Bumbu Sambal Goreng",
+    stok: 25,
+    hargaBeli: 7000,
+  },
+  {
+    id: 337,
+    kode: "BHN11",
+    nama: "Bumbu Soto Ayam",
+    stok: 30,
+    hargaBeli: 6500,
+  },
   { id: 338, kode: "BHN12", nama: "Bumbu Gulai", stok: 20, hargaBeli: 9000 },
-  { id: 339, kode: "BHN13", nama: "Bumbu Ayam Bakar", stok: 15, hargaBeli: 8500 },
-  { id: 340, kode: "BHN14", nama: "Bumbu Ikan Bakar", stok: 10, hargaBeli: 9500 },
-  { id: 341, kode: "BHN15", nama: "Bumbu Rica-Rica", stok: 12, hargaBeli: 8000 },
-  { id: 342, kode: "BHN16", nama: "Bumbu Ayam Goreng Kalasan", stok: 18, hargaBeli: 7500 },
-  { id: 343, kode: "BHN17", nama: "Bumbu Ayam Goreng Kremes", stok: 25, hargaBeli: 7000 },
-  { id: 344, kode: "BHN18", nama: "Bumbu Ayam Goreng Lengkuas", stok: 30, hargaBeli: 6500 },
-  { id: 345, kode: "BHN19", nama: "Bumbu Ayam Goreng Serundeng", stok: 20, hargaBeli: 9000 },
-  { id: 346, kode: "BHN20", nama: "Bumbu Ayam Goreng Padang", stok: 15, hargaBeli: 8500 },
-  { id: 347, kode: "BHN21", nama: "Bumbu Ayam Goreng Betutu", stok: 10, hargaBeli: 9500 },
-  { id: 348, kode: "BHN22", nama: "Bumbu Ayam Goreng Bali", stok: 12, hargaBeli: 8000 },
-  { id: 349, kode: "BHN23", nama: "Bumbu Ayam Goreng Taliwang", stok: 18, hargaBeli: 7500 },
-  { id: 350, kode: "BHN24", nama: "Bumbu Ayam Goreng Bumbu Rujak", stok: 25, hargaBeli: 7000 },
-  { id: 351, kode: "BHN25", nama: "Bumbu Ayam Goreng Bumbu Kuning", stok: 30, hargaBeli: 6500 },
-  { id: 352, kode: "BHN26", nama: "Bumbu Ayam Goreng Bumbu Merah", stok: 20, hargaBeli: 9000 },
-  { id: 353, kode: "BHN27", nama: "Bumbu Ayam Goreng Bumbu Hitam", stok: 15, hargaBeli: 8500 },
-  { id: 354, kode: "BHN28", nama: "Bumbu Ayam Goreng Bumbu Putih", stok: 10, hargaBeli: 9500 },
-  { id: 355, kode: "BHN29", nama: "Bumbu Ayam Goreng Bumbu Hijau", stok: 12, hargaBeli: 8000 },
-  { id: 356, kode: "BHN30", nama: "Bumbu Ayam Goreng Bumbu Ungu", stok: 18, hargaBeli: 7500 },
-  { id: 357, kode: "BHN31", nama: "Bumbu Ayam Goreng Bumbu Biru", stok: 25, hargaBeli: 7000 },
-  { id: 358, kode: "BHN32", nama: "Bumbu Ayam Goreng Bumbu Coklat", stok: 30, hargaBeli: 6500 },
-  { id: 359, kode: "BHN33", nama: "Bumbu Ayam Goreng Bumbu Pelangi", stok: 20, hargaBeli: 9000 },
-  { id: 360, kode: "BHN34", nama: "Bumbu Ayam Goreng Bumbu Nusantara", stok: 15, hargaBeli: 8500 },
+  {
+    id: 339,
+    kode: "BHN13",
+    nama: "Bumbu Ayam Bakar",
+    stok: 15,
+    hargaBeli: 8500,
+  },
+  {
+    id: 340,
+    kode: "BHN14",
+    nama: "Bumbu Ikan Bakar",
+    stok: 10,
+    hargaBeli: 9500,
+  },
+  {
+    id: 341,
+    kode: "BHN15",
+    nama: "Bumbu Rica-Rica",
+    stok: 12,
+    hargaBeli: 8000,
+  },
+  {
+    id: 342,
+    kode: "BHN16",
+    nama: "Bumbu Ayam Goreng Kalasan",
+    stok: 18,
+    hargaBeli: 7500,
+  },
+  {
+    id: 343,
+    kode: "BHN17",
+    nama: "Bumbu Ayam Goreng Kremes",
+    stok: 25,
+    hargaBeli: 7000,
+  },
+  {
+    id: 344,
+    kode: "BHN18",
+    nama: "Bumbu Ayam Goreng Lengkuas",
+    stok: 30,
+    hargaBeli: 6500,
+  },
+  {
+    id: 345,
+    kode: "BHN19",
+    nama: "Bumbu Ayam Goreng Serundeng",
+    stok: 20,
+    hargaBeli: 9000,
+  },
+  {
+    id: 346,
+    kode: "BHN20",
+    nama: "Bumbu Ayam Goreng Padang",
+    stok: 15,
+    hargaBeli: 8500,
+  },
+  {
+    id: 347,
+    kode: "BHN21",
+    nama: "Bumbu Ayam Goreng Betutu",
+    stok: 10,
+    hargaBeli: 9500,
+  },
+  {
+    id: 348,
+    kode: "BHN22",
+    nama: "Bumbu Ayam Goreng Bali",
+    stok: 12,
+    hargaBeli: 8000,
+  },
+  {
+    id: 349,
+    kode: "BHN23",
+    nama: "Bumbu Ayam Goreng Taliwang",
+    stok: 18,
+    hargaBeli: 7500,
+  },
+  {
+    id: 350,
+    kode: "BHN24",
+    nama: "Bumbu Ayam Goreng Bumbu Rujak",
+    stok: 25,
+    hargaBeli: 7000,
+  },
+  {
+    id: 351,
+    kode: "BHN25",
+    nama: "Bumbu Ayam Goreng Bumbu Kuning",
+    stok: 30,
+    hargaBeli: 6500,
+  },
+  {
+    id: 352,
+    kode: "BHN26",
+    nama: "Bumbu Ayam Goreng Bumbu Merah",
+    stok: 20,
+    hargaBeli: 9000,
+  },
+  {
+    id: 353,
+    kode: "BHN27",
+    nama: "Bumbu Ayam Goreng Bumbu Hitam",
+    stok: 15,
+    hargaBeli: 8500,
+  },
+  {
+    id: 354,
+    kode: "BHN28",
+    nama: "Bumbu Ayam Goreng Bumbu Putih",
+    stok: 10,
+    hargaBeli: 9500,
+  },
+  {
+    id: 355,
+    kode: "BHN29",
+    nama: "Bumbu Ayam Goreng Bumbu Hijau",
+    stok: 12,
+    hargaBeli: 8000,
+  },
+  {
+    id: 356,
+    kode: "BHN30",
+    nama: "Bumbu Ayam Goreng Bumbu Ungu",
+    stok: 18,
+    hargaBeli: 7500,
+  },
+  {
+    id: 357,
+    kode: "BHN31",
+    nama: "Bumbu Ayam Goreng Bumbu Biru",
+    stok: 25,
+    hargaBeli: 7000,
+  },
+  {
+    id: 358,
+    kode: "BHN32",
+    nama: "Bumbu Ayam Goreng Bumbu Coklat",
+    stok: 30,
+    hargaBeli: 6500,
+  },
+  {
+    id: 359,
+    kode: "BHN33",
+    nama: "Bumbu Ayam Goreng Bumbu Pelangi",
+    stok: 20,
+    hargaBeli: 9000,
+  },
+  {
+    id: 360,
+    kode: "BHN34",
+    nama: "Bumbu Ayam Goreng Bumbu Nusantara",
+    stok: 15,
+    hargaBeli: 8500,
+  },
 ];
 
 const seedSuppliers = [
@@ -128,7 +326,6 @@ const PembeliSuplier = () => {
 
   const [sortKey, setSortKey] = useState("nama"); // 'nama' | 'kode' | 'stok'
   const [sortAsc, setSortAsc] = useState(true);
-
   const [searchMode, setSearchMode] = useState("nama"); // 'nama' | 'kode'
 
   const [notifOpen, setNotifOpen] = useState(false);
@@ -149,34 +346,38 @@ const PembeliSuplier = () => {
   const [lineEditOpen, setLineEditOpen] = useState(false);
   const [lineForm, setLineForm] = useState({
     id: null,
-    harga: 0,              // harga beli per item
-    discountType: "rp",    // 'rp' | 'pct'
-    diskonPerQtyRp: 0,     // nominal Rp per item
-    diskonPerQtyPct: 0,    // persen per item
+    harga: 0, // harga beli per item
+    discountType: "rp", // 'rp' | 'pct'
+    diskonPerQtyRp: 0, // nominal Rp per item
+    diskonPerQtyPct: 0, // persen per item
     note: "",
   });
-  
-  // helper hitung diskon per item sesuai tipe
-  const calcPerItemDiscount = (harga, type, rp, pct) => {
-    const h = Math.max(0, Number(harga || 0));
-    if (type === "pct") return Math.min(h, (h * Math.max(0, Number(pct || 0))) / 100);
-    return Math.min(h, Math.max(0, Number(rp || 0)));
-  };
-  
 
+  // ===== Helpers Diskon Per Item =====
+  const calcPerItemDiscount = (harga, type, rpVal, pctVal) => {
+    const h = Math.max(0, Number(harga || 0));
+    if (type === "pct") {
+      const pct = Math.max(0, Number(pctVal || 0));
+      return Math.min(h, (h * pct) / 100);
+    }
+    const rp = Math.max(0, Number(rpVal || 0));
+    return Math.min(h, rp);
+  };
+
+  // Open modal edit line
   const openLineEdit = (row) => {
     setLineForm({
       id: row.id,
       harga: Number(row.harga || 0),
       discountType: row.discountType || "rp",
-      diskonPerQtyRp: Number(row.diskonPerQtyRp || row.diskonPerQty || 0), // fallback ke field lama kalau ada
+      diskonPerQtyRp: Number(row.diskonPerQtyRp || row.diskonPerQty || 0),
       diskonPerQtyPct: Number(row.diskonPerQtyPct || 0),
       note: row.note || "",
     });
     setLineEditOpen(true);
   };
 
-
+  // Simpan modal edit line
   const saveLineEdit = () => {
     setCart((prev) =>
       prev.map((p) =>
@@ -184,9 +385,12 @@ const PembeliSuplier = () => {
           ? {
               ...p,
               harga: Math.max(0, Number(lineForm.harga || 0)),
-              discountType: lineForm.discountType,         // 'rp' | 'pct'
+              discountType: lineForm.discountType,
               diskonPerQtyRp: Math.max(0, Number(lineForm.diskonPerQtyRp || 0)),
-              diskonPerQtyPct: Math.max(0, Number(lineForm.diskonPerQtyPct || 0)),
+              diskonPerQtyPct: Math.max(
+                0,
+                Number(lineForm.diskonPerQtyPct || 0)
+              ),
               note: lineForm.note || "",
             }
           : p
@@ -194,19 +398,19 @@ const PembeliSuplier = () => {
     );
     setLineEditOpen(false);
   };
+
+  // Filter + sort katalog
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     let data = items;
 
     if (q) {
-      if (searchMode === "nama") {
+      if (searchMode === "nama")
         data = data.filter((i) => i.nama.toLowerCase().includes(q));
-      } else {
-        data = data.filter((i) => (i.kode || "").toLowerCase().includes(q));
-      }
+      else data = data.filter((i) => (i.kode || "").toLowerCase().includes(q));
     }
 
-    const getVal = (it) =>
+    const valOf = (it) =>
       sortKey === "nama"
         ? (it.nama || "").toLowerCase()
         : sortKey === "kode"
@@ -214,8 +418,8 @@ const PembeliSuplier = () => {
         : Number(it.stok || 0);
 
     data = [...data].sort((a, b) => {
-      const va = getVal(a);
-      const vb = getVal(b);
+      const va = valOf(a);
+      const vb = valOf(b);
       if (va < vb) return sortAsc ? -1 : 1;
       if (va > vb) return sortAsc ? 1 : -1;
       return 0;
@@ -224,41 +428,87 @@ const PembeliSuplier = () => {
     return data;
   }, [items, query, searchMode, sortKey, sortAsc]);
 
-  const subItems = useMemo(
-    () => cart.reduce((s, it) => s + it.harga * it.qty, 0),
+  // ====== Perhitungan total yang benar (memasukkan diskon per item) ======
+
+  // Gross items (tanpa diskon apapun)
+  const grossItems = useMemo(
+    () =>
+      cart.reduce(
+        (s, it) => s + Number(it.harga || 0) * Number(it.qty || 0),
+        0
+      ),
     [cart]
   );
 
-  const totalDiskon = useMemo(() => {
-    if (!discValue) return 0;
-    if (discType === "pct") {
-      return Math.min(subItems * (Number(discValue) / 100), subItems);
-    }
-    return Math.min(Number(discValue || 0), subItems);
-  }, [discType, discValue, subItems]);
+  // Total diskon per item (Rp/% per qty)
+  const totalDiskonItem = useMemo(
+    () =>
+      cart.reduce((s, it) => {
+        const perItemDisc = calcPerItemDiscount(
+          it.harga,
+          it.discountType || "rp",
+          it.diskonPerQtyRp,
+          it.diskonPerQtyPct
+        );
+        return s + perItemDisc * Math.max(1, Number(it.qty || 1));
+      }, 0),
+    [cart]
+  );
 
+  // Omzet setelah diskon per item (dasar diskon global)
+  const baseAfterItemDisc = useMemo(
+    () => Math.max(0, grossItems - totalDiskonItem),
+    [grossItems, totalDiskonItem]
+  );
+
+  // Diskon global
+  const totalDiskonGlobal = useMemo(() => {
+    const v = Number(discValue || 0);
+    if (!v) return 0;
+    if (discType === "pct")
+      return Math.min(baseAfterItemDisc * (v / 100), baseAfterItemDisc);
+    return Math.min(v, baseAfterItemDisc);
+  }, [discType, discValue, baseAfterItemDisc]);
+
+  // Pajak dari omzet setelah semua diskon
   const totalPajak = useMemo(() => {
-    const base = Math.max(0, subItems - totalDiskon);
+    const base = Math.max(0, baseAfterItemDisc - totalDiskonGlobal);
     return Math.round(base * (Number(taxPct || 0) / 100));
-  }, [subItems, totalDiskon, taxPct]);
+  }, [baseAfterItemDisc, totalDiskonGlobal, taxPct]);
 
+  // Biaya tambahan
   const totalBiaya = useMemo(
     () => costs.reduce((s, c) => s + Number(c.amount || 0), 0),
     [costs]
   );
 
+  // Grand total
   const grandTotal = useMemo(
-    () => Math.max(0, subItems - totalDiskon) + totalPajak + totalBiaya,
-    [subItems, totalDiskon, totalPajak, totalBiaya]
+    () =>
+      Math.max(0, baseAfterItemDisc - totalDiskonGlobal) +
+      totalPajak +
+      totalBiaya,
+    [baseAfterItemDisc, totalDiskonGlobal, totalPajak, totalBiaya]
   );
 
+  const getSupplierName = (id, suppliers) => {
+    return suppliers.find((s) => s.id === id)?.nama || "Tanpa Supplier";
+  };
+
+  const upsertListById = (arr, row) => {
+    const idx = arr.findIndex((r) => r.id === row.id);
+    if (idx === -1) return [row, ...arr];
+    const next = [...arr];
+    next[idx] = row;
+    return next;
+  };
+
+  // Tambah ke keranjang (default field diskon per item)
   const addToCart = (it) => {
     setCart((prev) => {
       const found = prev.find((p) => p.id === it.id);
       if (found) {
-        return prev.map((p) =>
-          p.id === it.id ? { ...p, qty: p.qty + 1 } : p
-        );
+        return prev.map((p) => (p.id === it.id ? { ...p, qty: p.qty + 1 } : p));
       }
       return [
         ...prev,
@@ -268,6 +518,10 @@ const PembeliSuplier = () => {
           nama: it.nama,
           harga: it.hargaBeli,
           qty: 1,
+          discountType: "rp",
+          diskonPerQtyRp: 0,
+          diskonPerQtyPct: 0,
+          note: "",
         },
       ];
     });
@@ -281,12 +535,122 @@ const PembeliSuplier = () => {
     );
   };
   const incQty = (id) => {
-    setCart((prev) => prev.map((p) => (p.id === id ? { ...p, qty: p.qty + 1 } : p)));
+    setCart((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, qty: p.qty + 1 } : p))
+    );
   };
   const removeLine = (id) => {
     setCart((prev) => prev.filter((p) => p.id !== id));
   };
 
+  const buildItemsPayload = () =>
+    cart.map((c) => {
+      const perItemDisc = calcPerItemDiscount(
+        c.harga,
+        c.discountType || "rp",
+        c.diskonPerQtyRp,
+        c.diskonPerQtyPct
+      );
+      const afterPerItem = Math.max(0, Number(c.harga || 0) - perItemDisc);
+      return {
+        barang_id: c.id,
+        kode: c.kode,
+        nama: c.nama,
+        qty: Number(c.qty || 0),
+        harga_beli: Number(c.harga || 0),
+        discount_type: c.discountType || "rp",
+        diskon_per_qty_rp: Number(c.diskonPerQtyRp || 0),
+        diskon_per_qty_pct: Number(c.diskonPerQtyPct || 0),
+        note: c.note || "",
+        subtotal: afterPerItem * Number(c.qty || 0),
+      };
+    });
+
+  const buildMeta = () => ({
+    globalDiscount: { type: discType, value: Number(discValue || 0) },
+    globalTax: { pct: Number(taxPct || 0) },
+    costs,
+  });
+
+  const saveDraft = () => {
+    if (!supplierId) return alert("Pilih supplier terlebih dahulu.");
+    if (cart.length === 0) return alert("Keranjang masih kosong.");
+
+    const now = new Date().toISOString();
+    const current = JSON.parse(localStorage.getItem(LS_CURRENT) || "null");
+
+    const baseRecord = {
+      id: current?.id || Date.now(),
+      type: "purchase",
+      status: "draft",
+      toko_id: 1,
+      supplier_id: supplierId,
+      supplier_name: getSupplierName(supplierId, suppliers),
+      tanggal_waktu: now,
+      total: grandTotal, // <— penting untuk Transaksi
+      total_harga: grandTotal,
+      total_diskon: totalDiskonItem + totalDiskonGlobal,
+      total_pajak: totalPajak,
+      nominal_biaya: totalBiaya,
+      no_struk: current?.no_struk || genNoStruk(),
+      is_use_hutang: true,
+      created_by: 1,
+      updated_by: null,
+      created_at: now,
+      updated_at: now,
+      meta: buildMeta(),
+      items: buildItemsPayload(),
+    };
+
+    const list = loadList();
+    const nextList = upsertListById(list, baseRecord);
+    saveList(nextList);
+    saveCurrent(baseRecord);
+
+    alert("Draft pembelian disimpan.");
+  };
+
+  const proceedToPay = () => {
+    if (!supplierId) return alert("Pilih supplier terlebih dahulu.");
+    if (cart.length === 0) return alert("Keranjang masih kosong.");
+
+    const now = new Date().toISOString();
+    const current = JSON.parse(localStorage.getItem(LS_CURRENT) || "null");
+
+    const record = {
+      id: current?.id || Date.now(),
+      type: "purchase",
+      status: "paid", // <— sama seperti onPayDraft
+      toko_id: 1,
+      supplier_id: supplierId,
+      supplier_name: getSupplierName(supplierId, suppliers),
+      tanggal_waktu: now,
+      total: grandTotal,
+      total_harga: grandTotal,
+      total_diskon: totalDiskonItem + totalDiskonGlobal,
+      total_pajak: totalPajak,
+      nominal_biaya: totalBiaya,
+      no_struk: current?.no_struk || genNoStruk(),
+      is_use_hutang: false,
+      created_by: 1,
+      updated_by: null,
+      created_at: now,
+      updated_at: now,
+      meta: buildMeta(),
+      items: buildItemsPayload(),
+    };
+
+    // update list juga (supaya riwayat ada), tapi status "paid"
+    const list = loadList();
+    const nextList = upsertListById(list, record);
+    saveList(nextList);
+    saveCurrent(record);
+
+    // untuk halaman Transaksi.jsx
+    localStorage.setItem("pembelian.current", JSON.stringify(record));
+    // pergi ke trx
+    navigate("/trx");
+  };
   // Biaya handlers
   const openCost = () => {
     setCostForm({ name: "", amount: "", note: "" });
@@ -309,7 +673,9 @@ const PembeliSuplier = () => {
   const genNoStruk = () => {
     const d = new Date();
     const pad = (n) => String(n).padStart(2, "0");
-    return `PB-${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${d.getTime()}`;
+    return `PB-${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(
+      d.getDate()
+    )}-${d.getTime()}`;
   };
 
   const handleSave = (isPay) => {
@@ -317,13 +683,37 @@ const PembeliSuplier = () => {
     if (cart.length === 0) return alert("Keranjang masih kosong.");
 
     const now = new Date().toISOString();
+
+    // subtotal per item sesudah diskon item
+    const itemsPayload = cart.map((c) => {
+      const perItemDisc = calcPerItemDiscount(
+        c.harga,
+        c.discountType || "rp",
+        c.diskonPerQtyRp,
+        c.diskonPerQtyPct
+      );
+      const afterPerItem = Math.max(0, Number(c.harga || 0) - perItemDisc);
+      return {
+        barang_id: c.id,
+        kode: c.kode,
+        nama: c.nama,
+        qty: c.qty,
+        harga_beli: c.harga,
+        discount_type: c.discountType || "rp",
+        diskon_per_qty_rp: Number(c.diskonPerQtyRp || 0),
+        diskon_per_qty_pct: Number(c.diskonPerQtyPct || 0),
+        note: c.note || "",
+        subtotal: afterPerItem * Number(c.qty || 0),
+      };
+    });
+
     const record = {
       id: Date.now(),
       toko_id: 1,
       supplier_id: supplierId,
       tanggal_waktu: now,
       total_harga: grandTotal,
-      total_diskon: totalDiskon,
+      total_diskon: totalDiskonItem + totalDiskonGlobal, // gabungan item + global
       total_pajak: totalPajak,
       nominal_bayar: grandTotal,
       nominal_dibayar: isPay ? grandTotal : 0,
@@ -339,14 +729,7 @@ const PembeliSuplier = () => {
       status: true,
       created_at: now,
       updated_at: now,
-      items: cart.map((c) => ({
-        barang_id: c.id,
-        kode: c.kode,
-        nama: c.nama,
-        qty: c.qty,
-        harga_beli: c.harga,
-        subtotal: c.harga * c.qty,
-      })),
+      items: itemsPayload,
     };
 
     const list = loadList();
@@ -368,6 +751,43 @@ const PembeliSuplier = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  useEffect(() => {
+    try {
+      const cur = JSON.parse(localStorage.getItem(LS_CURRENT) || "null");
+      if (!cur) return;
+      // hanya muat yang tipe purchase
+      if (!(cur.type === "purchase" || cur.supplier_id)) return;
+
+      setSupplierId(cur.supplier_id || suppliers[0]?.id || null);
+
+      // meta global disc/tax
+      const gd = cur.meta?.globalDiscount || null;
+      const gt = cur.meta?.globalTax || null;
+      if (gd) {
+        setDiscType(gd.type === "pct" ? "pct" : "rp");
+        setDiscValue(Number(gd.value || 0));
+      }
+      if (gt) setTaxPct(Number(gt.pct || 0));
+
+      // biaya
+      if (Array.isArray(cur.meta?.costs)) setCosts(cur.meta.costs);
+
+      // cart
+      const mapped = (cur.items || []).map((it) => ({
+        id: it.barang_id ?? it.id,
+        kode: it.kode,
+        nama: it.nama,
+        harga: Number(it.harga_beli || it.harga || 0),
+        qty: Number(it.qty || 1),
+        discountType: it.discount_type || "rp",
+        diskonPerQtyRp: Number(it.diskon_per_qty_rp || 0),
+        diskonPerQtyPct: Number(it.diskon_per_qty_pct || 0),
+        note: it.note || "",
+      }));
+      if (mapped.length) setCart(mapped);
+    } catch {}
+  }, [suppliers]);
+
   // Navbar
   const onSave = useCallback(() => handleSave(false), []); // draft
   const onBayar = useCallback(() => handleSave(true), []); // lunas
@@ -380,7 +800,6 @@ const PembeliSuplier = () => {
     clearCurrent();
   }, []);
 
-  
   useNavbar(
     {
       variant: "page",
@@ -409,9 +828,15 @@ const PembeliSuplier = () => {
   );
 
   // === Notif datasets ===
-  const stokHabis = useMemo(() => items.filter((i) => Number(i.stok || 0) === 0), [items]);
+  const stokHabis = useMemo(
+    () => items.filter((i) => Number(i.stok || 0) === 0),
+    [items]
+  );
   const stokMenipis = useMemo(
-    () => items.filter((i) => Number(i.stok || 0) > 0 && Number(i.stok) <= MENIPIS_THRESHOLD),
+    () =>
+      items.filter(
+        (i) => Number(i.stok || 0) > 0 && Number(i.stok) <= MENIPIS_THRESHOLD
+      ),
     [items]
   );
   const stokSemua = items;
@@ -456,7 +881,6 @@ const PembeliSuplier = () => {
             onClick={() => setNotifOpen(true)}
           >
             <FiBell className="w-5 h-5" />
-
           </button>
 
           {/* Toggle search mode (nama/kode) */}
@@ -490,7 +914,11 @@ const PembeliSuplier = () => {
             <FiSearch className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-emerald-700" />
             <input
               type="text"
-              placeholder={searchMode === "nama" ? "Cari nama barang…" : "Cari kode barang…"}
+              placeholder={
+                searchMode === "nama"
+                  ? "Cari nama barang…"
+                  : "Cari kode barang…"
+              }
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="w-full border-2 border-emerald-400 rounded-full pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200"
@@ -506,7 +934,7 @@ const PembeliSuplier = () => {
           </button>
         </div>
 
-        {/* Kategori dummy warna */}
+        {/* Kategori dummy */}
         <div className="flex items-center gap-2">
           <button className="border px-4 py-2 rounded-full text-sm hover:bg-emerald-50 border-emerald-300 text-emerald-700">
             Semua
@@ -533,7 +961,9 @@ const PembeliSuplier = () => {
                   {it.kode}
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold text-emerald-800">{it.nama}</div>
+                  <div className="font-semibold text-emerald-800">
+                    {it.nama}
+                  </div>
                   <div className="text-xs text-gray-500 flex items-center gap-2">
                     <span className="px-2 py-0.5 rounded-full bg-sky-50 border border-sky-200 text-sky-700">
                       Stok {it.stok}
@@ -570,17 +1000,6 @@ const PembeliSuplier = () => {
               + Biaya (Ctrl+B)
             </button>
           </div>
-
-          {/* <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-700">Urut:</label>
-            <button
-              className="text-xs border border-emerald-300 px-3 py-1 rounded-full hover:bg-emerald-50 inline-flex items-center gap-1 bg-white text-emerald-700"
-              onClick={() => setSortAsc((v) => !v)}
-              title="Urut"
-            >
-              <HiArrowsUpDown /> {sortKey === "nama" ? "Nama" : sortKey === "kode" ? "Kode" : "Stok"}
-            </button>
-          </div> */}
         </div>
 
         <div className="rounded-xl border border-emerald-200 p-3 grid gap-3 bg-white/80">
@@ -601,7 +1020,7 @@ const PembeliSuplier = () => {
 
           <div className="grid grid-cols-2 gap-3">
             <label className="grid gap-1">
-              <span className="text-xs text-gray-600">Diskon</span>
+              <span className="text-xs text-gray-600">Diskon Global</span>
               <div className="flex gap-2">
                 <select
                   className="border rounded-lg px-2 text-sm"
@@ -617,7 +1036,9 @@ const PembeliSuplier = () => {
                   className="flex-1 border rounded-lg px-3 py-2 text-sm w-full"
                   min={0}
                   value={discValue}
-                  onChange={(e) => setDiscValue(e.target.value.replace(/[^0-9]/g, ""))}
+                  onChange={(e) =>
+                    setDiscValue(e.target.value.replace(/[^0-9]/g, ""))
+                  }
                   placeholder="0"
                 />
               </div>
@@ -631,7 +1052,9 @@ const PembeliSuplier = () => {
                 className="border rounded-lg px-3 py-2 text-sm w-full"
                 min={0}
                 value={taxPct}
-                onChange={(e) => setTaxPct(e.target.value.replace(/[^0-9]/g, ""))}
+                onChange={(e) =>
+                  setTaxPct(e.target.value.replace(/[^0-9]/g, ""))
+                }
                 placeholder="0"
               />
             </label>
@@ -667,107 +1090,142 @@ const PembeliSuplier = () => {
           ) : (
             <div className="grid gap-2">
               {cart.map((row) => (
-              <div
-                key={row.id}
-                className="border rounded-lg p-2 flex items-center justify-between bg-gradient-to-r from-white to-emerald-50 cursor-pointer"
-                onClick={() => openLineEdit(row)} // klik baris => buka modal
-                title="Klik untuk edit baris"
-              >
-                <div className="min-w-0">
-                  <div className="font-medium text-sm truncate text-emerald-800">
-                    {row.nama}
+                <div
+                  key={row.id}
+                  className="border rounded-lg p-2 flex items-center justify-between bg-gradient-to-r from-white to-emerald-50 cursor-pointer"
+                  onClick={() => openLineEdit(row)}
+                  title="Klik untuk edit baris"
+                >
+                  <div className="min-w-0">
+                    <div className="font-medium text-sm truncate text-emerald-800">
+                      {row.nama}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {row.kode} • {rp(row.harga)}
+                      {row.discountType === "pct" &&
+                        Number(row.diskonPerQtyPct || 0) > 0 && (
+                          <span className="ml-2 text-emerald-700">
+                            • Diskon/qty: {row.diskonPerQtyPct}%
+                          </span>
+                        )}
+                      {row.discountType !== "pct" &&
+                        Number(row.diskonPerQtyRp || 0) > 0 && (
+                          <span className="ml-2 text-emerald-700">
+                            • Diskon/qty: {rp(row.diskonPerQtyRp)}
+                          </span>
+                        )}
+                      {row.note && (
+                        <span className="ml-2 text-gray-400">• {row.note}</span>
+                      )}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-500">
-                    {row.kode} • {rp(row.harga)}
-                    {row.discountType === "pct" && Number(row.diskonPerQtyPct || 0) > 0 && (
-                      <span className="ml-2 text-emerald-700">• Diskon/qty: {row.diskonPerQtyPct}%</span>
-                    )}
-                    {row.discountType !== "pct" && Number(row.diskonPerQtyRp || 0) > 0 && (
-                      <span className="ml-2 text-emerald-700">• Diskon/qty: {rp(row.diskonPerQtyRp)}</span>
-                    )}
-                    {row.note && <span className="ml-2 text-gray-400">• {row.note}</span>}
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      className="w-8 h-8 rounded-full border hover:bg-gray-50 flex items-center justify-center"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        decQty(row.id);
+                      }}
+                      title="Kurangi"
+                    >
+                      <FiMinus />
+                    </button>
+
+                    <input
+                      type="number"
+                      min={1}
+                      value={row.qty}
+                      onChange={(e) => {
+                        const val = Math.max(1, Number(e.target.value || 1));
+                        setCart((prev) =>
+                          prev.map((p) =>
+                            p.id === row.id ? { ...p, qty: val } : p
+                          )
+                        );
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-14 text-center border rounded-md py-1 text-sm"
+                      title="Ubah jumlah"
+                    />
+
+                    <button
+                      className="w-8 h-8 rounded-full border hover:bg-gray-50 flex items-center justify-center"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        incQty(row.id);
+                      }}
+                      title="Tambah"
+                    >
+                      <FiPlusSm />
+                    </button>
+
+                    <button
+                      className="w-8 h-8 rounded-full border hover:bg-red-50 text-red-600 flex items-center justify-center"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeLine(row.id);
+                      }}
+                      title="Hapus baris"
+                    >
+                      <FiTrash2 />
+                    </button>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    className="w-8 h-8 rounded-full border hover:bg-gray-50 flex items-center justify-center"
-                    onClick={(e) => { e.stopPropagation(); decQty(row.id); }}
-                    title="Kurangi"
-                  >
-                    <FiMinus />
-                  </button>
-
-                  <input
-                    type="number"
-                    min={1}
-                    value={row.qty}
-                    onChange={(e) => {
-                      const val = Math.max(1, Number(e.target.value || 1));
-                      setCart((prev) =>
-                        prev.map((p) => (p.id === row.id ? { ...p, qty: val } : p))
-                      );
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    className="w-14 text-center border rounded-md py-1 text-sm"
-                    title="Ubah jumlah"
-                  />
-
-                  <button
-                    className="w-8 h-8 rounded-full border hover:bg-gray-50 flex items-center justify-center"
-                    onClick={(e) => { e.stopPropagation(); incQty(row.id); }}
-                    title="Tambah"
-                  >
-                    <FiPlusSm />
-                  </button>
-
-                  <button
-                    className="w-8 h-8 rounded-full border hover:bg-red-50 text-red-600 flex items-center justify-center"
-                    onClick={(e) => { e.stopPropagation(); removeLine(row.id); }}
-                    title="Hapus baris"
-                  >
-                    <FiTrash2 />
-                  </button>
-                </div>
-              </div>
-            ))}
-
+              ))}
             </div>
           )}
         </div>
 
+        {/* Rangkuman */}
         <div className="rounded-xl border border-emerald-300 overflow-hidden bg-white">
           <div className="px-4 py-3 grid gap-1 text-sm">
             <div className="flex justify-between">
-              <span>Subtotal</span>
-              <span className="font-medium">{rp(subItems)}</span>
+              <span>Subtotal (Sebelum diskon)</span>
+              <span className="font-medium">{rp(grossItems)}</span>
             </div>
             <div className="flex justify-between">
-              <span>Diskon {discType === "pct" ? `(${discValue || 0}%)` : ""}</span>
-              <span className="font-medium text-amber-700">- {rp(totalDiskon)}</span>
+              <span>Diskon Item</span>
+              <span className="font-medium text-amber-700">
+                - {rp(totalDiskonItem)}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span>
+                Diskon Global {discType === "pct" ? `(${discValue || 0}%)` : ""}
+              </span>
+              <span className="font-medium text-amber-700">
+                - {rp(totalDiskonGlobal)}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Pajak ({taxPct || 0}%)</span>
-              <span className="font-medium text-blue-700">{rp(totalPajak)}</span>
+              <span className="font-medium text-blue-700">
+                {rp(totalPajak)}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Biaya</span>
-              <span className="font-medium text-teal-700">{rp(totalBiaya)}</span>
+              <span className="font-medium text-teal-700">
+                {rp(totalBiaya)}
+              </span>
             </div>
             <div className="border-t pt-2 flex justify-between">
               <span className="font-semibold text-xl">Total</span>
-              <span className="font-bold text-emerald-700 text-xl">{rp(grandTotal)}</span>
+              <span className="font-bold text-emerald-700 text-xl">
+                {rp(grandTotal)}
+              </span>
             </div>
           </div>
           <div className="flex items-center justify-between px-4 py-4 bg-emerald-50">
             <button
-              onClick={() => handleSave(false)}
+              onClick={saveDraft}
               className="border-2 w-40 border-amber-600 text-amber-700 py-3 hover:bg-amber-50 text-sm font-semibold rounded-xl"
             >
               SIMPAN
             </button>
             <button
-              onClick={() => handleSave(true)}
+              onClick={proceedToPay}
               className="border-2 w-48 border-emerald-600 text-emerald-700 py-3 hover:bg-emerald-100 text-sm font-semibold rounded-xl"
             >
               Bayar (F12)
@@ -779,7 +1237,7 @@ const PembeliSuplier = () => {
       {/* MODAL: BIAYA */}
       {costOpen && (
         <div className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-5">
+          <div className="bg-white w/full max-w-md rounded-2xl shadow-xl p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="font-semibold text-lg">Tambah Biaya</div>
               <button
@@ -806,7 +1264,9 @@ const PembeliSuplier = () => {
               </label>
 
               <label className="grid gap-1">
-                <span className="text-sm font-medium">Keterangan (opsional)</span>
+                <span className="text-sm font-medium">
+                  Keterangan (opsional)
+                </span>
                 <input
                   type="text"
                   value={costForm.note}
@@ -872,7 +1332,9 @@ const PembeliSuplier = () => {
                 onClick={() => openNotifCategory("habis")}
               >
                 <div>
-                  <div className="font-medium text-red-700">1. Stok barang habis</div>
+                  <div className="font-medium text-red-700">
+                    1. Stok barang habis
+                  </div>
                   <div className="text-xs text-gray-500">
                     Barang dengan stok = 0
                   </div>
@@ -887,7 +1349,9 @@ const PembeliSuplier = () => {
                 onClick={() => openNotifCategory("menipis")}
               >
                 <div>
-                  <div className="font-medium text-amber-700">2. Stok barang menipis</div>
+                  <div className="font-medium text-amber-700">
+                    2. Stok barang menipis
+                  </div>
                   <div className="text-xs text-gray-500">
                     Stok &le; {MENIPIS_THRESHOLD}
                   </div>
@@ -902,7 +1366,9 @@ const PembeliSuplier = () => {
                 onClick={() => openNotifCategory("semua")}
               >
                 <div>
-                  <div className="font-medium text-sky-700">3. Stok barang semua</div>
+                  <div className="font-medium text-sky-700">
+                    3. Stok barang semua
+                  </div>
                   <div className="text-xs text-gray-500">
                     Lihat semua daftar barang dan stoknya
                   </div>
@@ -972,7 +1438,8 @@ const PembeliSuplier = () => {
                       </div>
                     ))}
                     {((notifCategory === "habis" && stokHabis.length === 0) ||
-                      (notifCategory === "menipis" && stokMenipis.length === 0)) && (
+                      (notifCategory === "menipis" &&
+                        stokMenipis.length === 0)) && (
                       <div className="text-center text-sm text-gray-500 py-4">
                         Tidak ada data.
                       </div>
@@ -994,129 +1461,184 @@ const PembeliSuplier = () => {
         </div>
       )}
 
-{lineEditOpen && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-    <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-5">
-      <div className="flex items-center justify-between mb-3">
-        <div className="font-semibold text-lg">Edit Baris</div>
-        <button onClick={() => setLineEditOpen(false)} className="w-8 h-8 rounded-full hover:bg-gray-100" title="Tutup">✕</button>
-      </div>
+      {/* MODAL: EDIT BARIS */}
+      {lineEditOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+          <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-5">
+            <div className="flex items-center justify-between mb-3">
+              <div className="font-semibold text-lg">Edit Baris</div>
+              <button
+                onClick={() => setLineEditOpen(false)}
+                className="w-8 h-8 rounded-full hover:bg-gray-100"
+                title="Tutup"
+              >
+                ✕
+              </button>
+            </div>
 
-      <div className="space-y-3">
-        {/* Harga per item */}
-        <label className="grid gap-1">
-          <span className="text-sm">Harga Beli (per item)</span>
-          <input
-            type="number"
-            min={0}
-            value={lineForm.harga}
-            onChange={(e) => setLineForm((f) => ({ ...f, harga: e.target.value }))}
-            className="border rounded-lg px-3 py-2"
-            placeholder="0"
-          />
-        </label>
+            <div className="space-y-3">
+              {/* Harga per item */}
+              <label className="grid gap-1">
+                <span className="text-sm">Harga Beli (per item)</span>
+                <input
+                  type="number"
+                  min={0}
+                  value={lineForm.harga}
+                  onChange={(e) =>
+                    setLineForm((f) => ({ ...f, harga: e.target.value }))
+                  }
+                  className="border rounded-lg px-3 py-2"
+                  placeholder="0"
+                />
+              </label>
 
-        {/* PILIHAN TIPE DISKON */}
-        <div className="grid gap-2">
-          <span className="text-sm">Diskon per Jumlah (per item)</span>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              className={`px-3 py-1.5 rounded-lg border ${lineForm.discountType === "rp" ? "bg-emerald-600 text-white border-emerald-600" : "bg-white hover:bg-gray-50"}`}
-              onClick={() => setLineForm((f) => ({ ...f, discountType: "rp" }))}
-              title="Diskon Rupiah per item"
-            >
-              Rp
-            </button>
-            <button
-              type="button"
-              className={`px-3 py-1.5 rounded-lg border ${lineForm.discountType === "pct" ? "bg-emerald-600 text-white border-emerald-600" : "bg-white hover:bg-gray-50"}`}
-              onClick={() => setLineForm((f) => ({ ...f, discountType: "pct" }))}
-              title="Diskon Persen per item"
-            >
-              %
-            </button>
-          </div>
-
-          {/* Input mengikuti tipe */}
-          {lineForm.discountType === "pct" ? (
-            <label className="grid gap-1">
-              <input
-                type="number"
-                min={0}
-                max={100}
-                value={lineForm.diskonPerQtyPct}
-                onChange={(e) => setLineForm((f) => ({ ...f, diskonPerQtyPct: e.target.value }))}
-                className="border rounded-lg px-3 py-2"
-                placeholder="0"
-              />
-              <span className="text-xs text-gray-500">Contoh: 10 berarti diskon 10% dari harga per item.</span>
-            </label>
-          ) : (
-            <label className="grid gap-1">
-              <input
-                type="number"
-                min={0}
-                value={lineForm.diskonPerQtyRp}
-                onChange={(e) => setLineForm((f) => ({ ...f, diskonPerQtyRp: e.target.value }))}
-                className="border rounded-lg px-3 py-2"
-                placeholder="0"
-              />
-              <span className="text-xs text-gray-500">Contoh: 500 berarti diskon Rp500 per item.</span>
-            </label>
-          )}
-        </div>
-
-        {/* Catatan */}
-        <label className="grid gap-1">
-          <span className="text-sm">Catatan Singkat</span>
-          <input
-            type="text"
-            value={lineForm.note}
-            onChange={(e) => setLineForm((f) => ({ ...f, note: e.target.value }))}
-            className="border rounded-lg px-3 py-2"
-            placeholder="Opsional"
-          />
-        </label>
-
-        {/* Pratinjau subtotal baris */}
-        <div className="p-3 bg-gray-50 rounded-lg text-sm">
-          {(() => {
-            const row = cart.find((c) => c.id === lineForm.id);
-            const qty = row ? Math.max(1, Number(row.qty || 1)) : 1;
-            const perItemDisc = calcPerItemDiscount(
-              lineForm.harga,
-              lineForm.discountType,
-              lineForm.diskonPerQtyRp,
-              lineForm.diskonPerQtyPct
-            );
-            const perItemAfter = Math.max(0, Number(lineForm.harga || 0) - perItemDisc);
-            const subtotal = Math.max(0, qty * perItemAfter);
-            return (
-              <>
-                <div className="flex justify-between"><span>Diskon/Item</span><span className="font-medium">{rp(perItemDisc)}</span></div>
-                <div className="flex justify-between"><span>Harga/Item setelah diskon</span><span className="font-medium">{rp(perItemAfter)}</span></div>
-                <div className="flex justify-between"><span>Qty</span><span className="font-medium">{qty}</span></div>
-                <div className="flex justify-between border-t pt-2 mt-2">
-                  <span>Subtotal Baris (estimasi)</span>
-                  <span className="font-semibold">{rp(subtotal)}</span>
+              {/* PILIHAN TIPE DISKON */}
+              <div className="grid gap-2">
+                <span className="text-sm">Diskon per Jumlah (per item)</span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    className={`px-3 py-1.5 rounded-lg border ${
+                      lineForm.discountType === "rp"
+                        ? "bg-emerald-600 text-white border-emerald-600"
+                        : "bg-white hover:bg-gray-50"
+                    }`}
+                    onClick={() =>
+                      setLineForm((f) => ({ ...f, discountType: "rp" }))
+                    }
+                    title="Diskon Rupiah per item"
+                  >
+                    Rp
+                  </button>
+                  <button
+                    type="button"
+                    className={`px-3 py-1.5 rounded-lg border ${
+                      lineForm.discountType === "pct"
+                        ? "bg-emerald-600 text-white border-emerald-600"
+                        : "bg-white hover:bg-gray-50"
+                    }`}
+                    onClick={() =>
+                      setLineForm((f) => ({ ...f, discountType: "pct" }))
+                    }
+                    title="Diskon Persen per item"
+                  >
+                    %
+                  </button>
                 </div>
-              </>
-            );
-          })()}
+
+                {lineForm.discountType === "pct" ? (
+                  <label className="grid gap-1">
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={lineForm.diskonPerQtyPct}
+                      onChange={(e) =>
+                        setLineForm((f) => ({
+                          ...f,
+                          diskonPerQtyPct: e.target.value,
+                        }))
+                      }
+                      className="border rounded-lg px-3 py-2"
+                      placeholder="0"
+                    />
+                    <span className="text-xs text-gray-500">
+                      Contoh: 10 berarti diskon 10% dari harga per item.
+                    </span>
+                  </label>
+                ) : (
+                  <label className="grid gap-1">
+                    <input
+                      type="number"
+                      min={0}
+                      value={lineForm.diskonPerQtyRp}
+                      onChange={(e) =>
+                        setLineForm((f) => ({
+                          ...f,
+                          diskonPerQtyRp: e.target.value,
+                        }))
+                      }
+                      className="border rounded-lg px-3 py-2"
+                      placeholder="0"
+                    />
+                    <span className="text-xs text-gray-500">
+                      Contoh: 500 berarti diskon Rp500 per item.
+                    </span>
+                  </label>
+                )}
+              </div>
+
+              {/* Catatan */}
+              <label className="grid gap-1">
+                <span className="text-sm">Catatan Singkat</span>
+                <input
+                  type="text"
+                  value={lineForm.note}
+                  onChange={(e) =>
+                    setLineForm((f) => ({ ...f, note: e.target.value }))
+                  }
+                  className="border rounded-lg px-3 py-2"
+                  placeholder="Opsional"
+                />
+              </label>
+
+              {/* Pratinjau subtotal baris */}
+              <div className="p-3 bg-gray-50 rounded-lg text-sm">
+                {(() => {
+                  const row = cart.find((c) => c.id === lineForm.id);
+                  const qty = row ? Math.max(1, Number(row.qty || 1)) : 1;
+                  const perItemDisc = calcPerItemDiscount(
+                    lineForm.harga,
+                    lineForm.discountType,
+                    lineForm.diskonPerQtyRp,
+                    lineForm.diskonPerQtyPct
+                  );
+                  const perItemAfter = Math.max(
+                    0,
+                    Number(lineForm.harga || 0) - perItemDisc
+                  );
+                  const subtotal = Math.max(0, qty * perItemAfter);
+                  return (
+                    <>
+                      <div className="flex justify-between">
+                        <span>Diskon/Item</span>
+                        <span className="font-medium">{rp(perItemDisc)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Harga/Item setelah diskon</span>
+                        <span className="font-medium">{rp(perItemAfter)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Qty</span>
+                        <span className="font-medium">{qty}</span>
+                      </div>
+                      <div className="flex justify-between border-t pt-2 mt-2">
+                        <span>Subtotal Baris (estimasi)</span>
+                        <span className="font-semibold">{rp(subtotal)}</span>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+
+              <div className="flex justify-end gap-2 pt-1">
+                <button
+                  className="px-4 py-2 rounded-lg border"
+                  onClick={() => setLineEditOpen(false)}
+                >
+                  Batal
+                </button>
+                <button
+                  className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+                  onClick={saveLineEdit}
+                >
+                  Simpan
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div className="flex justify-end gap-2 pt-1">
-          <button className="px-4 py-2 rounded-lg border" onClick={() => setLineEditOpen(false)}>Batal</button>
-          <button className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700" onClick={saveLineEdit}>Simpan</button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
-
-
-
+      )}
     </div>
   );
 };
