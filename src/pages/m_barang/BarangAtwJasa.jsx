@@ -122,11 +122,11 @@ export default function BarangJasa() {
 
   useNavbar(
     { variant: "page", title: "Barang & Jasa", backTo: "/management", actions },
-    [actions] // cukup ini biar gak rerun tiap state modal berubah
+    [actions]
   );
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-full flex flex-col bg-gray-50">
       {/* BODY */}
       <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
         {/* LEFT */}
