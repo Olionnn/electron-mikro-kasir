@@ -53,7 +53,7 @@ import LaporanKeuangan from "./pages/m_laporan/LaporanKeuangan";
 import LaporanKeuanganPage from "./pages/m_laporan/DetailKeuangan";
 import ContactList from "./pages/m_bantuan/HubungiKami";
 import FeedbackForm from "./pages/m_bantuan/feedbackapk";
-import DashboardKasir from "./pages/m_dasbord/Dasbord";
+import DashboardKasir from "./pages/m_dasbord/dasbord";
 import LaporanNeraca from "./pages/m_laporan/laporanneraca";
 import Laporanshift from "./pages/m_laporan/Laporanshift";
 import Riwayattransaksi from "./pages/m_laporan/Riwayattransaksi";
@@ -61,6 +61,8 @@ import TrxSetting from "./pages/m_setting/TrxSetting";
 import DraftPembelianPage from "./pages/m_pembelisupplier/Draft";
 import ManagementRole from "./pages/m_setting/ManajemenRole";
 import PromosiPage from "./pages/m_promosi/Promosi";
+import StokDetail from "./pages/m_stok/StokDetail";
+import LaporanUtangPiutang from "./pages/m_laporan/LaporanUtangPiutang";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -132,6 +134,7 @@ function App() {
               <Route path="/laporan/laporan-neraca" element={<LaporanNeraca/>} />
               <Route path="/laporan/laporan-shift" element={<Laporanshift/>} />
               <Route path="/laporan/riwayat-transaksi" element={<Riwayattransaksi/>} />
+              <Route path="/laporan/laporan-utang-piutang" element={<LaporanUtangPiutang/>} />
 
             
 
@@ -178,7 +181,7 @@ function App() {
 
               {/* Stok */}
               <Route path="/stok" element={<BarangStokPage/>} />
-              <Route path="/stok/:id" element={<div>Detail Stok Page</div>} />
+              <Route path="/stok/:id" element={<StokDetail/>} />
               <Route path="/stok/tambah" element={<div>Tambah Stok Page</div>} />
               <Route path="/stok/edit/:id" element={<div>Edit Stok Page</div>} />
               <Route path="/stokopname" element={<StokOpnamePage/>} />
