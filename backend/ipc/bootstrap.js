@@ -42,12 +42,12 @@ async function initDatabase() {
     const modelsPath = join(app.getAppPath(), 'src', 'backend', 'models');
     console.log('📂 Loading models from:', modelsPath);
 
-    readdirSync(modelsPath).forEach(file => {
-      if (file.endsWith('.js') && file !== 'index.js' && file !== 'contoh.js') {
-        console.log('📌 Registering model:', file);
-        require(join(modelsPath, file));
-      }
-    });
+    // readdirSync(modelsPath).forEach(file => {
+    //   if (file.endsWith('.js') && file !== 'index.js' && file !== 'contoh.js') {
+    //     console.log('📌 Registering model:', file);
+    //     require(join(modelsPath, file));
+    //   }
+    // });
 
     await db.authenticate();
 

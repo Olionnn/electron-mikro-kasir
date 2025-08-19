@@ -14,9 +14,8 @@ ipcMain.handle('kategoriIpc:getList', async (event, { pagination = {}, filter = 
     try {
       const result = await GetDataList(pagination, filter);
       const paginationData = calculatePagination(pagination, result.totalRows);
-      
       return createSuccessResponse({
-        items: result.kategoriIpcList,
+        items: result.kategoriList,
         pagination: paginationData
       });
     } catch (error) {

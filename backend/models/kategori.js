@@ -70,9 +70,9 @@ async function GetDataList(pagination, filter) {
     ]
   }
 
-//   if(filter?.kategori_id) {
-//     whereClause.kategori_id = filter.kategori_id;
-//   }
+  if(filter?.status) {
+    whereClause.status = filter.status;
+  }
 
   if(filter?.toko_id) {
     whereClause.toko_id = filter.toko_id;
@@ -115,9 +115,9 @@ async function GetDataById(id) {
 
 async function CreateData(trx, data) {
   try {
-    const Kategori = await Kategori.create(data, { transaction: trx });
+    const kategori = await Kategori.create(data, { transaction: trx });
     await trx.commit();
-    return Kategori;
+    return kategori;
   } catch (error) {
     await trx.rollback();
     throw error;

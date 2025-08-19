@@ -2,33 +2,11 @@ import React, { useEffect, useMemo, useState, useCallback } from "react";
 import Modal from "../../component/Modal";
 import { useNavbar } from "../../hooks/useNavbar";
 import { MdAdd, MdRefresh, MdSearch, MdClose, MdEdit, MdToggleOn, MdToggleOff } from "react-icons/md";
-import { MdSettings } from "react-icons/md";
+import { 
+  useKategori
+} from "../../hooks/useKategori";
 
-/**
- * =========================================================
- * Kategori Barang (Revamp + 3 Variants) — PREMIUM UI
- * =========================================================
- * Palette / CSS Tokens (dipakai lintas komponen):
- *  - Ungu Muda  : #B2B0E8 → var(--purple-200)
- *  - Biru Abu   : #7A85C1 → var(--blue-300)
- *  - Biru Tua   : #3B38A0 → var(--blue-700)
- *  - Navy Gelap : #1A2A80 → var(--navy-800)
- *
- * Catatan Implementasi:
- * - Tersedia 3 alternatif layout: "A" (Master–Detail split),
- *   "B" (Cards + Sidebar), "C" (Table-lite + Drawer feel).
- *   Gunakan: <KategoriBarangPage variant="A"/> / "B" / "C" (default: "A").
- * - Semua fungsi asli dipertahankan: search (debounce & highlight),
- *   tambah kategori (modal), preview + toggle status (dummy), refresh.
- * - Desain modern: spacing rapi, tipografi, hover & transition lembut.
- * - Production-ready: responsif, aksesibel, tanpa dependency ekstra.
- */
 
-/**
- * nowIso
- * — Utility: mengembalikan timestamp ISO saat ini.
- *   Dipakai untuk field created_at / updated_at dummy.
- */
 const nowIso = () => new Date().toISOString();
 
 /**
@@ -100,8 +78,14 @@ function Highlighted({ text = "", query = "" }) {
  *   - Menyediakan 3 varian layout UI (A/B/C) tanpa mengubah fungsi inti.
  */
 export default function KategoriBarangPage({ variant = "A" }) {
+  const { items: kategoriItems, pagination, loading, error, refresh, create, update, remove } =
+    useKategori();
+
+
+    console.log("KategoriBarangPage :", kategoriItems);
+
   // STATE: sumber data kategori untuk UI (dummy)
-  const [categories, setCategories] = useState(DUMMY);
+  const [categories, setCategories] = useState([]);
   // STATE: id kategori yang sedang dipreview di panel kanan
   const [selectedId, setSelectedId] = useState(DUMMY[0]?.id ?? null);
 
@@ -117,19 +101,24 @@ export default function KategoriBarangPage({ variant = "A" }) {
     return () => clearTimeout(t);
   }, [search]);
 
+
   /**
    * MEMO: hasil filter berdasarkan query. Sorting/ordering bisa ditambahkan di sini bila dibutuhkan.
    */
   const filtered = useMemo(() => {
-    if (!q.trim()) return categories;
+    if (!q.trim()) return kategoriItems;
     const lower = q.trim().toLowerCase();
-    return categories.filter((c) => (c.nama || "").toLowerCase().includes(lower));
-  }, [categories, q]);
+    return kategoriItems.filter((c) => (c.nama || "").toLowerCase().includes(lower));
+  }, [kategoriItems, q]);
 
   /**
    * MEMO: objek kategori yang saat ini terpilih (untuk panel preview).
    */
-  const selected = useMemo(() => categories.find((c) => c.id === selectedId) || null, [categories, selectedId]);
+  const selected = useMemo(() => {
+    return Array.isArray(kategoriItems)
+      ? kategoriItems.find((c) => c?.is_selected) // contoh kriteria
+      : undefined;
+  }, [kategoriItems]);
 
   /**
    * CALLBACK: membuka modal tambah kategori.
@@ -140,8 +129,7 @@ export default function KategoriBarangPage({ variant = "A" }) {
    * CALLBACK: refresh data ke kondisi awal (reset list + pilihan + pencarian).
    */
   const doRefresh = useCallback(() => {
-    setCategories(DUMMY);
-    setSelectedId(DUMMY[0]?.id ?? null);
+    refresh();
     setSearch("");
   }, []);
 
@@ -190,17 +178,28 @@ useNavbar(
    *  - Push ke state categories + set item terpilih + tutup modal
    */
   const addKategori = async (e) => {
+    // e.preventDefault();
+    // const nama = newCategoryName.trim();
+    // if (!nama) return;
+    // setSaving(true);
+    // const idBaru = Math.max(0, ...categories.map((c) => c.id)) + 1;
+    // const row = { id: idBaru, toko_id: 1, nama, created_by: 1, updated_by: 1, sync_at: null, status: true, created_at: nowIso(), updated_at: nowIso() };
+    // setCategories((prev) => [row, ...prev]);
+    // setSelectedId(idBaru);
+    // setNewCategoryName("");
+    // setSaving(false);
+    // setIsModalOpen(false);
     e.preventDefault();
+
     const nama = newCategoryName.trim();
     if (!nama) return;
     setSaving(true);
-    const idBaru = Math.max(0, ...categories.map((c) => c.id)) + 1;
-    const row = { id: idBaru, toko_id: 1, nama, created_by: 1, updated_by: 1, sync_at: null, status: true, created_at: nowIso(), updated_at: nowIso() };
-    setCategories((prev) => [row, ...prev]);
-    setSelectedId(idBaru);
+    const row = { id: 0, toko_id: 1, nama, created_by: 1, updated_by: 1, sync_at: null, status: true, created_at: nowIso(), updated_at: nowIso() };
+    create(row);
     setNewCategoryName("");
     setSaving(false);
     setIsModalOpen(false);
+    refresh(); 
   };
 
   /**
