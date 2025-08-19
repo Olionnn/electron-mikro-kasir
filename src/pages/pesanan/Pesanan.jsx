@@ -28,7 +28,7 @@ const OrderItem = ({ order, isSelected, onClick, onRemove }) => {
           type="checkbox"
           checked={isSelected}
           readOnly
-          className="mt-1 w-5 h-5 form-checkbox text-green-600 accent-green-600"
+          className="mt-1 w-5 h-5 form-checkbox text-violet-600 accent-violet-600"
         />
         <div className="flex-1 min-w-0">
           <p className="font-semibold truncate">{order.customer}</p>
@@ -40,7 +40,7 @@ const OrderItem = ({ order, isSelected, onClick, onRemove }) => {
               <p>Dibuat {order.author}</p>
             </div>
             <div className="flex items-center gap-4 shrink-0">
-              <button className="text-green-600 font-semibold text-sm hover:underline">
+              <button className="text-violet-600 font-semibold text-sm hover:underline">
                 Split
               </button>
               <button
@@ -96,7 +96,7 @@ const Pesanan = () => {
           {/* Toolbar */}
           <div className="p-4">
             <div className="flex border-b border-gray-200 font-semibold mb-4">
-              <div className="pb-2 px-1 border-b-2 border-green-500 text-gray-900">
+              <div className="pb-2 px-1 border-b-2 border-violet-500 text-gray-900">
                 Daftar Pesanan
               </div>
               <div className="pb-2 px-4 text-gray-400">Arsip</div>
@@ -107,7 +107,7 @@ const Pesanan = () => {
                 <input
                   type="checkbox"
                   defaultChecked
-                  className="w-5 h-5 form-checkbox text-green-600 accent-green-600"
+                  className="w-5 h-5 form-checkbox text-violet-600 accent-violet-600"
                 />
                 <span>Umum</span>
               </label>
@@ -115,14 +115,14 @@ const Pesanan = () => {
                 <input
                   type="checkbox"
                   defaultChecked
-                  className="w-5 h-5 form-checkbox text-green-600 accent-green-600"
+                  className="w-5 h-5 form-checkbox text-violet-600 accent-violet-600"
                 />
                 <span>Olshopin</span>
               </label>
             </div>
 
             <div className="flex items-center gap-2 mb-3">
-              <div className="flex items-center border rounded-md px-3 py-2 flex-1 focus-within:ring-2 focus-within:ring-green-500">
+              <div className="flex items-center border rounded-md px-3 py-2 flex-1 focus-within:ring-2 focus-within:ring-violet-500">
                 <FaFilter className="text-gray-400 mr-2" />
                 <input
                   type="text"
@@ -133,7 +133,7 @@ const Pesanan = () => {
               <input
                 type="text"
                 placeholder="Jatuh Tempo"
-                className="border rounded-md px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none"
+                className="border rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500 focus:outline-none"
               />
               <button
                 className="text-2xl text-gray-400 hover:text-gray-500 px-2 rounded-md hover:bg-gray-100"
@@ -144,7 +144,7 @@ const Pesanan = () => {
             </div>
 
             <div className="mb-1">
-              <label className="flex items-center gap-2 text-sm text-gray-700">
+              <label className="flex items-center gap-2 text-sm text-violet-700">
                 <input type="checkbox" className="w-5 h-5 form-checkbox" />
                 <span>Pilih Semua</span>
               </label>
@@ -216,7 +216,7 @@ const Pesanan = () => {
               </div>
 
               <div className="flex gap-3 pt-4">
-                <button className="flex items-center justify-center gap-2 bg-green-100 text-green-700 font-semibold py-3 rounded-md w-1/3 hover:bg-green-200 transition">
+                <button className="flex items-center justify-center gap-2 bg-violet-100 text-violet-700 font-semibold py-3 rounded-md w-1/3 hover:bg-green-200 transition">
                   <FaPrint /> Cetak
                 </button>
                 <button className="flex items-center justify-center gap-2 bg-gray-100 text-gray-700 font-semibold py-3 rounded-md w-1/3 hover:bg-gray-200 transition">

@@ -144,7 +144,7 @@ export default function TambahEditBarang() {
           type: 'button',
           title: 'Simpan',
           onClick: onSave,
-          className: 'inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-60',
+          className: 'inline-flex items-center gap-2 bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700 disabled:opacity-60',
           icon: <MdSave size={18} />,
         },
       ],
@@ -181,7 +181,7 @@ export default function TambahEditBarang() {
               type="text"
               value={nama}
               onChange={(e) => setNama(e.target.value)}
-              className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
               placeholder="Nama barang"
               required
               disabled={loading}
@@ -194,7 +194,7 @@ export default function TambahEditBarang() {
               <select
                 value={tipe}
                 onChange={(e) => setTipe(e.target.value)}
-                className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
                 disabled={loading}
               >
                 <option value="Default">Default</option>
@@ -207,7 +207,7 @@ export default function TambahEditBarang() {
                 type="checkbox"
                 checked={tampilkan}
                 onChange={(e) => setTampilkan(e.target.checked)}
-                className="form-checkbox text-green-600 w-5 h-5"
+                className="form-checkbox text-violet-600 w-5 h-5"
                 disabled={loading}
               />
               <span className="text-gray-800">Tampilkan di Transaksi</span>
@@ -218,7 +218,7 @@ export default function TambahEditBarang() {
                 type="checkbox"
                 checked={pakaiStok}
                 onChange={(e) => setPakaiStok(e.target.checked)}
-                className="form-checkbox text-green-600 w-5 h-5"
+                className="form-checkbox text-violet-600 w-5 h-5"
                 disabled={loading || tipe === 'Servis'}
               />
               <span className="text-gray-800">Pakai Stok</span>
@@ -232,7 +232,7 @@ export default function TambahEditBarang() {
                 type="number"
                 value={stok}
                 onChange={(e) => setStok(e.target.value)}
-                className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-100"
+                className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 disabled:bg-gray-100"
                 min="0"
                 disabled={loading || stokDisabled}
                 placeholder={stokDisabled ? 'Tidak menggunakan stok' : '0'}
@@ -244,7 +244,7 @@ export default function TambahEditBarang() {
                 type="text"
                 value={kodeBarang}
                 onChange={(e) => setKodeBarang(e.target.value)}
-                className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
                 placeholder="Kode unik barang"
                 disabled={loading}
               />
@@ -259,7 +259,7 @@ export default function TambahEditBarang() {
                 value={hargaDasar}
                 onChange={(e) => setHargaDasar(e.target.value)}
                 placeholder="0"
-                className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
                 min="0"
                 disabled={loading}
               />
@@ -271,7 +271,7 @@ export default function TambahEditBarang() {
                 value={hargaJual}
                 onChange={(e) => setHargaJual(e.target.value)}
                 placeholder="0"
-                className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
                 min="0"
                 required
                 disabled={loading}
@@ -284,7 +284,7 @@ export default function TambahEditBarang() {
             <select
               value={kategori}
               onChange={(e) => setKategori(e.target.value)}
-              className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
               disabled={loading}
             >
               <option value="">Pilih Kategori</option>
@@ -299,7 +299,7 @@ export default function TambahEditBarang() {
           <div className="pt-6">
             <button
               type="submit"
-              className="w-full bg-green-600 text-white font-bold py-4 rounded-full text-lg hover:bg-green-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="w-full bg-violet-600 text-white font-bold py-4 rounded-full text-lg hover:bg-violet-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
               disabled={loading}
             >
               {loading ? (isEdit ? 'MENYIMPAN...' : 'MENAMBAHKAN...') : (isEdit ? 'SIMPAN PERUBAHAN' : 'SIMPAN')}

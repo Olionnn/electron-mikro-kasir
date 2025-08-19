@@ -92,10 +92,10 @@ const Review = () => {
 
         {/* Tombol */}
         <div className="flex justify-between px-6 py-6 space-x-4 border-t">
-          <button className="flex items-center justify-center w-1/3 bg-green-100 text-green-700 py-2 rounded-full hover:bg-green-200 transition text-sm font-medium">
+          <button className="flex items-center justify-center w-1/3 bg-violet-100 text-violet-700 py-2 rounded-full hover:bg-violet-200 transition text-sm font-medium">
             <FaPrint className="mr-2" /> Cetak
           </button>
-          <button className="flex items-center justify-center w-1/3 bg-green-200 text-green-800 py-2 rounded-full hover:bg-green-300 transition text-sm font-medium">
+          <button className="flex items-center justify-center w-1/3 bg-violet-200 text-violet-800 py-2 rounded-full hover:bg-violet-300 transition text-sm font-medium">
             <FaPencilAlt className="mr-2" /> Edit
           </button>
           <button

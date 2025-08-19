@@ -852,7 +852,7 @@ const Pos = () => {
               <button
                 className={`p-3 rounded-xl border ${
                   selectedIcon === "search"
-                    ? "bg-green-600 text-white border-green-600"
+                    ? "bg-violet-600 text-white border-violet-600"
                     : "bg-white text-gray-700 hover:bg-gray-50"
                 }`}
                 title="Cari"
@@ -863,7 +863,7 @@ const Pos = () => {
               <button
                 className={`p-3 rounded-xl border ${
                   selectedIcon === "barcode"
-                    ? "bg-green-600 text-white border-green-600"
+                    ? "bg-violet-600 text-white border-violet-600"
                     : "bg-white text-gray-700 hover:bg-gray-50"
                 }`}
                 title="Barcode"
@@ -874,7 +874,7 @@ const Pos = () => {
               <button
                 className={`p-3 rounded-xl border ${
                   selectedIcon === "receipt"
-                    ? "bg-green-600 text-white border-green-600"
+                    ? "bg-violet-600 text-white border-violet-600"
                     : "bg-white text-gray-700 hover:bg-gray-50"
                 }`}
                 title="Receipt"
@@ -990,9 +990,9 @@ const Pos = () => {
               <div className="fixed bottom-0 left-0 w-[54.5%] bg-white border border-gray-200 p-4">
                 <Link
                   to="/barang/tambah"
-                  className="flex items-center gap-3 text-emerald-700 hover:text-emerald-900 text-sm"
+                  className="flex items-center gap-3 text-violet-700 hover:text-violet-900 text-sm"
                 >
-                  <span className="w-10 h-10 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center">
+                  <span className="w-10 h-10 bg-violet-50 border border-violet-200 rounded-full flex items-center justify-center">
                     <FiPlus className="text-lg" />
                   </span>
                   <span className="font-semibold">Tambah Barang Baru</span>
@@ -1009,7 +1009,7 @@ const Pos = () => {
           <div className="flex items-center justify-between">
             <button
               onClick={openCostModal}
-              className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl shadow-sm"
+              className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-xl shadow-sm"
               title="Tambah biaya (ongkir/jasa/dll)"
             >
               <span className="text-lg leading-none">＋</span> Biaya
@@ -1027,7 +1027,7 @@ const Pos = () => {
                 <button
                   key={c.id}
                   onClick={() => setCostDetail(c)}
-                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-teal-300 bg-teal-50 text-teal-700 hover:bg-teal-100 text-xs"
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-300 bg-violet-50 text-violet-700 hover:bg-violet-100 text-xs"
                   title="Lihat detail biaya"
                 >
                   <span className="font-semibold">{c.name}</span>
@@ -1096,7 +1096,7 @@ const Pos = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Biaya</span>
-                <span className="font-medium text-teal-700">
+                <span className="font-medium text-violet-700">
                   Rp {formatCurrency(totalCosts)}
                 </span>
               </div>
@@ -1116,10 +1116,10 @@ const Pos = () => {
                     <span className="font-medium">Potensi Untung</span>
                     <HiOutlineQuestionMarkCircle
                       size={20}
-                      className="text-gray-500 hover:text-green-600 transition"
+                      className="text-gray-500 hover:text-violet-600 transition"
                     />
                   </span>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-semibold">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-violet-100 text-violet-700 font-semibold">
                     {profitCalc.itemsCount} Item
                   </span>
                 </button>
@@ -1127,7 +1127,7 @@ const Pos = () => {
 
               <button
                 onClick={() => setPromotionOpen(true)}
-                className="w-1/2 h-[54px] bg-teal-100 text-teal-800 px-3 border border-teal-600 text-sm font-medium hover:bg-teal-200 transition rounded-xl"
+                className="w-1/2 h-[54px] bg-violet-100 text-violet-800 px-3 border border-violet-600 text-sm font-medium hover:bg-violet-200 transition rounded-xl"
               >
                 Lihat Promosi
               </button>
@@ -1136,13 +1136,13 @@ const Pos = () => {
             <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between mt-4">
               <button
                 onClick={handleSimpanPesananClick}
-                className="flex-1 bg-white border border-green-600 text-green-600 px-6 py-3 rounded-xl text-base font-medium hover:bg-green-50"
+                className="flex-1 bg-white border border-violet-600 text-violet-600 px-6 py-3 rounded-xl text-base font-medium hover:bg-violet-50"
               >
                 Simpan Pesanan
               </button>
               <button
                 onClick={handleCheckoutClick}
-                className="flex-1 bg-green-600 text-white px-6 py-3 rounded-xl text-base font-semibold hover:bg-green-700"
+                className="flex-1 bg-violet-600 text-white px-6 py-3 rounded-xl text-base font-semibold hover:bg-violet-700"
               >
                 Rp.{formatCurrency(totalPrice)} Bayar
               </button>
@@ -1277,7 +1277,7 @@ const Pos = () => {
                   Batal
                 </button>
                 <button
-                  className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+                  className="px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700"
                   onClick={applyEditItem}
                 >
                   Simpan
@@ -1385,7 +1385,7 @@ const Pos = () => {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+                className="px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700"
               >
                 Tambah ke Cart
               </button>
@@ -1406,7 +1406,7 @@ const Pos = () => {
                 ✕
               </button>
             </div>
-            {/* ${d.id == globalDiscount.id ? "bg-green-200 border-green-500" : ""} */}
+            {/* ${d.id == globalDiscount.id ? "bg-violet-200 border-violet-500" : ""} */}
             <div className="space-y-2 max-h-80 overflow-auto">
               {discounts.map((d) => (
                 <button
@@ -1520,7 +1520,7 @@ const Pos = () => {
                   Batal
                 </button>
                 <button
-                  className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+                  className="px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700"
                   onClick={applyTax}
                 >
                   Terapkan
@@ -1554,11 +1554,11 @@ const Pos = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div className="p-4 rounded-xl border bg-green-50">
+              <div className="p-4 rounded-xl border bg-violet-50">
                 <div className="text-sm text-gray-600">
                   Total Untung (kotor)
                 </div>
-                <div className="text-xl font-bold text-green-700">
+                <div className="text-xl font-bold text-violet-700">
                   Rp{" "}
                   {new Intl.NumberFormat("id-ID").format(
                     profitCalc.grossBeforeDisc
@@ -1654,7 +1654,7 @@ const Pos = () => {
             <div className="flex justify-end mt-5">
               <button
                 onClick={() => setProfitOpen(false)}
-                className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+                className="px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700"
               >
                 Tutup
               </button>
@@ -1696,7 +1696,7 @@ const Pos = () => {
                   <div
                     className={`px-3 py-1 rounded-full text-sm font-bold ${
                       promo.type === "pct"
-                        ? "bg-green-100 text-green-700"
+                        ? "bg-violet-100 text-violet-700"
                         : "bg-orange-100 text-orange-700"
                     }`}
                   >
@@ -1711,7 +1711,7 @@ const Pos = () => {
             <div className="mt-6 text-right">
               <button
                 onClick={() => setPromotionOpen(false)}
-                className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+                className="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700"
               >
                 Tutup
               </button>
@@ -1794,7 +1794,7 @@ const Pos = () => {
                   </button>
                   <button
                     onClick={saveCost}
-                    className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+                    className="px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700"
                   >
                     Simpan
                   </button>
@@ -1847,7 +1847,7 @@ const Pos = () => {
               </button>
               <button
                 onClick={() => setCostDetail(null)}
-                className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+                className="px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700"
               >
                 Tutup
               </button>
@@ -1879,7 +1879,7 @@ const Pos = () => {
 
             {/* Toolbar */}
             <div className="px-5 py-3 border-b flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-2 border rounded-xl flex-1 focus-within:ring-2 focus-within:ring-green-500">
+              <div className="flex items-center gap-2 px-3 py-2 border rounded-xl flex-1 focus-within:ring-2 focus-within:ring-violet-500">
                 <span className="text-gray-400">🔎</span>
                 <input
                   type="text"
@@ -1891,7 +1891,7 @@ const Pos = () => {
               </div>
               <button
                 onClick={openAddCustomer}
-                className="px-4 py-2 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-700"
+                className="px-4 py-2 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700"
               >
                 + Tambah
               </button>
@@ -1922,7 +1922,7 @@ const Pos = () => {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => selectCustomer(c)}
-                        className="px-3 py-1.5 rounded-lg border text-sm hover:bg-green-50"
+                        className="px-3 py-1.5 rounded-lg border text-sm hover:bg-violet-50"
                         title="Pilih"
                       >
                         Pilih
@@ -1961,7 +1961,7 @@ const Pos = () => {
               </div>
               <button
                 onClick={() => setMemberOpen(false)}
-                className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 text-sm"
+                className="px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700 text-sm"
               >
                 Selesai
               </button>

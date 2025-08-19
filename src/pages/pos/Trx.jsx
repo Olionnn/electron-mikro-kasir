@@ -119,7 +119,7 @@ const Transaksi = () => {
         onClick: handlePaymentSuccess,
         label: 'Selesai (F12)',
         className:
-          'bg-green-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-green-700',
+          'bg-violet-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-violet-700',
         icon: <FaCheck size={18} />,
       },
     ],
@@ -218,13 +218,13 @@ const Transaksi = () => {
         <div className="flex flex-col w-1/2 gap-4">
           <div className="flex gap-2">
             {showPoints && (
-              <button className="flex items-center border border-green-600 text-green-600 px-3 py-1 rounded-full hover:bg-green-50">
+              <button className="flex items-center border border-violet-600 text-violet-600 px-3 py-1 rounded-full hover:bg-violet-50">
                 <FaStar className="mr-1" /> + {earnablePoints} POIN
               </button>
             )}
             {mode === 'sale' && (
               <button
-                className="flex items-center bg-green-500 text-white px-3 py-1 rounded-full hover:bg-green-600"
+                className="flex items-center bg-violet-500 text-white px-3 py-1 rounded-full hover:bg-violet-600"
                 onClick={() => setSplitOpen(true)}
               >
                 <FaExchangeAlt className="mr-1" /> Pisah Bayar
@@ -241,7 +241,7 @@ const Transaksi = () => {
             <label className="inline-flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
-                className="w-5 h-5 accent-green-600"
+                className="w-5 h-5 accent-violet-600"
                 checked={allowCredit}
                 onChange={(e) => setAllowCredit(e.target.checked)}
               />
@@ -257,7 +257,7 @@ const Transaksi = () => {
               <input
                 type="text"
                 placeholder="No.Meja"
-                className="border px-3 py-1 rounded w-24 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="border px-3 py-1 rounded w-24 focus:outline-none focus:ring-2 focus:ring-violet-500"
               />
             )}
           </div>
@@ -268,7 +268,7 @@ const Transaksi = () => {
             placeholder="Keterangan"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            className="bg-gray-100 text-gray-700 px-3 py-2 rounded outline-none focus:ring-2 focus:ring-green-500"
+            className="bg-gray-100 text-gray-700 px-3 py-2 rounded outline-none focus:ring-2 focus:ring-violet-500"
           />
 
           {/* Info diskon/pajak/metode */}
@@ -279,7 +279,7 @@ const Transaksi = () => {
             <div className="border border-gray-300 px-3 py-1 rounded-full text-sm">
               Tax : {taxPct}%
             </div>
-            <div className="border border-green-600 text-green-600 px-3 py-1 rounded-full text-sm">
+            <div className="border border-violet-600 text-violet-600 px-3 py-1 rounded-full text-sm">
               {mainPaymentBadge}
             </div>
           </div>
@@ -288,29 +288,29 @@ const Transaksi = () => {
           <div className="grid grid-cols-2 gap-2 mt-2">
             <button
               onClick={() => handleAddAmount(checkoutOrder?.total || 0)}
-              className="bg-green-600 text-white py-3 rounded hover:bg-green-700"
+              className="bg-violet-600 text-white py-3 rounded hover:bg-violet-700"
             >
               Uang Pas (F2)
             </button>
             <button
               onClick={() => handleAddAmount(20000)}
-              className="bg-green-600 text-white py-3 rounded hover:bg-green-700"
+              className="bg-violet-600 text-white py-3 rounded hover:bg-violet-700"
             >
               Rp 20.000
             </button>
             <button
               onClick={() => handleAddAmount(50000)}
-              className="bg-green-600 text-white py-3 rounded hover:bg-green-700"
+              className="bg-violet-600 text-white py-3 rounded hover:bg-violet-700"
             >
               Rp 50.000
             </button>
             <button
               onClick={() => handleAddAmount(100000)}
-              className="bg-green-600 text-white py-3 rounded hover:bg-green-700"
+              className="bg-violet-600 text-white py-3 rounded hover:bg-violet-700"
             >
               Rp 100.000
             </button>
-            <button className="bg-green-600 text-white py-3 rounded col-span-2 hover:bg-green-700">
+            <button className="bg-violet-600 text-white py-3 rounded col-span-2 hover:bg-violet-700">
               Lainnya
             </button>
           </div>
@@ -393,7 +393,7 @@ const Transaksi = () => {
               </div>
               <div className="flex justify-between text-sm px-1">
                 <div className="text-gray-600">Total Split</div>
-                <div className="font-semibold text-green-700">Rp {splits.reduce((s, r) => s + Number(r.amount||0), 0).toLocaleString('id-ID')}</div>
+                <div className="font-semibold text-violet-700">Rp {splits.reduce((s, r) => s + Number(r.amount||0), 0).toLocaleString('id-ID')}</div>
               </div>
             </div>
 
@@ -409,7 +409,7 @@ const Transaksi = () => {
                   Batal
                 </button>
                 <button
-                  className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+                  className="px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700"
                   onClick={() => {
                     // validasi sederhana
                     const sum = splits.reduce((s, r) => s + Number(r.amount||0), 0);

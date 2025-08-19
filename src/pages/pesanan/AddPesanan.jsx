@@ -104,7 +104,7 @@ const BuatPesanan = () => {
             onClick={() => setTipeLayanan(label)}
             className={`${
               tipeLayanan === label
-                ? "bg-green-600 text-white"
+                ? "bg-violet-600 text-white"
                 : "bg-gray-200 text-gray-700"
             } px-4 py-2 rounded-full text-base transition`}
           >
@@ -122,7 +122,7 @@ const BuatPesanan = () => {
             <input
               type="text"
               placeholder="Nama Transaksi"
-              className="w-full border-2 border-gray-200 rounded-md px-5 py-4 focus:outline-none focus:border-green-500"
+              className="w-full border-2 border-gray-200 rounded-md px-5 py-4 focus:outline-none focus:border-violet-500"
               value={namaTransaksi}
               onChange={(e) => setNamaTransaksi(e.target.value)}
             />
@@ -136,7 +136,7 @@ const BuatPesanan = () => {
               <input
                 type="text"
                 placeholder="Pelanggan"
-                className="border-2 border-gray-200 rounded-md px-5 py-4 w-full focus:outline-none focus:border-green-500"
+                className="border-2 border-gray-200 rounded-md px-5 py-4 w-full focus:outline-none focus:border-violet-500"
                 value={pelanggan}
                 onChange={(e) => setPelanggan(e.target.value)}
               />
@@ -148,7 +148,7 @@ const BuatPesanan = () => {
               <input
                 type="text"
                 placeholder="No. Meja"
-                className="border-2 border-gray-200 rounded-md px-5 py-4 w-full focus:outline-none focus:border-green-500"
+                className="border-2 border-gray-200 rounded-md px-5 py-4 w-full focus:outline-none focus:border-violet-500"
                 value={noMeja}
                 onChange={(e) => setNoMeja(e.target.value)}
               />
@@ -161,7 +161,7 @@ const BuatPesanan = () => {
                 <input
                   type="date"
                   placeholder="Jatuh Tempo"
-                  className="border-2 border-gray-200 rounded-md px-5 py-4 w-full pr-14 focus:outline-none focus:border-green-500"
+                  className="border-2 border-gray-200 rounded-md px-5 py-4 w-full pr-14 focus:outline-none focus:border-violet-500"
                   value={jatuhTempo}
                   onChange={(e) => setJatuhTempo(e.target.value)}
                 />
@@ -176,7 +176,7 @@ const BuatPesanan = () => {
             <input
               type="text"
               placeholder="Keterangan Struk"
-              className="w-full border-2 border-gray-200 px-5 py-4 rounded-md text-base focus:outline-none focus:border-green-500"
+              className="w-full border-2 border-gray-200 px-5 py-4 rounded-md text-base focus:outline-none focus:border-violet-500"
               value={keterangan}
               onChange={(e) => setKeterangan(e.target.value)}
             />
@@ -185,7 +185,7 @@ const BuatPesanan = () => {
           <label className="flex items-center space-x-3 text-base">
             <input
               type="checkbox"
-              className="form-checkbox text-green-600 w-5 h-5 accent-green-600"
+              className="form-checkbox text-violet-600 w-5 h-5 accent-violet-600"
               checked={lihatReview}
               onChange={(e) => setLihatReview(e.target.checked)}
             />
@@ -209,7 +209,7 @@ const BuatPesanan = () => {
         </Link>
         <button
           onClick={handleSimpan}
-          className="px-6 py-3 text-base bg-green-600 text-white font-semibold rounded-md hover:bg-green-700"
+          className="px-6 py-3 text-base bg-violet-600 text-white font-semibold rounded-md hover:bg-violet-700"
         >
           Simpan
         </button>
