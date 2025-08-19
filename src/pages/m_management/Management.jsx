@@ -266,29 +266,7 @@ export default function ManagementPage() {
   const layoutNeo = (
     <div className="min-h-full" style={{ background: `linear-gradient(180deg, ${BG_APP} 0%, ${CARD_SOFT} 100%)` }}>
       {/* HERO */}
-      <section className="px-6 sm:px-8 py-8 sm:py-12" style={{ background: gradientHero, color: "#FFFFFF" }}>
-        <div className="max-w-6xl mx-auto">
-          <div className={`transition-all ${isLoading ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"}`} style={{ transitionDuration: "500ms" }}>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Management Center</h1>
-            <p className="mt-2 text-sm sm:text-base opacity-90">Akses cepat ke modul operasional. Dirancang modern dan nyaman digunakan.</p>
 
-            {/* Quick actions / Layout switcher */}
-            <div className="mt-5 inline-flex items-center gap-2 text-xs sm:text-sm">
-              {(["neo", "mosaic", "minimalPro"]).map((k) => (
-                <button
-                  key={k}
-                  type="button"
-                  onClick={() => setSelectedLayout(k)}
-                  className={`px-3 py-1.5 rounded-full font-medium transition-all ${selectedLayout === k ? "ring-2 ring-white/70" : "opacity-80 hover:opacity-100"}`}
-                  style={{ background: "rgba(255,255,255,0.15)" }}
-                >
-                  {k === "neo" ? "Neo" : k === "mosaic" ? "Mosaic" : "Minimal Pro"}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* CONTENT */}
       <section className="px-6 sm:px-8 py-10">

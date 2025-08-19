@@ -117,7 +117,7 @@ export default function BarangJasa({ variant = "A" }) {
         type: "button",
         title: "Tambah Barang",
         onClick: () => handleOpenAdd(),
-        className: "inline-flex items-center gap-2 text-white px-3 py-2 rounded-lg hover:opacity-95",
+        className: "inline-flex items-center gap-2 border px-3 py-2 rounded-lg hover:opacity-95",
         icon: <MdAdd size={20} />,
         style: {
           background: `linear-gradient(90deg, ${primary700}, ${accent700})`,

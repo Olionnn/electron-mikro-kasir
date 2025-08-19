@@ -4,6 +4,8 @@ export default function cx(...a) {
    return a.filter(Boolean).join(" ");
 } 
 
+export const nowIso = () => new Date().toISOString();
+
 export function normalizeRow(r) {
   return r && typeof r === 'object' && r.dataValues ? r.dataValues : r;
 }
@@ -34,7 +36,42 @@ export function Highlight({ text = "", query = "" }) {
 }
 
 
+
+export function Highlighted({ text = "", query = "" }) {
+  if (!query) return <>{text}</>;
+  const q = query.trim();
+  const parts = text.split(new RegExp(`(${q})`, "gi"));
+  return (
+    <>
+      {parts.map((p, i) =>
+        p.toLowerCase() === q.toLowerCase() ? (
+          <mark
+            key={i}
+            className="bg-[color:var(--purple-200)]/40 text-[color:var(--navy-800)] rounded px-0.5"
+          >
+            {p}
+          </mark>
+        ) : (
+          <span key={i}>{p}</span>
+        )
+      )}
+    </>
+  );
+}
+
+
 export function fmtDate(v) {
+  if (!v) return "-";
+  try {
+    const d = new Date(v);
+    return `${d.toLocaleDateString("id-ID")} ${d.toLocaleTimeString("id-ID")}`;
+  } catch {
+    return String(v);
+  }
+}
+
+
+export function formatDate(v) {
   if (!v) return "-";
   try {
     const d = new Date(v);

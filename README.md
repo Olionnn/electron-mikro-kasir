@@ -38,4 +38,11 @@ If you are developing a production application, we recommend using TypeScript wi
 
 
 
+## arm
+arch -arm64 npm install
+npx electron-rebuild -f -w sqlite3
 
+
+## not arm
+arch -x86_64 npm install
+npx electron-rebuild -f -w sqlite3

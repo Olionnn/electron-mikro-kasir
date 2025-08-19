@@ -1,224 +1,152 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import Modal from "../../component/Modal";
 import { useNavbar } from "../../hooks/useNavbar";
-import { MdAdd, MdRefresh, MdSearch, MdClose, MdEdit, MdToggleOn, MdToggleOff } from "react-icons/md";
-import { 
-  useKategori
-} from "../../hooks/useKategori";
+import {
+  MdAdd,
+  MdRefresh,
+  MdSearch,
+  MdClose,
+  MdEdit,
+  MdToggleOn,
+  MdToggleOff,
+} from "react-icons/md";
+import { useKategori } from "../../hooks/useKategori";
+import cx, { useDebouncedValue, Highlighted, formatDate } from "../../utils/utils";
+import { ModalAddKategori, ModalEditKategori } from "./ModalKategori";
 
-
-const nowIso = () => new Date().toISOString();
-
-/**
- * DUMMY
- * — Data kategori mock untuk ilustrasi UI (tidak mengubah logic app).
- *   id/created_by/updated_by/sync_at/status dibuat realistis.
- */
-const DUMMY = [
-  { id: 1, toko_id: 1, nama: "Elektronik", created_by: 1, updated_by: 1, sync_at: null, status: true, created_at: nowIso(), updated_at: nowIso() },
-  { id: 2, toko_id: 1, nama: "Pakaian", created_by: 2, updated_by: 2, sync_at: null, status: true, created_at: nowIso(), updated_at: nowIso() },
-  { id: 3, toko_id: 1, nama: "Alat Tulis", created_by: 1, updated_by: 1, sync_at: null, status: true, created_at: nowIso(), updated_at: nowIso() },
-  { id: 4, toko_id: 1, nama: "Makanan", created_by: 3, updated_by: 3, sync_at: null, status: false, created_at: nowIso(), updated_at: nowIso() },
-  { id: 5, toko_id: 1, nama: "Minuman", created_by: 3, updated_by: 3, sync_at: null, status: true, created_at: nowIso(), updated_at: nowIso() },
-];
-
-/**
- * formatDate
- * — Utility: memformat ISO string → tanggal & jam lokal (id-ID).
- *   Aman untuk input null/invalid.
- */
-function formatDate(v) {
-  if (!v) return "-";
-  try {
-    const d = new Date(v);
-    return `${d.toLocaleDateString("id-ID")} ${d.toLocaleTimeString("id-ID")}`;
-  } catch {
-    return String(v);
-  }
-}
-
-/**
- * cn
- * — Utility sederhana untuk menggabungkan className secara kondisional.
- */
-function cn(...xs) { return xs.filter(Boolean).join(" "); }
-
-/**
- * Highlighted
- * — Komponen teks dengan kemampuan highlight substring (case-insensitive)
- *   sesuai query. Dipakai untuk menyorot hasil pencarian.
- */
-function Highlighted({ text = "", query = "" }) {
-  if (!query) return <>{text}</>;
-  const q = query.trim();
-  const parts = text.split(new RegExp(`(${q})`, "gi"));
-  return (
-    <>
-      {parts.map((p, i) =>
-        p.toLowerCase() === q.toLowerCase() ? (
-          <mark
-            key={i}
-            className="bg-[color:var(--purple-200)]/40 text-[color:var(--navy-800)] rounded px-0.5"
-          >
-            {p}
-          </mark>
-        ) : (
-          <span key={i}>{p}</span>
-        )
-      )}
-    </>
-  );
-}
-
-/**
- * KategoriBarangPage
- * — Container utama halaman Kategori Barang.
- *   - Mengatur state list kategori, pencarian (dengan debounce),
- *     item terpilih, dan modal tambah.
- *   - Menyediakan 3 varian layout UI (A/B/C) tanpa mengubah fungsi inti.
- */
 export default function KategoriBarangPage({ variant = "A" }) {
-  const { items: kategoriItems, pagination, loading, error, refresh, create, update, remove } =
-    useKategori();
+  const {
+    items: kategoriItems,
+    pagination,
+    loading,
+    error,
+    refresh,
+    create,
+    update,
+    remove,
+  } = useKategori();
 
-
-    console.log("KategoriBarangPage :", kategoriItems);
-
-  // STATE: sumber data kategori untuk UI (dummy)
-  const [categories, setCategories] = useState([]);
-  // STATE: id kategori yang sedang dipreview di panel kanan
-  const [selectedId, setSelectedId] = useState(DUMMY[0]?.id ?? null);
-
-  // STATE: pencarian (search input) + query yang didebounce untuk efisiensi render
+  const [selectedId, setSelectedId] = useState(null);
   const [search, setSearch] = useState("");
-  const [q, setQ] = useState("");
+  const [open, setOpen] = useState(false);
+  const [namaBaru, setNamaBaru] = useState("");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [saving, setSaving] = useState(false);
 
-  /**
-   * EFFECT: debounce input pencarian selama 250ms sebelum menyalurkan ke query (q)
-   */
-  useEffect(() => {
-    const t = setTimeout(() => setQ(search), 250);
-    return () => clearTimeout(t);
-  }, [search]);
+  const q = useDebouncedValue(search, 250);
 
-
-  /**
-   * MEMO: hasil filter berdasarkan query. Sorting/ordering bisa ditambahkan di sini bila dibutuhkan.
-   */
   const filtered = useMemo(() => {
-    if (!q.trim()) return kategoriItems;
-    const lower = q.trim().toLowerCase();
-    return kategoriItems.filter((c) => (c.nama || "").toLowerCase().includes(lower));
+    const s = q.trim().toLowerCase();
+    if (!s) return kategoriItems;
+    return kategoriItems.filter((it) =>
+      (it.nama || "").toLowerCase().includes(s)
+    );
   }, [kategoriItems, q]);
 
-  /**
-   * MEMO: objek kategori yang saat ini terpilih (untuk panel preview).
-   */
-  const selected = useMemo(() => {
-    return Array.isArray(kategoriItems)
-      ? kategoriItems.find((c) => c?.is_selected) // contoh kriteria
-      : undefined;
-  }, [kategoriItems]);
+  useEffect(() => {
+    if (!selectedId && filtered.length) {
+      setSelectedId(filtered[0].id);
+    }
+  }, [filtered, selectedId]);
 
-  /**
-   * CALLBACK: membuka modal tambah kategori.
-   */
-  const openTambah = useCallback(() => setIsModalOpen(true), []);
+  const selected = filtered.find((x) => x.id === selectedId) || null;
 
-  /**
-   * CALLBACK: refresh data ke kondisi awal (reset list + pilihan + pencarian).
-   */
+  const openTambah = useCallback(() => setIsAddModalOpen(true), []);
+
   const doRefresh = useCallback(() => {
     refresh();
     setSearch("");
   }, []);
 
-  /**
-   * ACTIONS NAVBAR: konfigurasi tombol aksi di header (Tambah, Refresh).
-   *  - Tetap memanfaatkan hook useNavbar dari aplikasi asli.
-   */
-  const actions = useMemo(() => [
+  const actions = useMemo(
+    () => [
+      {
+        type: "button",
+        title: "Tambah Kategori",
+        onClick: openTambah,
+        className:
+          "inline-flex items-center gap-2 text-white px-3 py-2 rounded-lg hover:opacity-95",
+        icon: <MdAdd size={20} />,
+        style: {
+          background:
+            "linear-gradient(90deg, var(--blue-700), var(--navy-800))",
+        },
+      },
+      {
+        type: "button",
+        title: "Refresh",
+        onClick: doRefresh,
+        className:
+          "inline-flex items-center gap-2 text-slate-700 px-3 py-2 rounded-lg hover:bg-slate-100",
+        icon: <MdRefresh size={20} />,
+      },
+    ],
+    [openTambah, doRefresh]
+  );
+
+  useNavbar(
     {
-      type: "button",
-      title: "Tambah Kategori",
-      onClick: openTambah,
-      className: "inline-flex items-center gap-2 text-white px-3 py-2 rounded-lg hover:opacity-95",
-      icon: <MdAdd size={20} />,
-      style: { background: "linear-gradient(90deg, var(--blue-700), var(--navy-800))" },
+      variant: "page",
+      uiPreset: "translucent", // coba: 'solid' / 'translucent' / 'compact'
+      title: "Kategori Barang",
+      backTo: "/management",
+      actions: actions,
     },
-    {
-      type: "button",
-      title: "Refresh",
-      onClick: doRefresh,
-      className: "inline-flex items-center gap-2 text-slate-700 px-3 py-2 rounded-lg hover:bg-slate-100",
-      icon: <MdRefresh size={20} />,
-    },
-  ], [openTambah, doRefresh]);
+    [actions] // deps
+  );
 
-  // REGISTER NAVBAR: set judul, back, dan actions ke sistem navbar aplikasi
-useNavbar(
-  {
-    variant: "page",
-    uiPreset: "translucent", // coba: 'solid' / 'translucent' / 'compact'
-    title: "Kategori Barang",
-    backTo: "/management",
-    actions: actions
-  },
-  [actions] // deps
-);
-
-  // STATE: kontrol modal tambah + form name + flag saving
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState("");
-  const [saving, setSaving] = useState(false);
-
-  /**
-   * HANDLER: submit form tambah kategori (dummy)
-   *  - Membuat row baru berdasarkan nama input
-   *  - Push ke state categories + set item terpilih + tutup modal
-   */
   const addKategori = async (e) => {
-    // e.preventDefault();
-    // const nama = newCategoryName.trim();
-    // if (!nama) return;
-    // setSaving(true);
-    // const idBaru = Math.max(0, ...categories.map((c) => c.id)) + 1;
-    // const row = { id: idBaru, toko_id: 1, nama, created_by: 1, updated_by: 1, sync_at: null, status: true, created_at: nowIso(), updated_at: nowIso() };
-    // setCategories((prev) => [row, ...prev]);
-    // setSelectedId(idBaru);
-    // setNewCategoryName("");
-    // setSaving(false);
-    // setIsModalOpen(false);
     e.preventDefault();
-
-    const nama = newCategoryName.trim();
+    const nama = namaBaru.trim();
     if (!nama) return;
     setSaving(true);
-    const row = { id: 0, toko_id: 1, nama, created_by: 1, updated_by: 1, sync_at: null, status: true, created_at: nowIso(), updated_at: nowIso() };
-    create(row);
-    setNewCategoryName("");
-    setSaving(false);
-    setIsModalOpen(false);
-    refresh(); 
+    try {
+      await create({ nama, status: true, toko_id: 1 });
+      setNamaBaru("");
+      setOpen(false);
+      refresh();
+    } finally {
+      setSaving(false);
+    }
   };
 
-  /**
-   * HANDLER: toggle status aktif/nonaktif pada item terpilih (dummy)
-   *  - Update hanya terjadi pada state lokal (tanpa API)
-   */
+  const updateKategori = async (e) => {
+    e.preventDefault();
+    const nama = selected?.nama?.trim();
+    if (!nama) return;
+    setSaving(true);
+    try {
+      await update(selected.id, { 
+        nama: nama, 
+      });
+      setOpen(false);
+      refresh();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+
   const toggleStatus = () => {
     if (!selected) return;
-    setCategories((prev) => prev.map((c) => (c.id === selected.id ? { ...c, status: !c.status, updated_at: nowIso() } : c)));
+    setCategories((prev) =>
+      prev.map((c) =>
+        c.id === selected.id
+          ? { ...c, status: !c.status, updated_at: nowIso() }
+          : c
+      )
+    );
   };
 
-  /**
-   * EFFECT: set judul dokumen (tab browser) untuk konteks halaman.
-   */
-  useEffect(() => { document.title = "Kategori Barang | Aplikasi"; }, []);
+
+  useEffect(() => {
+    document.title = "Kategori Barang | Aplikasi";
+  }, []);
 
   return (
-    <div className="min-h-screen w-full flex overflow-hidden bg-slate-50">
-      {/* Color Tokens (dibuat global untuk halaman ini) */}
+    <div className="h-full w-full flex overflow-hidden bg-slate-50">
       <style>{`:root{--purple-200:#B2B0E8;--blue-300:#7A85C1;--blue-700:#3B38A0;--navy-800:#1A2A80}`}</style>
 
       {/*
@@ -262,43 +190,8 @@ useNavbar(
         />
       )}
 
-      {/* MODAL: Tambah Kategori */}
-      <Modal open={isModalOpen} title="Tambah Kategori" onClose={() => setIsModalOpen(false)}>
-        <form onSubmit={addKategori} className="space-y-4">
-          <div>
-            <label htmlFor="categoryName" className="block text-sm font-medium text-slate-700">
-              Nama Kategori
-            </label>
-            <input
-              id="categoryName"
-              type="text"
-              value={newCategoryName}
-              onChange={(e) => setNewCategoryName(e.target.value)}
-              placeholder="cth: Makanan, Elektronik, ATK..."
-              className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 outline-none focus:border-[color:var(--blue-700)] focus:ring-2 focus:ring-[color:var(--purple-200)]/60"
-              data-autofocus
-              required
-            />
-          </div>
-          <div className="flex items-center justify-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(false)}
-              className="rounded-xl px-4 py-2.5 text-slate-700 bg-slate-100 hover:bg-slate-200"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              disabled={!newCategoryName.trim() || saving}
-              className="rounded-xl px-4 py-2.5 text-white disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{ background: "linear-gradient(90deg, var(--blue-700), var(--navy-800))" }}
-            >
-              {saving ? "Menyimpan..." : "Tambah"}
-            </button>
-          </div>
-        </form>
-      </Modal>
+      <ModalAddKategori isModalOpen={isAddModalOpen} setIsModalOpen={setIsAddModalOpen} newCategoryName={newCategoryName} setNewCategoryName={setNewCategoryName} addKategori={addKategori} saving={saving} />
+      <ModalEditKategori isModalOpen={isEditModalOpen} setIsModalOpen={setIsEditModalOpen} selectedCategory={selected} updateKategori={updateKategori} saving={saving} />
     </div>
   );
 }
@@ -309,12 +202,26 @@ useNavbar(
  * — Master–Detail split: kiri (list) & kanan (preview).
  *   Optim untuk kecepatan navigasi item pada desktop.
  */
-function LayoutA({ search, setSearch, filtered, selected, selectedId, setSelectedId, openTambah, toggleStatus }) {
+function LayoutA({
+  search,
+  setSearch,
+  filtered,
+  selected,
+  selectedId,
+  setSelectedId,
+  openTambah,
+  toggleStatus,
+}) {
   return (
     <div className="flex flex-1 flex-col lg:flex-row overflow-hidden">
       {/* LEFT - list */}
       <div className="w-full lg:w-1/2 h-full flex flex-col border-r border-slate-200 bg-white">
-        <StickySearch search={search} setSearch={setSearch} count={filtered.length} totalHint />
+        <StickySearch
+          search={search}
+          setSearch={setSearch}
+          count={filtered.length}
+          totalHint
+        />
         {filtered.length === 0 ? (
           <EmptyList openTambah={openTambah} />
         ) : (
@@ -326,7 +233,7 @@ function LayoutA({ search, setSearch, filtered, selected, selectedId, setSelecte
                   key={c.id}
                   type="button"
                   onClick={() => setSelectedId(c.id)}
-                  className={cn(
+                  className={cx(
                     "w-full text-left rounded-xl border transition focus:outline-none focus:ring-2",
                     active
                       ? "border-[color:var(--blue-700)] ring-1 ring-[color:var(--blue-700)] bg-[color:var(--purple-200)]/20"
@@ -335,9 +242,11 @@ function LayoutA({ search, setSearch, filtered, selected, selectedId, setSelecte
                 >
                   <div className="flex items-stretch">
                     <div
-                      className={cn(
+                      className={cx(
                         "w-1.5 rounded-l-xl",
-                        active ? "bg-[color:var(--blue-700)]" : "bg-[color:var(--purple-200)]/60"
+                        active
+                          ? "bg-[color:var(--blue-700)]"
+                          : "bg-[color:var(--purple-200)]/60"
                       )}
                     />
                     <div className="flex-1 flex items-center gap-3 p-4">
@@ -353,9 +262,11 @@ function LayoutA({ search, setSearch, filtered, selected, selectedId, setSelecte
                         <div className="text-slate-500 text-xs">ID: {c.id}</div>
                       </div>
                       <span
-                        className={cn(
+                        className={cx(
                           "text-xs px-2 py-1 rounded-full",
-                          c.status ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600"
+                          c.status
+                            ? "bg-green-100 text-green-700"
+                            : "bg-slate-100 text-slate-600"
                         )}
                       >
                         {c.status ? "Aktif" : "Nonaktif"}
@@ -371,7 +282,10 @@ function LayoutA({ search, setSearch, filtered, selected, selectedId, setSelecte
           <button
             onClick={openTambah}
             className="w-full rounded-xl py-3 text-white font-semibold hover:opacity-95"
-            style={{ background: "linear-gradient(90deg, var(--blue-700), var(--navy-800))" }}
+            style={{
+              background:
+                "linear-gradient(90deg, var(--blue-700), var(--navy-800))",
+            }}
           >
             TAMBAH KATEGORI
           </button>
@@ -397,13 +311,24 @@ function LayoutA({ search, setSearch, filtered, selected, selectedId, setSelecte
  * — Grid card + sidebar sticky: cocok untuk scan banyak kategori cepat,
  *   detail selalu terlihat di sisi kanan.
  */
-function LayoutB({ search, setSearch, filtered, selected, selectedId, setSelectedId, openTambah, toggleStatus }) {
+function LayoutB({
+  search,
+  setSearch,
+  filtered,
+  selected,
+  selectedId,
+  setSelectedId,
+  openTambah,
+  toggleStatus,
+}) {
   return (
     <div className="flex-1 overflow-hidden">
       <div className="border-b bg-white">
         <div className="p-4 lg:p-6">
           <SearchBar search={search} setSearch={setSearch} compact />
-          <div className="mt-2 text-xs text-slate-500">Menampilkan <b>{filtered.length}</b> kategori</div>
+          <div className="mt-2 text-xs text-slate-500">
+            Menampilkan <b>{filtered.length}</b> kategori
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 p-4 lg:p-6">
@@ -419,7 +344,7 @@ function LayoutB({ search, setSearch, filtered, selected, selectedId, setSelecte
                   <button
                     key={c.id}
                     onClick={() => setSelectedId(c.id)}
-                    className={cn(
+                    className={cx(
                       "text-left rounded-2xl border p-4 transition shadow-sm hover:shadow-md hover:-translate-y-[1px]",
                       active
                         ? "border-[color:var(--blue-700)] ring-1 ring-[color:var(--blue-700)] bg-[color:var(--purple-200)]/20"
@@ -439,9 +364,11 @@ function LayoutB({ search, setSearch, filtered, selected, selectedId, setSelecte
                         <div className="text-xs text-slate-500">ID: {c.id}</div>
                       </div>
                       <span
-                        className={cn(
+                        className={cx(
                           "text-xs px-2 py-1 rounded-full",
-                          c.status ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600"
+                          c.status
+                            ? "bg-green-100 text-green-700"
+                            : "bg-slate-100 text-slate-600"
                         )}
                       >
                         {c.status ? "Aktif" : "Nonaktif"}
@@ -456,12 +383,19 @@ function LayoutB({ search, setSearch, filtered, selected, selectedId, setSelecte
         {/* Sidebar detail */}
         <div className="lg:col-span-2">
           <div className="sticky top-4">
-            {!selected ? <EmptyHint /> : <PreviewCard selected={selected} toggleStatus={toggleStatus} />}
+            {!selected ? (
+              <EmptyHint />
+            ) : (
+              <PreviewCard selected={selected} toggleStatus={toggleStatus} />
+            )}
             <div className="mt-4">
               <button
                 onClick={openTambah}
                 className="w-full rounded-xl py-3 text-white font-semibold hover:opacity-95"
-                style={{ background: "linear-gradient(90deg, var(--blue-700), var(--navy-800))" }}
+                style={{
+                  background:
+                    "linear-gradient(90deg, var(--blue-700), var(--navy-800))",
+                }}
               >
                 TAMBAH KATEGORI
               </button>
@@ -478,7 +412,16 @@ function LayoutB({ search, setSearch, filtered, selected, selectedId, setSelecte
  * — Table-lite (ringan) + panel kanan (rasa drawer). Fokus pada
  *   keterbacaan data tabular sambil tetap menyediakan detail cepat.
  */
-function LayoutC({ search, setSearch, filtered, selected, selectedId, setSelectedId, openTambah, toggleStatus }) {
+function LayoutC({
+  search,
+  setSearch,
+  filtered,
+  selected,
+  selectedId,
+  setSelectedId,
+  openTambah,
+  toggleStatus,
+}) {
   return (
     <div className="flex-1 overflow-hidden">
       <div className="border-b bg-white">
@@ -506,31 +449,46 @@ function LayoutC({ search, setSearch, filtered, selected, selectedId, setSelecte
                     return (
                       <tr
                         key={c.id}
-                        className={cn("border-t", active ? "bg-[color:var(--purple-200)]/10" : "hover:bg-slate-50")}
+                        className={cx(
+                          "border-t",
+                          active
+                            ? "bg-[color:var(--purple-200)]/10"
+                            : "hover:bg-slate-50"
+                        )}
                       >
                         <td className="px-4 py-3">
-                          <button onClick={() => setSelectedId(c.id)} className="inline-flex items-center gap-3">
+                          <button
+                            onClick={() => setSelectedId(c.id)}
+                            className="inline-flex items-center gap-3"
+                          >
                             <div className="w-8 h-8 bg-[color:var(--purple-200)]/30 rounded-md flex items-center justify-center">
                               <span className="text-[color:var(--blue-700)] font-bold">
                                 {(c.nama || "K").charAt(0).toUpperCase()}
                               </span>
                             </div>
                             <span className="font-medium">
-                              <Highlighted text={c.nama || "-"} query={search} />
+                              <Highlighted
+                                text={c.nama || "-"}
+                                query={search}
+                              />
                             </span>
                           </button>
                         </td>
                         <td className="px-4 py-3">
                           <span
-                            className={cn(
+                            className={cx(
                               "text-xs px-2 py-1 rounded-full",
-                              c.status ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600"
+                              c.status
+                                ? "bg-green-100 text-green-700"
+                                : "bg-slate-100 text-slate-600"
                             )}
                           >
                             {c.status ? "Aktif" : "Nonaktif"}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-slate-600">{formatDate(c.updated_at)}</td>
+                        <td className="px-4 py-3 text-slate-600">
+                          {formatDate(c.updated_at)}
+                        </td>
                       </tr>
                     );
                   })}
@@ -540,12 +498,19 @@ function LayoutC({ search, setSearch, filtered, selected, selectedId, setSelecte
           )}
         </div>
         <div className="lg:col-span-2">
-          {!selected ? <EmptyHint /> : <PreviewCard selected={selected} toggleStatus={toggleStatus} />}
+          {!selected ? (
+            <EmptyHint />
+          ) : (
+            <PreviewCard selected={selected} toggleStatus={toggleStatus} />
+          )}
           <div className="mt-4">
             <button
               onClick={openTambah}
               className="w-full rounded-xl py-3 text-white font-semibold hover:opacity-95"
-              style={{ background: "linear-gradient(90deg, var(--blue-700), var(--navy-800))" }}
+              style={{
+                background:
+                  "linear-gradient(90deg, var(--blue-700), var(--navy-800))",
+              }}
             >
               TAMBAH KATEGORI
             </button>
@@ -569,7 +534,9 @@ function StickySearch({ search, setSearch, count, totalHint = false }) {
         <SearchBar search={search} setSearch={setSearch} />
         <div className="mt-2 text-xs text-slate-500">
           {totalHint ? (
-            <>Menampilkan <b>{count}</b> kategori</>
+            <>
+              Menampilkan <b>{count}</b> kategori
+            </>
           ) : (
             <>&nbsp;</>
           )}
@@ -588,7 +555,10 @@ function SearchBar({ search, setSearch, compact = false }) {
   return (
     <div className={compact ? "" : ""}>
       <div className="relative">
-        <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+        <MdSearch
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+          size={20}
+        />
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -642,16 +612,27 @@ function PreviewCard({ selected, toggleStatus }) {
               <MdEdit size={18} />
             </button>
             <label className="inline-flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={selected.status} onChange={toggleStatus} className="hidden" />
+              <input
+                type="checkbox"
+                checked={selected.status}
+                onChange={toggleStatus}
+                className="hidden"
+              />
               <span
-                className={cn(
+                className={cx(
                   "inline-flex items-center gap-2 px-3 py-2 rounded-lg transition",
-                  selected.status ? "bg-green-600 text-white hover:bg-green-700" : "bg-slate-200 text-slate-800 hover:bg-slate-300"
+                  selected.status
+                    ? "bg-green-600 text-white hover:bg-green-700"
+                    : "bg-slate-200 text-slate-800 hover:bg-slate-300"
                 )}
                 title="Toggle Status"
                 aria-label="Ubah status aktif"
               >
-                {selected.status ? <MdToggleOn size={20} /> : <MdToggleOff size={20} />}
+                {selected.status ? (
+                  <MdToggleOn size={20} />
+                ) : (
+                  <MdToggleOff size={20} />
+                )}
               </span>
             </label>
             <button
@@ -666,27 +647,33 @@ function PreviewCard({ selected, toggleStatus }) {
         </div>
         {/* Status badges */}
         <div className="flex flex-wrap items-center gap-2 mt-4">
-          <span className={cn("px-2.5 py-1 rounded-full text-xs", selected.status ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-700")}>
+          <span
+            className={cx(
+              "px-2.5 py-1 rounded-full text-xs",
+              selected.status
+                ? "bg-green-100 text-green-700"
+                : "bg-slate-100 text-slate-700"
+            )}
+          >
             {selected.status ? "Aktif" : "Nonaktif"}
           </span>
-          <span className="px-2.5 py-1 rounded-full text-xs bg-slate-100 text-slate-700">Toko #{selected.toko_id ?? "-"}</span>
+          <span className="px-2.5 py-1 rounded-full text-xs bg-slate-100 text-slate-700">
+            Toko #{selected.toko_id ?? "-"}
+          </span>
         </div>
         {/* Info grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
           <Field label="Toko ID" value={selected.toko_id ?? "-"} />
           <Field label="Created By" value={selected.created_by ?? "-"} />
           <Field label="Updated By" value={selected.updated_by ?? "-"} />
-          <Field label="Sync At" value={selected.sync_at ? formatDate(selected.sync_at) : "-"} />
+          <Field
+            label="Sync At"
+            value={selected.sync_at ? formatDate(selected.sync_at) : "-"}
+          />
           <Field label="Created At" value={formatDate(selected.created_at)} />
           <Field label="Updated At" value={formatDate(selected.updated_at)} />
         </div>
-        {/* Note */}
-        <div className="p-4 bg-white rounded-xl border mt-4">
-          <div className="text-xs text-slate-500 mb-1">Catatan</div>
-          <div className="text-slate-700">
-            Ini preview detail kategori berdasarkan struktur model. Aksi edit/status masih dummy.
-          </div>
-        </div>
+        
       </div>
     </div>
   );
@@ -705,7 +692,10 @@ function EmptyList({ openTambah }) {
         <button
           onClick={openTambah}
           className="mt-4 inline-flex items-center gap-2 text-white px-4 py-2 rounded-lg hover:opacity-95"
-          style={{ background: "linear-gradient(90deg, var(--blue-700), var(--navy-800))" }}
+          style={{
+            background:
+              "linear-gradient(90deg, var(--blue-700), var(--navy-800))",
+          }}
         >
           <MdAdd size={18} /> Tambah Kategori Baru
         </button>

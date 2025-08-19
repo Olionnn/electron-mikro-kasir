@@ -121,7 +121,7 @@ export default function Navbar({
       </IconBtn>
 
       {/* Tombol toggle mode (light/dark) */}
-      <IconBtn
+      {/* <IconBtn
         onClick={() => setMode("toggle")}
         title={`Mode: ${isDark ? "Dark" : "Light"}`}
         className="hover:bg-opacity-10"
@@ -131,7 +131,7 @@ export default function Navbar({
         }}
       >
         {isDark ? <MdLightMode size={22} /> : <MdDarkMode size={22} />}
-      </IconBtn>
+      </IconBtn> */}
 
       {rightExtra}
 
