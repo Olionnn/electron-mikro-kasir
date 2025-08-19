@@ -189,7 +189,7 @@ export default function SupplierPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari nama / email / telp / kode…"
-              className="w-full h-11 pl-4 pr-24 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full h-11 pl-4 pr-24 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
             {search && (
               <button
@@ -201,7 +201,7 @@ export default function SupplierPage() {
             )}
             <button
               onClick={openFilterModal}
-              className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg border text-green-700 bg-white hover:bg-green-50"
+              className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg border text-violet-700 bg-white hover:bg-green-50"
               title="Filter"
             >
               <FiFilter />
@@ -229,7 +229,7 @@ export default function SupplierPage() {
                   className={cx(
                     "w-full text-left rounded-xl border transition focus:outline-none focus:ring-2",
                     active
-                      ? "border-green-500 ring-1 ring-green-500 bg-green-50"
+                      ? "border-violet-500 ring-1 ring-violet-500 bg-violet-50"
                       : "border-gray-200 bg-white hover:shadow-sm"
                   )}
                 >
@@ -237,12 +237,12 @@ export default function SupplierPage() {
                     <div
                       className={cx(
                         "w-1.5 rounded-l-xl",
-                        active ? "bg-green-500" : "bg-gradient-to-b from-green-400 to-emerald-500"
+                        active ? "bg-violet-500" : "bg-gradient-to-b from-violet-400 to-blue-500"
                       )}
                     />
                     <div className="flex-1 flex items-center gap-3 p-3">
-                      <div className="w-10 h-10 bg-green-100 rounded-md flex items-center justify-center">
-                        <span className="text-green-600 font-bold">
+                      <div className="w-10 h-10 bg-violet-100 rounded-md flex items-center justify-center">
+                        <span className="text-violet-600 font-bold">
                           {(sup.nama || "S").charAt(0).toUpperCase()}
                         </span>
                       </div>
@@ -257,7 +257,7 @@ export default function SupplierPage() {
                       <span
                         className={cx(
                           "text-xs px-2 py-1 rounded-full",
-                          sup.status ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"
+                          sup.status ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"
                         )}
                       >
                         {sup.status ? "Aktif" : "Nonaktif"}
@@ -299,7 +299,7 @@ export default function SupplierPage() {
               </div>
               <button
                 onClick={handleOpenEdit}
-                className="inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50"
+                className="inline-flex items-center gap-2 bg-white border border-violet-500 text-violet-700 px-3 py-2 rounded-lg hover:bg-violet-50"
               >
                 <MdEdit size={18} /> Edit
               </button>
@@ -323,10 +323,10 @@ export default function SupplierPage() {
                 Informasi Utama
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <InfoPlain icon={<FiHash className="text-green-600" />} label="Toko ID" value={selected.toko_id} />
-                <InfoPlain icon={<FiMail className="text-green-600" />} label="Email" value={selected.email || "-"} />
-                <InfoPlain icon={<FiPhone className="text-green-600" />} label="No. Telp" value={selected.no_telp || "-"} />
-                <InfoPlain icon={<FiMapPin className="text-green-600" />} label="Alamat" value={selected.alamat || "-"} wide />
+                <InfoPlain icon={<FiHash className="text-violet-600" />} label="Toko ID" value={selected.toko_id} />
+                <InfoPlain icon={<FiMail className="text-violet-600" />} label="Email" value={selected.email || "-"} />
+                <InfoPlain icon={<FiPhone className="text-violet-600" />} label="No. Telp" value={selected.no_telp || "-"} />
+                <InfoPlain icon={<FiMapPin className="text-violet-600" />} label="Alamat" value={selected.alamat || "-"} wide />
               </div>
             </section>
 
@@ -386,7 +386,7 @@ export default function SupplierPage() {
             <select
               value={filter.status}
               onChange={(e) => setFilter((f) => ({ ...f, status: e.target.value }))}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
             >
               <option value="">Semua</option>
               <option value="true">Aktif</option>
@@ -398,7 +398,7 @@ export default function SupplierPage() {
             <select
               value={filter.hasEmail}
               onChange={(e) => setFilter((f) => ({ ...f, hasEmail: e.target.value }))}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
             >
               <option value="">Semua</option>
               <option value="true">Ya</option>
@@ -413,7 +413,7 @@ export default function SupplierPage() {
                 setFilter((f) => ({ ...f, toko_id: e.target.value.replace(/\D/g, "") }))
               }
               inputMode="numeric"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
               placeholder="cth: 10"
             />
           </Labeled>
@@ -434,7 +434,7 @@ export default function SupplierPage() {
               </button>
               <button
                 onClick={() => setOpenFilter(false)}
-                className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600"
+                className="px-4 py-2 rounded-lg bg-violet-500 text-white hover:bg-violet-600"
               >
                 Terapkan
               </button>
@@ -489,7 +489,7 @@ function SupplierForm({ form, setForm, onSubmit, submitText = "Simpan", initialF
           value={toStr(form.nama)}
           onChange={txt("nama")}
           placeholder="Nama supplier"
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
           data-autofocus
         />
       </Labeled>
@@ -501,7 +501,7 @@ function SupplierForm({ form, setForm, onSubmit, submitText = "Simpan", initialF
             onChange={num("toko_id")}
             inputMode="numeric"
             placeholder="cth: 10"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
           />
         </Labeled>
         <Labeled label="Email">
@@ -510,7 +510,7 @@ function SupplierForm({ form, setForm, onSubmit, submitText = "Simpan", initialF
             onChange={txt("email")}
             type="email"
             placeholder="email@contoh.com"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
           />
         </Labeled>
       </div>
@@ -521,7 +521,7 @@ function SupplierForm({ form, setForm, onSubmit, submitText = "Simpan", initialF
             value={toStr(form.no_telp)}
             onChange={txt("no_telp")}
             placeholder="021-xxxxx / 08xxxx"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
           />
         </Labeled>
         <Labeled label="Status Aktif">
@@ -537,7 +537,7 @@ function SupplierForm({ form, setForm, onSubmit, submitText = "Simpan", initialF
           value={toStr(form.alamat)}
           onChange={txt("alamat")}
           placeholder="Alamat supplier"
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
         />
       </Labeled>
 
@@ -546,16 +546,16 @@ function SupplierForm({ form, setForm, onSubmit, submitText = "Simpan", initialF
           value={toStr(form.image)}
           onChange={txt("image")}
           placeholder="https://…"
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
         />
       </Labeled>
 
       <div className="grid grid-cols-2 gap-3">
         <Labeled label="Created By (ID)">
-          <input value={toInt(form.created_by)} onChange={num("created_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+          <input value={toInt(form.created_by)} onChange={num("created_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
         </Labeled>
         <Labeled label="Updated By (ID)">
-          <input value={toInt(form.updated_by)} onChange={num("updated_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+          <input value={toInt(form.updated_by)} onChange={num("updated_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
         </Labeled>
       </div>
 
@@ -564,7 +564,7 @@ function SupplierForm({ form, setForm, onSubmit, submitText = "Simpan", initialF
           value={toStr(form.sync_at || "")}
           onChange={txt("sync_at")}
           placeholder="2025-08-01"
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
         />
       </Labeled>
 
@@ -572,7 +572,7 @@ function SupplierForm({ form, setForm, onSubmit, submitText = "Simpan", initialF
         <button type="button" className="px-4 py-2 rounded-lg border hover:bg-gray-50" onClick={() => history.back()}>
           Batal
         </button>
-        <button type="submit" className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600">
+        <button type="submit" className="px-4 py-2 rounded-lg bg-violet-500 text-white hover:bg-violet-600">
           {submitText}
         </button>
       </div>

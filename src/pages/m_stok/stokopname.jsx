@@ -15,7 +15,7 @@ const dummyData = [
 function Th({ children, w, right }) {
   return (
     <th
-      className={`px-3 py-2 text-left font-semibold text-gray-700 ${right ? "text-right" : ""}`}
+      className={`px-3 py-2 text-left font-semibold text-black ${right ? "text-right" : ""}`}
       style={w ? { width: w } : undefined}
     >
       {children}
@@ -28,7 +28,7 @@ function Td({ children, right }) {
 function Group({ label, children }) {
   return (
     <label className="flex flex-col gap-1">
-      <span className="text-sm text-gray-600">{label}</span>
+      <span className="text-sm text-black">{label}</span>
       {children}
     </label>
   );
@@ -59,7 +59,7 @@ function Pagination({ page, totalPages, onPrev, onNext, onGoto, compact = false 
             <button
               onClick={() => onGoto(p)}
               className={`px-3 py-1.5 rounded-lg border text-sm ${
-                p === page ? "bg-green-600 text-white border-green-600" : "hover:bg-gray-50"
+                p === page ? "bg-violet-900 text-white border-violet-700" : "hover:bg-gray-50"
               }`}
             >
               {p}
@@ -243,8 +243,8 @@ export default function StokOpnamePage() {
             )}
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gray-200 bg-gray-50">
+          <div className="flex items-center gap-2 text-sm text-white">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-700 bg-violet-700">
               {total} entri
             </span>
           </div>
@@ -279,10 +279,10 @@ export default function StokOpnamePage() {
       {/* Table (scroll di komponen ini saja) */}
       <div className="flex-1 overflow-hidden">
         <div className="h-full overflow-auto p-4 md:p-6">
-          <div className="bg-white border rounded-xl overflow-hidden">
+          <div className="bg-violet-200 border rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-green-50 sticky top-0">
+                <thead className="bg-violet-700 sticky top-0">
                   <tr>
                     <Th w="80">#</Th>
                     <Th w="120">ID</Th>
@@ -298,7 +298,7 @@ export default function StokOpnamePage() {
                 <tbody>
                   {paged.length === 0 ? (
                     <tr>
-                      <td colSpan={9} className="p-6 text-center text-gray-500">Tidak ada data.</td>
+                      <td colSpan={9} className="p-6 text-center text-gray-900">Tidak ada data.</td>
                     </tr>
                   ) : (
                     paged.map((item, idx) => (
@@ -332,7 +332,7 @@ export default function StokOpnamePage() {
             </div>
 
             {/* Footer table */}
-            <div className="px-4 py-3 bg-gray-50 text-sm text-gray-600 flex items-center justify-between">
+            <div className="px-4 py-3 bg-violet-700 text-sm text-black flex items-center justify-between">
               <div>
                 Menampilkan <strong>{paged.length}</strong> dari <strong>{total}</strong> entri
               </div>

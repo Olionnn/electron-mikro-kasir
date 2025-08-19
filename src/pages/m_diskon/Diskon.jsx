@@ -249,7 +249,7 @@ export default function DiskonPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari nama atau jumlah…"
-              className="w-full h-11 pl-4 pr-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full h-11 pl-4 pr-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
             {search && (
               <button
@@ -282,12 +282,12 @@ export default function DiskonPage() {
                   className={cx(
                     "w-full text-left rounded-xl border transition focus:outline-none focus:ring-2",
                     active
-                      ? "border-green-500 ring-1 ring-green-500 bg-green-50"
+                      ? "border-violet-500 ring-1 ring-violet-500 bg-violet-50"
                       : "border-gray-200 bg-white hover:shadow-sm"
                   )}
                 >
                   <div className="flex items-stretch">
-                    <div className={cx("w-1.5 rounded-l-xl", active ? "bg-green-500" : "bg-gradient-to-b from-green-400 to-emerald-500")} />
+                    <div className={cx("w-1.5 rounded-l-xl", active ? "bg-violet-500" : "bg-gradient-to-b from-violet-400 to-blue-500")} />
                     <div className="flex-1 flex items-center justify-between p-3">
                       <div className="min-w-0">
                         <div className="font-semibold text-gray-800 truncate">
@@ -300,7 +300,7 @@ export default function DiskonPage() {
                       <span
                         className={cx(
                           "text-xs px-2 py-1 rounded-full",
-                          d.status ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"
+                          d.status ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"
                         )}
                       >
                         {d.status ? "Aktif" : "Nonaktif"}
@@ -331,7 +331,7 @@ export default function DiskonPage() {
               </div>
               <button
                 onClick={handleOpenEdit}
-                className="inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50"
+                className="inline-flex items-center gap-2 bg-white border border-violet-500 text-violet-700 px-3 py-2 rounded-lg hover:bg-violet-50"
               >
                 <MdEdit size={18} /> Edit
               </button>
@@ -346,8 +346,8 @@ export default function DiskonPage() {
                 </>
               ) : (
                 <>
-                  <FiXCircle className="text-gray-500" />
-                  <span className="text-gray-600 text-sm">Nonaktif</span>
+                  <FiXCircle className="text-red-500" />
+                  <span className="text-red-600 text-sm">Nonaktif</span>
                 </>
               )}
             </div>
@@ -356,8 +356,8 @@ export default function DiskonPage() {
             <section>
               <h3 className="text-sm font-semibold text-gray-700 mb-2">Informasi</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <Info label="Toko ID" value={selected.toko_id} icon={<FiHash className="text-green-600" />} />
-                <Info label="Jenis Diskon" value={labelJenis(selected.jenis_diskon)} icon={<FiPercent className="text-green-600" />} />
+                <Info label="Toko ID" value={selected.toko_id} icon={<FiHash className="text-violet-600" />} />
+                <Info label="Jenis Diskon" value={labelJenis(selected.jenis_diskon)} icon={<FiPercent className="text-violet-600" />} />
                 <Info label="Jumlah" value={showJumlah(selected.jenis_diskon, selected.jumlah)} />
                 <Info label="Sync At" value={selected.sync_at || "-"} />
               </div>
@@ -410,7 +410,7 @@ export default function DiskonPage() {
             <select
               value={filter.jenis_diskon}
               onChange={(e) => setFilter((f) => ({ ...f, jenis_diskon: e.target.value }))}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
             >
               <option value="">Semua</option>
               <option value="1">Persentase</option>
@@ -422,7 +422,7 @@ export default function DiskonPage() {
             <select
               value={filter.status}
               onChange={(e) => setFilter((f) => ({ ...f, status: e.target.value }))}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
             >
               <option value="">Semua</option>
               <option value="true">Aktif</option>
@@ -437,7 +437,7 @@ export default function DiskonPage() {
                 setFilter((f) => ({ ...f, toko_id: e.target.value.replace(/\D/g, "") }))
               }
               inputMode="numeric"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
               placeholder="cth: 10"
             />
           </Labeled>
@@ -458,7 +458,7 @@ export default function DiskonPage() {
               </button>
               <button
                 onClick={() => setOpenFilter(false)}
-                className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600"
+                className="px-4 py-2 rounded-lg bg-violet-500 text-white hover:bg-violet-600"
               >
                 Terapkan
               </button>
@@ -514,7 +514,7 @@ function DiskonForm({ form, setForm, onSubmit, submitText = "Simpan", initialFoc
           value={form.nama}
           onChange={txt("nama")}
           placeholder="cth: Promo Akhir Tahun"
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
           data-autofocus
         />
       </Labeled>
@@ -524,7 +524,7 @@ function DiskonForm({ form, setForm, onSubmit, submitText = "Simpan", initialFoc
           <select
             value={String(form.jenis_diskon)}
             onChange={txt("jenis_diskon")}
-            className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
           >
             <option value="1">Persentase (%)</option>
             <option value="2">Nominal (Rp)</option>
@@ -537,7 +537,7 @@ function DiskonForm({ form, setForm, onSubmit, submitText = "Simpan", initialFoc
             onChange={num("jumlah")}
             inputMode="numeric"
             placeholder={String(form.jenis_diskon) === "1" ? "cth: 10" : "cth: 50000"}
-            className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
           />
         </Labeled>
       </div>
@@ -549,7 +549,7 @@ function DiskonForm({ form, setForm, onSubmit, submitText = "Simpan", initialFoc
             onChange={num("toko_id")}
             inputMode="numeric"
             placeholder="cth: 10"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
           />
         </Labeled>
 
@@ -563,10 +563,10 @@ function DiskonForm({ form, setForm, onSubmit, submitText = "Simpan", initialFoc
 
       <div className="grid grid-cols-2 gap-3">
         <Labeled label="Created By (ID)">
-          <input value={form.created_by} onChange={num("created_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+          <input value={form.created_by} onChange={num("created_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
         </Labeled>
         <Labeled label="Updated By (ID)">
-          <input value={form.updated_by} onChange={num("updated_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+          <input value={form.updated_by} onChange={num("updated_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
         </Labeled>
       </div>
 
@@ -575,7 +575,7 @@ function DiskonForm({ form, setForm, onSubmit, submitText = "Simpan", initialFoc
           value={form.sync_at}
           onChange={txt("sync_at")}
           placeholder="YYYY-MM-DD"
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
         />
       </Labeled>
 
@@ -583,7 +583,7 @@ function DiskonForm({ form, setForm, onSubmit, submitText = "Simpan", initialFoc
         <button type="button" className="px-4 py-2 rounded-lg border hover:bg-gray-50" onClick={() => history.back()}>
           Batal
         </button>
-        <button type="submit" className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600">
+        <button type="submit" className="px-4 py-2 rounded-lg bg-violet-500 text-white hover:bg-violet-600">
           {submitText}
         </button>
       </div>

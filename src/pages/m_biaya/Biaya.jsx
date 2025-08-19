@@ -202,7 +202,7 @@ export default function BiayaPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari nama atau nominal…"
-              className="w-full h-11 pl-4 pr-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full h-11 pl-4 pr-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
             {search && (
               <button
@@ -232,11 +232,11 @@ export default function BiayaPage() {
                   onClick={() => setSelected(e)}
                   className={cx(
                     "w-full text-left rounded-xl border transition focus:outline-none focus:ring-2",
-                    active ? "border-green-500 ring-1 ring-green-500 bg-green-50" : "border-gray-200 bg-white hover:shadow-sm"
+                    active ? "border-violet-500 ring-1 ring-violet-500 bg-violet-50" : "border-gray-200 bg-white hover:shadow-sm"
                   )}
                 >
                   <div className="flex items-stretch">
-                    <div className={cx("w-1.5 rounded-l-xl", active ? "bg-green-500" : "bg-gradient-to-b from-green-400 to-emerald-500")} />
+                    <div className={cx("w-1.5 rounded-l-xl", active ? "bg-violet-500" : "bg-gradient-to-b from-violet-400 to-blue-500")} />
                     <div className="flex-1 flex items-center justify-between p-3">
                       <div className="min-w-0">
                         <div className="font-semibold text-gray-800 truncate">{e.nama}</div>
@@ -268,7 +268,7 @@ export default function BiayaPage() {
               </div>
               <button
                 onClick={handleOpenEdit}
-                className="inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50"
+                className="inline-flex items-center gap-2 bg-white border border-violet-500 text-violet-700 px-3 py-2 rounded-lg hover:bg-violet-50"
               >
                 <MdEdit size={18} /> Edit
               </button>
@@ -318,7 +318,7 @@ export default function BiayaPage() {
               value={filter.toko_id}
               onChange={(e) => setFilter((f) => ({ ...f, toko_id: e.target.value.replace(/\D/g, "") }))}
               inputMode="numeric"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
               placeholder="cth: 10"
             />
           </Labeled>
@@ -328,7 +328,7 @@ export default function BiayaPage() {
                 value={filter.minNom}
                 onChange={(e) => setFilter((f) => ({ ...f, minNom: e.target.value.replace(/\D/g, "") }))}
                 inputMode="numeric"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
                 placeholder="0"
               />
             </Labeled>
@@ -337,7 +337,7 @@ export default function BiayaPage() {
                 value={filter.maxNom}
                 onChange={(e) => setFilter((f) => ({ ...f, maxNom: e.target.value.replace(/\D/g, "") }))}
                 inputMode="numeric"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
                 placeholder="1000000"
               />
             </Labeled>
@@ -346,7 +346,7 @@ export default function BiayaPage() {
             <select
               value={filter.status}
               onChange={(e) => setFilter((f) => ({ ...f, status: e.target.value }))}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
             >
               <option value="">Semua</option>
               <option value="true">Aktif</option>
@@ -358,7 +358,7 @@ export default function BiayaPage() {
             <button onClick={clearFilters} className="px-4 py-2 rounded-lg border hover:bg-gray-50">Reset</button>
             <div className="flex gap-2">
               <button onClick={() => setOpenFilter(false)} className="px-4 py-2 rounded-lg border hover:bg-gray-50">Batal</button>
-              <button onClick={() => setOpenFilter(false)} className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600">Terapkan</button>
+              <button onClick={() => setOpenFilter(false)} className="px-4 py-2 rounded-lg bg-violet-500 text-white hover:bg-violet-600">Terapkan</button>
             </div>
           </div>
         </div>
@@ -409,7 +409,7 @@ function BiayaForm({ form, setForm, onSubmit, submitText = "Simpan", initialFocu
           value={form.nama}
           onChange={txt("nama")}
           placeholder="cth: Biaya Listrik"
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
           data-autofocus
         />
       </Labeled>
@@ -421,7 +421,7 @@ function BiayaForm({ form, setForm, onSubmit, submitText = "Simpan", initialFocu
             onChange={num("nominal")}
             inputMode="numeric"
             placeholder="50000"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
           />
         </Labeled>
         <Labeled label="Toko ID *">
@@ -430,17 +430,17 @@ function BiayaForm({ form, setForm, onSubmit, submitText = "Simpan", initialFocu
             onChange={num("toko_id")}
             inputMode="numeric"
             placeholder="10"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
           />
         </Labeled>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <Labeled label="Created By (ID)">
-          <input value={form.created_by} onChange={num("created_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+          <input value={form.created_by} onChange={num("created_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
         </Labeled>
         <Labeled label="Updated By (ID)">
-          <input value={form.updated_by} onChange={num("updated_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+          <input value={form.updated_by} onChange={num("updated_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
         </Labeled>
       </div>
 
@@ -455,7 +455,7 @@ function BiayaForm({ form, setForm, onSubmit, submitText = "Simpan", initialFocu
         <button type="button" className="px-4 py-2 rounded-lg border hover:bg-gray-50" onClick={() => history.back()}>
           Batal
         </button>
-        <button type="submit" className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600">
+        <button type="submit" className="px-4 py-2 rounded-lg bg-violet-500 text-white hover:bg-violet-600">
           {submitText}
         </button>
       </div>

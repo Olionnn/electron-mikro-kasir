@@ -1,9 +1,12 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import Modal from "../../component/Modal";
 import { useNavbar } from "../../hooks/useNavbar";
+import { useTheme } from "../../hooks/useTheme";
 import { MdAdd, MdRefresh, MdFilterList, MdSearch, MdArrowForward } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
+
+// Dummy data untuk simulasi
 const dummyData = [
   {
     id: 1,
@@ -53,7 +56,7 @@ const dummyData = [
   {
     id: 4,
     toko_id: 102,
-    barang_id: 4  ,
+    barang_id: 4,
     harga_dasar: 75000,
     tanggal_masuk: "2025-08-05",
     jumlah_stok: 15,
@@ -141,7 +144,7 @@ const dummyData = [
     updated_at: "2025-08-10",
   },
   {
-    id: 10,    
+    id: 10,
     toko_id: 104,
     barang_id: 204,
     harga_dasar: 60000,
@@ -172,9 +175,11 @@ const dummyData = [
   },
 ];
 
+// Helper untuk memformat angka ke Rupiah
 const rupiah = (n) => `Rp ${Number(n || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
 
 export default function BarangStokPage() {
+  // State untuk data tabel dan filter
   const [rows, setRows] = useState(dummyData);
   const [search, setSearch] = useState("");
   const [debounced, setDebounced] = useState("");
@@ -182,6 +187,7 @@ export default function BarangStokPage() {
   const [openFilter, setOpenFilter] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  // State untuk form tambah stok
   const [form, setForm] = useState({
     toko_id: "",
     barang_id: "",
@@ -193,23 +199,31 @@ export default function BarangStokPage() {
     status: true,
   });
 
+  // State untuk form filter
   const [filterForm, setFilterForm] = useState({
     status: "",
     minHarga: "",
     maxHarga: "",
   });
 
-  // Pagination
+  // State untuk pagination
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
   const pageSizeOptions = [10, 25, 50, 100];
 
-  // Debounce search
+  // Debounce input pencarian untuk performa lebih baik
   useEffect(() => {
     const t = setTimeout(() => setDebounced(search), 300);
     return () => clearTimeout(t);
   }, [search]);
 
+  // Hook untuk mengambil token tema (warna)
+  const { token } = useTheme();
+  const primaryColor = token("--primary-700");
+  const primaryLight = token("--primary-200");
+  const primaryDarkColor = token("--primary-800");
+
+  // Memoized filter data berdasarkan pencarian dan filter form
   const filtered = useMemo(() => {
     let data = [...rows];
     const q = debounced.trim().toLowerCase();
@@ -242,21 +256,25 @@ export default function BarangStokPage() {
     return data;
   }, [rows, debounced, filterForm]);
 
-  // Reset ke halaman 1 saat filter/search berubah
+  // Reset halaman ke 1 saat filter/search berubah
   useEffect(() => {
     setPage(1);
   }, [debounced, filterForm, pageSize]);
 
+  // Kalkulasi data untuk pagination
   const total = filtered.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const start = (page - 1) * pageSize;
   const paged = filtered.slice(start, start + pageSize);
 
+  // Callback untuk membuka modal tambah
   const openTambah = useCallback(() => setOpenModal(true), []);
+  // Callback untuk refresh data
   const doRefresh = useCallback(() => setRows((prev) => [...prev]), []);
 
   const navigate = useNavigate();
 
+  // Konfigurasi aksi-aksi di navbar
   const actions = useMemo(
     () => [
       {
@@ -264,7 +282,12 @@ export default function BarangStokPage() {
         title: "Filter",
         onClick: () => setOpenFilter(true),
         className:
-          "inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50",
+          "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-colors duration-300",
+        style: {
+          color: primaryColor,
+          borderColor: primaryColor,
+          backgroundColor: primaryLight,
+        },
         icon: <MdFilterList size={20} />,
       },
       {
@@ -272,7 +295,8 @@ export default function BarangStokPage() {
         title: "Tambah Stok",
         onClick: openTambah,
         className:
-          "inline-flex items-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700",
+          "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-colors duration-300",
+        style: { backgroundColor: primaryColor, borderColor: primaryColor },
         icon: <MdAdd size={20} />,
       },
       {
@@ -280,28 +304,37 @@ export default function BarangStokPage() {
         title: "Refresh",
         onClick: doRefresh,
         className:
-          "inline-flex items-center gap-2 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-100",
+          "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-colors duration-300",
+        style: {
+          color: primaryColor,
+          borderColor: primaryColor,
+          backgroundColor: primaryLight,
+        },
         icon: <MdRefresh size={20} />,
       },
     ],
-    [openTambah, doRefresh]
+    [openTambah, doRefresh, primaryColor, primaryLight]
   );
 
+  // Integrasi navbar dengan halaman
   useNavbar(
     { variant: "page", title: "Barang Stok", backTo: "/management", actions },
     [actions]
   );
 
+  // Handler untuk input form tambah
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
   };
 
+  // Handler untuk input form filter
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilterForm((f) => ({ ...f, [name]: value }));
   };
 
+  // Handler untuk submit form tambah
   const handleAdd = async (e) => {
     e.preventDefault();
     if (!form.barang_id || !form.tanggal_masuk || !form.jumlah_stok) {
@@ -343,57 +376,142 @@ export default function BarangStokPage() {
     }
   };
 
+  // Handler untuk navigasi ke halaman detail barang
   const goDetailBarang = (barangId) => navigate(`/stok/${barangId}`);
 
   return (
-    <div className="w-full h-full flex flex-col bg-white">
-      {/* Toolbar */}
-      <div className="p-4 md:p-6 border-b bg-white sticky top-0 z-10">
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div className="relative w-full md:max-w-xl">
-            <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+    <div className="w-full h-full flex flex-col" style={{ backgroundColor: token("--primary-100") }}>
+      {/* Kontainer utama dengan padding */}
+      <div className="p-4 md:p-8 flex-1 overflow-hidden flex flex-col">
+        {/* Toolbar interaktif */}
+        <div className="bg-violet-800 rounded-2xl shadow-lg p-4 mb-6 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-4 z-10">
+          <div className="relative w-full md:max-w-xs">
+            <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-white" />
             <input
               type="text"
-              placeholder="Cari stok…"
+              placeholder="Cari stok..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-10 border border-gray-300 rounded-xl px-4 py-3"
+              className="w-full pl-12 pr-4 py-3 border border-white rounded-full  "
+              style={{
+                color: token("--primary-200"),
+                borderColor: token("--primary-400"),
+              }}
             />
-            {search && (
-              <button
-                onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800"
-                title="Bersihkan"
-              >
-                ✕
-              </button>
-            )}
           </div>
-
-          {/* Summary kecil */}
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gray-200 bg-gray-50">
-              {total} entri
-            </span>
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <div className="flex items-center gap-2 text-sm text-amber-50">
+              <span className="font-semibold text-amber-50">{total}</span>
+              <span className="text-amber-50">entri</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-amber-50">Tampilkan</span>
+              <select
+                value={pageSize}
+                onChange={(e) => setPageSize(parseInt(e.target.value))}
+                className="border rounded-lg px-2 py-1 text-sm focus:ring-2 transition-all duration-200"
+                style={{
+                  color: token("--primary-200"),
+                  borderColor: token("--primary-400"),
+                  "--tw-ring-color": primaryColor,
+                }}
+              >
+                {pageSizeOptions.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
-        {/* Controls bawah toolbar */}
-        <div className="mt-3 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Tampilkan</span>
-            <select
-              value={pageSize}
-              onChange={(e) => setPageSize(parseInt(e.target.value))}
-              className="border rounded-lg px-2 py-1 text-sm"
-            >
-              {pageSizeOptions.map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
-              ))}
-            </select>
-            <span className="text-sm text-gray-600">per halaman</span>
+        {/* Tabel Data dalam card */}
+        <div className="flex-1 overflow-hidden">
+          <div className="h-full overflow-y-auto pb-4 custom-scrollbar">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="sticky top-0 border-b" style={{ backgroundColor: primaryLight, borderColor: token("--primary-900") }}>
+                    <tr>
+                      <Th w="60">#</Th>
+                      <Th w="100">ID</Th>
+                      <Th w="100">Toko</Th>
+                      <Th w="100">Barang</Th>
+                      <Th w="120" right>
+                        Harga Dasar
+                      </Th>
+                      <Th w="140">Tanggal Masuk</Th>
+                      <Th w="80" right>
+                        Jumlah
+                      </Th>
+                      <Th>Keterangan</Th>
+                      <Th w="100">Status</Th>
+                      <Th w="100">Dibuat Oleh</Th>
+                      <Th w="120">Dibuat Pada</Th>
+                      <Th w="100">Aksi</Th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paged.length === 0 ? (
+                      <tr>
+                        <td colSpan={12} className="p-6 text-center text-gray-500">
+                          Tidak ada data.
+                        </td>
+                      </tr>
+                    ) : (
+                      paged.map((item, idx) => (
+                        <tr
+                          key={item.id}
+                          className="border-t border-gray-100 hover:bg-gray-50 transition-colors"
+                        >
+                          <Td>{start + idx + 1}</Td>
+                          <Td>{item.id}</Td>
+                          <Td>{item.toko_id ?? "-"}</Td>
+                          <Td>{item.barang_id ?? "-"}</Td>
+                          <Td right>{rupiah(item.harga_dasar)}</Td>
+                          <Td>{item.tanggal_masuk}</Td>
+                          <Td right>{item.jumlah_stok}</Td>
+                          <Td className="max-w-[300px]">
+                            <span className="line-clamp-2 text-gray-700">{item.keterangan}</span>
+                          </Td>
+                          <Td>
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                                item.status
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-red-100 text-red-700"
+                              }`}
+                            >
+                              {item.status ? "Aktif" : "Nonaktif"}
+                            </span>
+                          </Td>
+                          <Td>{item.created_by ?? "-"}</Td>
+                          <Td>{item.created_at}</Td>
+                          <Td>
+                            <button
+                              onClick={() => goDetailBarang(item.barang_id)}
+                              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors"
+                              style={{ borderColor: token("--primary-400"), color: primaryDarkColor }}
+                              title="Lihat detail stok barang"
+                            >
+                              <MdArrowForward /> Detail
+                            </button>
+                          </Td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-
+        </div>
+        {/* Footer pagination */}
+        <div className="mt-4 flex flex-col md:flex-row items-center justify-between gap-3 text-sm">
+          <div className="text-gray-600">
+            Menampilkan <strong style={{ color: primaryDarkColor }}>{paged.length}</strong> dari <strong style={{ color: primaryDarkColor }}>{total}</strong> entri
+          </div>
           <Pagination
             page={page}
             totalPages={totalPages}
@@ -404,120 +522,41 @@ export default function BarangStokPage() {
         </div>
       </div>
 
-      {/* Table container (scroll di komponen ini saja) */}
-      <div className="flex-1 overflow-hidden">
-        <div className="h-full overflow-auto p-4 md:p-6">
-          <div className="bg-white border rounded-xl overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-green-50 sticky top-0">
-                  <tr>
-                    <Th w="80">#</Th>
-                    <Th w="120">ID</Th>
-                    <Th w="120">Toko</Th>
-                    <Th w="120">Barang</Th>
-                    <Th w="140" right>Harga Dasar</Th>
-                    <Th w="140">Tanggal Masuk</Th>
-                    <Th w="100" right>Jumlah</Th>
-                    <Th>Keterangan</Th>
-                    <Th w="110">Status</Th>
-                    <Th w="110">Created By</Th>
-                    <Th w="140">Created At</Th>
-                    <Th w="120">Aksi</Th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {paged.length === 0 ? (
-                    <tr>
-                      <td colSpan={12} className="p-6 text-center text-gray-500">
-                        Tidak ada data.
-                      </td>
-                    </tr>
-                  ) : (
-                    paged.map((item, idx) => (
-                      <tr key={item.id} className="border-t">
-                        <Td>{start + idx + 1}</Td>
-                        <Td>{item.id}</Td>
-                        <Td>{item.toko_id ?? "-"}</Td>
-                        <Td>{item.barang_id ?? "-"}</Td>
-                        <Td right>{rupiah(item.harga_dasar)}</Td>
-                        <Td>{item.tanggal_masuk}</Td>
-                        <Td right>{item.jumlah_stok}</Td>
-                        <Td className="max-w-[360px]">
-                          <span className="line-clamp-2">{item.keterangan}</span>
-                        </Td>
-                        <Td>
-                          <span
-                            className={`px-2 py-0.5 rounded-full text-xs ${
-                              item.status ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                            }`}
-                          >
-                            {item.status ? "Aktif" : "Nonaktif"}
-                          </span>
-                        </Td>
-                        <Td>{item.created_by ?? "-"}</Td>
-                        <Td>{item.created_at}</Td>
-                        <Td>
-                          <button
-                            onClick={() => goDetailBarang(item.barang_id)}
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border hover:bg-gray-50"
-                            title="Lihat detail stok barang"
-                          >
-                            <MdArrowForward /> Detail
-                          </button>
-                        </Td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Footer table */}
-            <div className="px-4 py-3 bg-gray-50 text-sm text-gray-600 flex items-center justify-between">
-              <div>
-                Menampilkan <strong>{paged.length}</strong> dari <strong>{total}</strong> entri
-              </div>
-              <Pagination
-                page={page}
-                totalPages={totalPages}
-                onPrev={() => setPage((p) => Math.max(1, p - 1))}
-                onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
-                onGoto={(p) => setPage(p)}
-                compact
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Modal Filter */}
       <Modal
         open={openFilter}
         title="Filter Barang Stok"
         onClose={() => setOpenFilter(false)}
       >
-        <form className="grid gap-3">
+        <form className="grid gap-4">
           <Group label="Status">
             <select
               name="status"
               value={filterForm.status}
               onChange={handleFilterChange}
-              className="border rounded-lg px-3 py-2"
+              className="w-full border rounded-lg px-3 py-2 focus:ring-2 transition-all duration-200"
+              style={{
+                borderColor: token("--primary-400"),
+                "--tw-ring-color": primaryColor,
+              }}
             >
               <option value="">Semua</option>
               <option value="aktif">Aktif</option>
               <option value="nonaktif">Nonaktif</option>
             </select>
           </Group>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Group label="Harga Minimum">
               <input
                 type="number"
                 name="minHarga"
                 value={filterForm.minHarga}
                 onChange={handleFilterChange}
-                className="border rounded-lg px-3 py-2"
+                className="w-full border rounded-lg px-3 py-2 focus:ring-2 transition-all duration-200"
+                style={{
+                  borderColor: token("--primary-400"),
+                  "--tw-ring-color": primaryColor,
+                }}
                 placeholder="0"
               />
             </Group>
@@ -527,15 +566,24 @@ export default function BarangStokPage() {
                 name="maxHarga"
                 value={filterForm.maxHarga}
                 onChange={handleFilterChange}
-                className="border rounded-lg px-3 py-2"
+                className="w-full border rounded-lg px-3 py-2 focus:ring-2 transition-all duration-200"
+                style={{
+                  borderColor: token("--primary-400"),
+                  "--tw-ring-color": primaryColor,
+                }}
                 placeholder="0"
               />
             </Group>
           </div>
-          <div className="flex justify-end gap-2 pt-1">
+          <div className="flex justify-end gap-2 pt-2">
             <button
               type="button"
-              className="px-4 py-2 rounded-lg border"
+              className="px-4 py-2 rounded-lg border font-semibold transition-colors duration-200 hover:opacity-80"
+              style={{
+                borderColor: primaryColor,
+                color: primaryColor,
+                backgroundColor: primaryLight,
+              }}
               onClick={() => {
                 setFilterForm({ status: "", minHarga: "", maxHarga: "" });
                 setOpenFilter(false);
@@ -545,7 +593,8 @@ export default function BarangStokPage() {
             </button>
             <button
               type="button"
-              className="px-4 py-2 rounded-lg bg-green-600 text-white"
+              className="px-4 py-2 rounded-lg text-white font-semibold transition-colors duration-200 hover:opacity-80"
+              style={{ backgroundColor: primaryColor }}
               onClick={() => setOpenFilter(false)}
             >
               Terapkan
@@ -554,19 +603,24 @@ export default function BarangStokPage() {
         </form>
       </Modal>
 
+      {/* Modal Tambah */}
       <Modal
         open={openModal}
         title="Tambah Barang Stok"
         onClose={() => setOpenModal(false)}
       >
-        <form className="grid gap-3" onSubmit={handleAdd}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <form className="grid gap-4" onSubmit={handleAdd}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Group label="Toko ID">
               <input
                 name="toko_id"
                 value={form.toko_id}
                 onChange={handleChange}
-                className="border rounded-lg px-3 py-2"
+                className="border rounded-lg px-3 py-2 focus:ring-2 transition-all duration-200"
+                style={{
+                  borderColor: token("--primary-400"),
+                  "--tw-ring-color": primaryColor,
+                }}
                 placeholder="Contoh: 101"
                 inputMode="numeric"
               />
@@ -576,7 +630,11 @@ export default function BarangStokPage() {
                 name="barang_id"
                 value={form.barang_id}
                 onChange={handleChange}
-                className="border rounded-lg px-3 py-2"
+                className="border rounded-lg px-3 py-2 focus:ring-2 transition-all duration-200"
+                style={{
+                  borderColor: token("--primary-400"),
+                  "--tw-ring-color": primaryColor,
+                }}
                 placeholder="Contoh: 201"
                 inputMode="numeric"
                 required
@@ -584,13 +642,17 @@ export default function BarangStokPage() {
             </Group>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Group label="Harga Dasar">
               <input
                 name="harga_dasar"
                 value={form.harga_dasar}
                 onChange={handleChange}
-                className="border rounded-lg px-3 py-2"
+                className="border rounded-lg px-3 py-2 focus:ring-2 transition-all duration-200"
+                style={{
+                  borderColor: token("--primary-400"),
+                  "--tw-ring-color": primaryColor,
+                }}
                 placeholder="0"
                 inputMode="numeric"
               />
@@ -601,19 +663,27 @@ export default function BarangStokPage() {
                 name="tanggal_masuk"
                 value={form.tanggal_masuk}
                 onChange={handleChange}
-                className="border rounded-lg px-3 py-2"
+                className="border rounded-lg px-3 py-2 focus:ring-2 transition-all duration-200"
+                style={{
+                  borderColor: token("--primary-400"),
+                  "--tw-ring-color": primaryColor,
+                }}
                 required
               />
             </Group>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Group label="Jumlah Stok">
               <input
                 name="jumlah_stok"
                 value={form.jumlah_stok}
                 onChange={handleChange}
-                className="border rounded-lg px-3 py-2"
+                className="border rounded-lg px-3 py-2 focus:ring-2 transition-all duration-200"
+                style={{
+                  borderColor: token("--primary-400"),
+                  "--tw-ring-color": primaryColor,
+                }}
                 placeholder="0"
                 inputMode="numeric"
                 required
@@ -624,7 +694,11 @@ export default function BarangStokPage() {
                 name="created_by"
                 value={form.created_by}
                 onChange={handleChange}
-                className="border rounded-lg px-3 py-2"
+                className="border rounded-lg px-3 py-2 focus:ring-2 transition-all duration-200"
+                style={{
+                  borderColor: token("--primary-400"),
+                  "--tw-ring-color": primaryColor,
+                }}
                 placeholder="1"
                 inputMode="numeric"
               />
@@ -636,30 +710,51 @@ export default function BarangStokPage() {
               name="keterangan"
               value={form.keterangan}
               onChange={handleChange}
-              className="border rounded-lg px-3 py-2"
+              className="border rounded-lg px-3 py-2 focus:ring-2 transition-all duration-200"
+              style={{
+                borderColor: token("--primary-400"),
+                "--tw-ring-color": primaryColor,
+              }}
               placeholder="Catatan (opsional)"
             />
           </Group>
 
           <Group label="Status Aktif">
-            <div className="h-10 flex items-center px-3 border rounded-lg">
+            <div className="h-10 flex items-center px-3 border rounded-lg"
+              style={{
+                borderColor: token("--primary-400"),
+              }}>
               <input
                 type="checkbox"
                 name="status"
                 checked={!!form.status}
                 onChange={handleChange}
+                className="h-4 w-4 rounded text-indigo-600 focus:ring-indigo-500"
+                style={{
+                  "--tw-ring-color": primaryColor,
+                }}
               />
-              <span className="ml-2">Aktif</span>
+              <span className="ml-2 text-sm text-gray-700">Aktif</span>
             </div>
           </Group>
 
           <div className="flex justify-end gap-2 pt-2">
-            <button type="button" className="px-4 py-2 rounded-lg border" onClick={() => setOpenModal(false)}>
+            <button
+              type="button"
+              className="px-4 py-2 rounded-lg border font-semibold transition-colors duration-200 hover:opacity-80"
+              style={{
+                borderColor: primaryColor,
+                color: primaryColor,
+                backgroundColor: primaryLight,
+              }}
+              onClick={() => setOpenModal(false)}
+            >
               Batal
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-lg bg-green-600 text-white disabled:opacity-60"
+              className="px-4 py-2 rounded-lg text-white font-semibold transition-colors disabled:opacity-60"
+              style={{ backgroundColor: primaryColor }}
               disabled={saving}
             >
               {saving ? "Menyimpan…" : "Simpan"}
@@ -671,57 +766,99 @@ export default function BarangStokPage() {
   );
 }
 
+// Komponen helper untuk header tabel
 function Th({ children, w, right }) {
+  const { token } = useTheme();
   return (
     <th
-      className={`px-3 py-2 text-left font-semibold text-gray-700 ${right ? "text-right" : ""}`}
-      style={w ? { width: w } : undefined}
+      className={`px-4 py-3 text-left text-xs font-bold uppercase tracking-wider ${
+        right ? "text-right" : ""
+      }`}
+      style={{
+        width: w,
+        color: token("--primary-800")
+      }}
     >
       {children}
     </th>
   );
 }
+
+// Komponen helper untuk sel data tabel
 function Td({ children, right }) {
-  return <td className={`px-3 py-2 ${right ? "text-right" : ""}`}>{children}</td>;
-}
-function Group({ label, children }) {
+  const { token } = useTheme();
   return (
-    <label className="flex flex-col gap-1">
-      <span className="text-sm text-gray-600">{label}</span>
+    <td className={`px-4 py-3 ${right ? "text-right" : ""}`}
+      style={{
+        color: token("--primary-800")
+      }}
+    >
+      {children}
+    </td>
+  );
+}
+
+// Komponen helper untuk form group
+function Group({ label, children }) {
+  const { token } = useTheme();
+  return (
+    <label className="flex flex-col gap-2 text-sm font-medium"
+      style={{
+        color: token("--primary-800")
+      }}>
+      {label}
       {children}
     </label>
   );
 }
 
-function Pagination({ page, totalPages, onPrev, onNext, onGoto, compact = false }) {
+// Komponen Pagination yang dioptimalkan
+function Pagination({ page, totalPages, onPrev, onNext, onGoto }) {
+  const { token } = useTheme();
+  const primaryColor = token("--primary-700");
+  const primaryDarkColor = token("--primary-800");
+
   const pages = useMemo(() => {
     const window = 2;
     const start = Math.max(1, page - window);
     const end = Math.min(totalPages, page + window);
     const arr = [];
     for (let i = start; i <= end; i++) arr.push(i);
-    if (!arr.includes(1)) arr.unshift(1);
-    if (!arr.includes(totalPages)) arr.push(totalPages);
-    return Array.from(new Set(arr)).sort((a, b) => a - b);
+    if (!arr.includes(1) && totalPages > 1) {
+      arr.unshift(1);
+    }
+    if (!arr.includes(totalPages) && totalPages > 1) {
+      arr.push(totalPages);
+    }
+    const uniquePages = Array.from(new Set(arr)).sort((a, b) => a - b);
+    return uniquePages;
   }, [page, totalPages]);
 
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center justify-center gap-2">
       <button
         onClick={onPrev}
         disabled={page === 1}
-        className="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-50"
+        className="px-4 py-2 rounded-lg border text-sm disabled:opacity-50 transition-colors hover:bg-gray-100"
+        style={{ borderColor: token("--primary-400"), color: primaryDarkColor }}
       >
-        Prev
+        &larr; Sebelumnya
       </button>
-      {!compact && pages.map((p, idx) => (
+      {pages.map((p, idx) => (
         <React.Fragment key={`${p}-${idx}`}>
-          {idx > 0 && pages[idx - 1] + 1 !== p && <span className="px-1">…</span>}
+          {idx > 0 && pages[idx - 1] + 1 !== p && (
+            <span className="px-1 text-gray-500">...</span>
+          )}
           <button
             onClick={() => onGoto(p)}
-            className={`px-3 py-1.5 rounded-lg border text-sm ${p === page ? "bg-green-600 text-white border-green-600" : "hover:bg-gray-50"}`}
+            className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-medium transition-colors ${
+              p === page
+                ? "text-white shadow-lg"
+                : "text-gray-700 hover:bg-gray-100"
+            }`}
+            style={{ backgroundColor: p === page ? primaryColor : "transparent" }}
           >
             {p}
           </button>
@@ -730,9 +867,10 @@ function Pagination({ page, totalPages, onPrev, onNext, onGoto, compact = false 
       <button
         onClick={onNext}
         disabled={page === totalPages}
-        className="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-50"
+        className="px-4 py-2 rounded-lg border text-sm disabled:opacity-50 transition-colors hover:bg-gray-100"
+        style={{ borderColor: token("--primary-400"), color: primaryDarkColor }}
       >
-        Next
+        Selanjutnya &rarr;
       </button>
     </div>
   );

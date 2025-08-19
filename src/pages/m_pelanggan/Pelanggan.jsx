@@ -101,7 +101,7 @@ export default function PelangganPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari nama / email / telp / kode…"
-              className="w-full h-11 pl-4 pr-24 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full h-11 pl-4 pr-24 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
             {/* {search && (
                 // <button
@@ -140,15 +140,15 @@ export default function PelangganPage() {
                   className={cx(
                     "w-full text-left rounded-xl border transition focus:outline-none focus:ring-2",
                     active
-                      ? "border-green-500 ring-1 ring-green-500 bg-green-50"
-                      : "border-gray-200 bg-white hover:shadow-sm"
+                      ? "border-violet-500 ring-1 ring-violet-500 bg-violet-100"
+                      : "border-violet-400 bg-white hover:shadow-sm"
                   )}
                 >
                   <div className="flex items-stretch">
-                    <div className={cx("w-1.5 rounded-l-xl", active ? "bg-green-500" : "bg-gradient-to-b from-green-400 to-emerald-500")} />
+                    <div className={cx("w-1.5 rounded-l-xl", active ? "bg-violet-500" : "bg-gradient-to-b from-violet-400 to-violet-500")} />
                     <div className="flex-1 flex items-center gap-3 p-3">
-                      <div className="w-10 h-10 bg-green-100 rounded-md flex items-center justify-center">
-                        <span className="text-green-600 font-bold">{(cust.nama || "P").charAt(0).toUpperCase()}</span>
+                      <div className="w-10 h-10 bg-violet-300 rounded-md flex items-center justify-center">
+                        <span className="text-violet-600 font-bold">{(cust.nama || "P").charAt(0).toUpperCase()}</span>
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="font-semibold text-gray-800 truncate">{cust.nama}</div>
@@ -156,7 +156,7 @@ export default function PelangganPage() {
                       </div>
                       <span className={cx(
                         "text-xs px-2 py-1 rounded-full",
-                        cust.status ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"
+                        cust.status ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"
                       )}>
                         {cust.status ? "Aktif" : "Nonaktif"}
                       </span>
@@ -192,7 +192,7 @@ export default function PelangganPage() {
               </div>
               <button
                 onClick={handleOpenEdit}
-                className="inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50"
+                className="inline-flex items-center gap-2 bg-white border border-violet-500 text-violet-700 px-3 py-2 rounded-lg hover:bg-violet-200"
               >
                 <MdEdit size={18} /> Edit
               </button>
@@ -212,11 +212,11 @@ export default function PelangganPage() {
             <section>
               <h3 className="text-sm font-semibold text-gray-700 mb-2">Informasi Utama</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <InfoPlain icon={<FiAward className="text-green-600" />} label="Poin" value={selectedCustomer.poin} />
-                <InfoPlain icon={<FiHash  className="text-green-600" />} label="Toko ID" value={selectedCustomer.toko_id} />
-                <InfoPlain icon={<FiMail  className="text-green-600" />} label="Email" value={selectedCustomer.email || "-"} />
-                <InfoPlain icon={<FiPhone className="text-green-600" />} label="No. Telp" value={selectedCustomer.no_telp || "-"} />
-                <InfoPlain icon={<FiMapPin className="text-green-600" />} label="Alamat" value={selectedCustomer.alamat || "-"} wide />
+                <InfoPlain icon={<FiAward className="text-violet-600" />} label="Poin" value={selectedCustomer.poin} />
+                <InfoPlain icon={<FiHash  className="text-violet-600" />} label="Toko ID" value={selectedCustomer.toko_id} />
+                <InfoPlain icon={<FiMail  className="text-violet-600" />} label="Email" value={selectedCustomer.email || "-"} />
+                <InfoPlain icon={<FiPhone className="text-violet-600" />} label="No. Telp" value={selectedCustomer.no_telp || "-"} />
+                <InfoPlain icon={<FiMapPin className="text-violet-600" />} label="Alamat" value={selectedCustomer.alamat || "-"} wide />
               </div>
             </section>
 
@@ -256,7 +256,7 @@ export default function PelangganPage() {
             <select
               value={filter.status}
               onChange={(e) => setFilter((f) => ({ ...f, status: e.target.value }))}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
             >
               <option value="">Semua</option>
               <option value="true">Aktif</option>
@@ -268,7 +268,7 @@ export default function PelangganPage() {
             <select
               value={filter.hasEmail}
               onChange={(e) => setFilter((f) => ({ ...f, hasEmail: e.target.value }))}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
             >
               <option value="">Semua</option>
               <option value="true">Ya</option>
@@ -282,7 +282,7 @@ export default function PelangganPage() {
                 value={filter.poinMin}
                 onChange={(e) => setFilter((f) => ({ ...f, poinMin: e.target.value.replace(/\D/g, "") }))}
                 inputMode="numeric"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
               />
             </Labeled>
             <Labeled label="Poin Max">
@@ -290,7 +290,7 @@ export default function PelangganPage() {
                 value={filter.poinMax}
                 onChange={(e) => setFilter((f) => ({ ...f, poinMax: e.target.value.replace(/\D/g, "") }))}
                 inputMode="numeric"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
               />
             </Labeled>
           </div>
@@ -300,7 +300,7 @@ export default function PelangganPage() {
               value={filter.toko_id}
               onChange={(e) => setFilter((f) => ({ ...f, toko_id: e.target.value.replace(/\D/g, "") }))}
               inputMode="numeric"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
               placeholder="cth: 101"
             />
           </Labeled>
@@ -309,7 +309,7 @@ export default function PelangganPage() {
             <button onClick={clearFilters} className="px-4 py-2 rounded-lg border hover:bg-gray-50">Reset</button>
             <div className="flex gap-2">
               <button onClick={() => setOpenFilter(false)} className="px-4 py-2 rounded-lg border hover:bg-gray-50">Batal</button>
-              <button onClick={() => setOpenFilter(false)} className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600">Terapkan</button>
+              <button onClick={() => setOpenFilter(false)} className="px-4 py-2 rounded-lg bg-violet-500 text-white hover:bg-violet-600">Terapkan</button>
             </div>
           </div>
         </div>
@@ -355,21 +355,21 @@ function PelangganForm({ form, setForm, onSubmit, submitText = "Simpan" }) {
       className="grid grid-cols-1 gap-3"
     >
       <Labeled label="Nama *">
-        <input value={toStr(form.nama)} onChange={handleTxt("nama")} placeholder="Nama pelanggan" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" data-autofocus />
+        <input value={toStr(form.nama)} onChange={handleTxt("nama")} placeholder="Nama pelanggan" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" data-autofocus />
       </Labeled>
 
       <div className="grid grid-cols-2 gap-3">
         <Labeled label="Toko ID *">
-          <input value={toInt(form.toko_id)} onChange={handleNum("toko_id")} inputMode="numeric" placeholder="cth: 101" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+          <input value={toInt(form.toko_id)} onChange={handleNum("toko_id")} inputMode="numeric" placeholder="cth: 101" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
         </Labeled>
         <Labeled label="Kode">
-          <input value={toStr(form.kode)} onChange={handleTxt("kode")} placeholder="Kode unik (opsional)" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+          <input value={toStr(form.kode)} onChange={handleTxt("kode")} placeholder="Kode unik (opsional)" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
         </Labeled>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <Labeled label="Poin">
-          <input value={toInt(form.poin)} onChange={handleNum("poin")} inputMode="numeric" placeholder="0" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+          <input value={toInt(form.poin)} onChange={handleNum("poin")} inputMode="numeric" placeholder="0" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
         </Labeled>
         <Labeled label="Status Aktif">
           <div className="h-10 flex items-center px-3 border rounded-lg">
@@ -381,37 +381,37 @@ function PelangganForm({ form, setForm, onSubmit, submitText = "Simpan" }) {
 
       <div className="grid grid-cols-2 gap-3">
         <Labeled label="Email">
-          <input value={toStr(form.email)} onChange={handleTxt("email")} type="email" placeholder="email@contoh.com" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+          <input value={toStr(form.email)} onChange={handleTxt("email")} type="email" placeholder="email@contoh.com" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
         </Labeled>
         <Labeled label="No. Telp">
-          <input value={toStr(form.no_telp)} onChange={handleTxt("no_telp")} placeholder="08xxxxxxxxxx" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+          <input value={toStr(form.no_telp)} onChange={handleTxt("no_telp")} placeholder="08xxxxxxxxxx" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
         </Labeled>
       </div>
 
       <Labeled label="Alamat">
-        <input value={toStr(form.alamat)} onChange={handleTxt("alamat")} placeholder="Alamat pelanggan" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+        <input value={toStr(form.alamat)} onChange={handleTxt("alamat")} placeholder="Alamat pelanggan" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
       </Labeled>
 
       <Labeled label="URL Foto (opsional)">
-        <input value={toStr(form.image)} onChange={handleTxt("image")} placeholder="https://…" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+        <input value={toStr(form.image)} onChange={handleTxt("image")} placeholder="https://…" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
       </Labeled>
 
       <div className="grid grid-cols-2 gap-3">
         <Labeled label="Created By (ID)">
-          <input value={toInt(form.created_by)} onChange={handleNum("created_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+          <input value={toInt(form.created_by)} onChange={handleNum("created_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
         </Labeled>
         <Labeled label="Updated By (ID)">
-          <input value={toInt(form.updated_by)} onChange={handleNum("updated_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+          <input value={toInt(form.updated_by)} onChange={handleNum("updated_by")} inputMode="numeric" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
         </Labeled>
       </div>
 
       <Labeled label="Sync At (ISO Date)">
-        <input value={toStr(form.sync_at || "")} onChange={handleTxt("sync_at")} placeholder="2025-08-01" className="w-full px-3 py-2 border rounded-lg focus:outline-green-500" />
+        <input value={toStr(form.sync_at || "")} onChange={handleTxt("sync_at")} placeholder="2025-08-01" className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500" />
       </Labeled>
 
       <div className="flex items-center justify-end gap-2 pt-2">
         <button type="button" className="px-4 py-2 rounded-lg border hover:bg-gray-50" onClick={() => history.back()}>Batal</button>
-        <button type="submit" className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600">{submitText}</button>
+        <button type="submit" className="px-4 py-2 rounded-lg bg-violet-500 text-white hover:bg-violet-600">{submitText}</button>
       </div>
     </form>
   );

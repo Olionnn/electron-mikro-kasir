@@ -126,7 +126,7 @@ export default function PromosiPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari promosi…"
-            className="w-full h-11 pl-4 pr-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full h-11 pl-4 pr-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
           <div className="mt-2 text-xs text-gray-500">
             Menampilkan <b>{filtered.length}</b> dari {promotions.length} promosi
@@ -149,7 +149,7 @@ export default function PromosiPage() {
                   className={cx(
                     "w-full text-left rounded-xl border transition",
                     active
-                      ? "border-green-500 ring-1 ring-green-500 bg-green-50"
+                      ? "border-violet-500 ring-1 ring-violet-500 bg-violet-50"
                       : "border-gray-200 bg-white hover:shadow-sm"
                   )}
                 >
@@ -180,7 +180,7 @@ export default function PromosiPage() {
               </div>
               <button
                 onClick={handleOpenEdit}
-                className="inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50"
+                className="inline-flex items-center gap-2 bg-white border border-violet-500 text-violet-700 px-3 py-2 rounded-lg hover:bg-violet-50"
               >
                 <MdEdit size={18} /> Edit
               </button>
@@ -239,7 +239,7 @@ function PromotionForm({ form, setForm, onSubmit, submitText, initialFocusRef })
           value={form.id}
           onChange={txt("id")}
           placeholder="cth: PROMO4"
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
         />
       </Labeled>
       <Labeled label="Nama *">
@@ -247,14 +247,14 @@ function PromotionForm({ form, setForm, onSubmit, submitText, initialFocusRef })
           value={form.name}
           onChange={txt("name")}
           placeholder="cth: Promo Spesial"
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
         />
       </Labeled>
       <Labeled label="Jenis">
         <select
           value={form.type}
           onChange={txt("type")}
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
         >
           <option value="pct">Persentase (%)</option>
           <option value="rp">Nominal (Rp)</option>
@@ -265,7 +265,7 @@ function PromotionForm({ form, setForm, onSubmit, submitText, initialFocusRef })
           value={form.value}
           onChange={txt("value")}
           type="number"
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
         />
       </Labeled>
       <Labeled label="Gambar URL">
@@ -273,21 +273,21 @@ function PromotionForm({ form, setForm, onSubmit, submitText, initialFocusRef })
           value={form.img}
           onChange={txt("img")}
           placeholder="https://..."
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
         />
       </Labeled>
       <Labeled label="Deskripsi">
         <textarea
           value={form.description}
           onChange={txt("description")}
-          className="w-full px-3 py-2 border rounded-lg focus:outline-green-500"
+          className="w-full px-3 py-2 border rounded-lg focus:outline-violet-500"
         />
       </Labeled>
       <div className="flex justify-end gap-2 pt-2">
         <button type="button" className="px-4 py-2 rounded-lg border hover:bg-gray-50" onClick={() => history.back()}>
           Batal
         </button>
-        <button type="submit" className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600">
+        <button type="submit" className="px-4 py-2 rounded-lg bg-violet-500 text-white hover:bg-violet-600">
           {submitText}
         </button>
       </div>

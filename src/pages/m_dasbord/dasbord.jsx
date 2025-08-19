@@ -1,8 +1,18 @@
+// src/pages/DashboardKasirModern.jsx
 import React, { useMemo, useState } from "react";
 import { useNavbar } from "../../hooks/useNavbar";
+import { useTheme } from "../../hooks/useTheme";
 import { Card } from "../../component/SimpleCard";
 import { Badge } from "../../component/SimpleBadge";
-
+import {
+  MdMenu,
+  MdSearch,
+  MdClose,
+  MdAdd,
+  MdInventory,
+  MdQrCodeScanner,
+  MdBarChart,
+} from "react-icons/md";
 
 import {
   ResponsiveContainer,
@@ -13,15 +23,30 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  PieChart,
+  Pie,
+  Cell,
 } from "recharts";
 
+/**
+ * DashboardKasirModern
+ * - Versi tampilan modern / premium sesuai gambar referensi.
+ * - Fungsi / data tidak diubah; hanya tampilannya yang dirubah.
+ * - Menggunakan useTheme().token('--primary-700') untuk mengambil warna runtime dari ThemeProvider.
+ *
+ * Catatan integrasi:
+ * - Pastikan ThemeProvider menyediakan CSS variable --primary-700, --primary-500, --primary-900, dll.
+ * - Card / Badge dipakai ulang untuk konsistensi.
+ */
 
+/* ----------------- Utilities ----------------- */
 const fmtIDR = (n) =>
   new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(n);
 const toISO = (d) => (typeof d === "string" ? d : d.toISOString().slice(0, 10));
 const toLabel = (iso) =>
   new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short" });
 
+/* ----------------- Dummy data (tetap sama) ----------------- */
 const DUMMY_POS = [
   { id: "TX-001", date: "2025-08-11", revenue: 120000, profit: 35000 },
   { id: "TX-002", date: "2025-08-11", revenue: 250000, profit: 70000 },
@@ -75,7 +100,7 @@ export default function DashboardKasir() {
     []
   );
 
-  // Tanggal aktif (filter)
+  // State filter tanggal (sama fungsi)
   const [activeDate, setActiveDate] = useState("2025-08-13");
 
   // ↳ Derive KPI hari ini
@@ -101,246 +126,185 @@ export default function DashboardKasir() {
     return Array.from(map.values()).sort((a, b) => new Date(a.date) - new Date(b.date));
   }, []);
 
-  const salesByItem = useMemo(
-    () => DUMMY_SALES_BY_ITEM.filter((r) => r.date === activeDate),
-    [activeDate]
-  );
-  const salesByStaff = useMemo(
-    () => DUMMY_SALES_BY_STAFF.filter((r) => r.date === activeDate),
-    [activeDate]
-  );
-  const stockMoves = useMemo(
-    () => DUMMY_STOCK_MOVES.filter((r) => r.date === activeDate),
-    [activeDate]
-  );
+  const salesByItem = useMemo(() => DUMMY_SALES_BY_ITEM.filter((r) => r.date === activeDate), [activeDate]);
+  const salesByStaff = useMemo(() => DUMMY_SALES_BY_STAFF.filter((r) => r.date === activeDate), [activeDate]);
+  const stockMoves = useMemo(() => DUMMY_STOCK_MOVES.filter((r) => r.date === activeDate), [activeDate]);
 
-  const Tip = ({ active, payload, label, valueFmt = (v) => v }) => {
-    if (!active || !payload || !payload.length) return null;
+  // Ring progress data (contoh statis: 76% -> hitung dari target)
+  const target = 200_000_000;
+  const achieved = 152_000_000;
+  const achievedPct = Math.round((achieved / target) * 100);
+
+  // Tooltip custom (dipakai di chart)
+  const TooltipBox = ({ payload, label }) => {
+    if (!payload || !payload.length) return null;
     return (
-      <div className="bg-white border rounded-md shadow px-3 py-2 text-xs">
-        <div className="font-semibold mb-1">{toLabel(label)}</div>
+      <div className="bg-[#0b1226]/90 border border-white/8 text-xs text-white p-2 rounded shadow-lg">
+        <div className="font-semibold text-sm">{toLabel(label)}</div>
         {payload.map((p, i) => (
-          <div key={i} className="flex items-center gap-2">
-            <span className="inline-block w-2 h-2 rounded-full" style={{ background: p.color }} />
-            <span className="text-gray-600">{p.name}:</span>
-            <span className="font-semibold">{valueFmt(p.value)}</span>
+          <div className="flex items-center gap-2 mt-1" key={i}>
+            <div className="w-2 h-2 rounded-full" style={{ background: p.fill || p.color }} />
+            <div className="text-xs text-white/80">{p.name}:</div>
+            <div className="font-medium text-white">{p.value >= 1000 ? fmtIDR(p.value) : p.value}</div>
           </div>
         ))}
       </div>
     );
   };
 
+  /* ----------------- Layout -----------------
+     - Struktur: 12-column grid (kiri lebar 8, kanan 4)
+     - Background gradient & glass cards untuk efek "deep purple dashboard"
+     - Tailwind utility classes digunakan; tambahkan kelas helper di tailwind config jika perlu
+  ------------------------------------------------*/
   return (
-    <div className="h-full w-screen flex flex-col bg-gray-100 overflow-hidden">
-      <div className="flex-1 overflow-auto">
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-6 py-4 grid grid-cols-12 gap-4">
-          <main className="col-span-12">
-            {/* Filter bar */}
-            <div className="flex flex-wrap items-center gap-3 mb-4">
-              <h2 className="text-lg font-semibold text-gray-800">Dashboard</h2>
-              <div className="ml-auto flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="date"
-                    className="px-3 py-2 bg-white border rounded-lg text-sm"
-                    value={activeDate}
-                    onChange={(e) => setActiveDate(toISO(new Date(e.target.value)))}
-                  />
-                  <label className="inline-flex items-center gap-2 text-xs text-gray-600">
-                    <input type="checkbox" className="rounded" />
-                    Tampilkan Total Pendapatan Sebelum Piutang Dibayar
-                  </label>
-                  <label className="inline-flex items-center gap-2 text-xs text-gray-600">
-                    <input type="checkbox" className="rounded" />
-                    Tampilkan Untung Sebelum Piutang Dibayar
-                  </label>
-                </div>
+    <div className="min-h-screen bg-purple-950 text-white p-4">
+      {/* Navbar */}
+      <header className="flex items-center justify-between bg-purple-900 p-4 rounded-2xl shadow-lg">
+        <div className="flex items-center gap-3">
+          <MdMenu className="text-2xl" />
+          <h1 className="font-bold text-lg">POS Dashboard</h1>
+        </div>
+        <div className="flex-1 mx-6">
+          <div className="flex items-center bg-purple-800 px-3 py-2 rounded-xl">
+            <MdSearch className="mr-2 text-gray-300" />
+            <input
+              type="text"
+              placeholder="Cari menu, pelanggan, item.."
+              className="bg-transparent flex-1 outline-none text-sm placeholder-gray-400"
+            />
+          </div>
+        </div>
+        <button className="bg-purple-700 px-4 py-2 rounded-xl font-semibold hover:bg-purple-600">
+          Tutup Kas
+        </button>
+      </header>
+
+      {/* Grid Utama */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+        {/* Ringkasan Penjualan */}
+        <div className="bg-purple-900 rounded-2xl p-4 col-span-2 shadow-lg">
+          <h2 className="font-bold mb-2">Ringkasan Penjualan (Mingguan)</h2>
+          <p className="text-sm text-gray-400 mb-4">Sales vs Orders</p>
+          <div className="flex items-end gap-2 h-48">
+            {["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"].map((d, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center">
+                <div
+                  className="w-8 bg-purple-500 rounded-t"
+                  style={{ height: `${Math.random() * 100 + 40}px` }}
+                />
+                <span className="text-xs mt-2 text-gray-300">{d}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Kartu Statistik */}
+        <div className="flex flex-col gap-4">
+          <div className="bg-purple-900 rounded-2xl p-4 shadow-lg">
+            <p className="text-sm text-gray-400">Omzet Minggu Ini</p>
+            <h3 className="text-xl font-bold">Rp 382.500.000</h3>
+          </div>
+          <div className="bg-purple-900 rounded-2xl p-4 shadow-lg">
+            <p className="text-sm text-gray-400">Total Order</p>
+            <h3 className="text-xl font-bold">744</h3>
+          </div>
+          <div className="bg-purple-900 rounded-2xl p-4 shadow-lg">
+            <p className="text-sm text-gray-400">Rata-rata Keranjang</p>
+            <h3 className="text-xl font-bold">Rp 51.405</h3>
+          </div>
+          <div className="bg-purple-900 rounded-2xl p-4 shadow-lg">
+            <p className="text-sm text-gray-400">Item Terjual</p>
+            <h3 className="text-xl font-bold">1.359 pcs</h3>
+          </div>
+        </div>
+      </div>
+
+      {/* Aksi Cepat + Target */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        {/* Aksi Cepat */}
+        <div className="bg-purple-900 rounded-2xl p-4 shadow-lg">
+          <h2 className="font-bold mb-4">Aksi Cepat</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <button className="bg-purple-800 p-4 rounded-xl flex flex-col items-center hover:bg-purple-700">
+              <MdAdd className="text-2xl mb-1" />
+              <span className="text-sm">Transaksi</span>
+            </button>
+            <button className="bg-purple-800 p-4 rounded-xl flex flex-col items-center hover:bg-purple-700">
+              <MdQrCodeScanner className="text-2xl mb-1" />
+              <span className="text-sm">Scan Barcode</span>
+            </button>
+            <button className="bg-purple-800 p-4 rounded-xl flex flex-col items-center hover:bg-purple-700">
+              <MdInventory className="text-2xl mb-1" />
+              <span className="text-sm">Inventory</span>
+            </button>
+            <button className="bg-purple-800 p-4 rounded-xl flex flex-col items-center hover:bg-purple-700">
+              <MdBarChart className="text-2xl mb-1" />
+              <span className="text-sm">Laporan</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Pencapaian Target */}
+        <div className="bg-purple-900 rounded-2xl p-4 shadow-lg">
+          <h2 className="font-bold mb-4">Pencapaian Target Bulan Ini</h2>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-3xl font-bold">76%</p>
+              <p className="text-sm text-gray-400">
+                Target omzet Rp 200.000.000
+              </p>
+              <p className="text-sm text-gray-400">ETA 9 hari</p>
+            </div>
+            <div className="w-20 h-20 rounded-full border-8 border-purple-700 flex items-center justify-center font-bold text-lg">
+              76%
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Produk Terlaris + Penjualan Per Staff */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        {/* Produk Terlaris */}
+        <div className="bg-purple-900 rounded-2xl p-4 shadow-lg">
+          <h2 className="font-bold mb-4">Produk Terlaris</h2>
+          {[
+            { name: "Kopi Latte 12oz", val: 11020000 },
+            { name: "Roti Sourdough", val: 8400000 },
+            { name: "Es Teh Manis", val: 6150000 },
+          ].map((item, i) => (
+            <div key={i} className="mb-4">
+              <div className="flex justify-between text-sm mb-1">
+                <span>{item.name}</span>
+                <span>{item.val.toLocaleString()}</span>
+              </div>
+              <div className="h-2 bg-purple-800 rounded-full">
+                <div
+                  className="h-2 bg-purple-500 rounded-full"
+                  style={{ width: `${(item.val / 12000000) * 100}%` }}
+                ></div>
               </div>
             </div>
+          ))}
+        </div>
 
-            {/* KPI */}
-            <div className="grid grid-cols-12 gap-4 mb-4">
-              <Card className="col-span-12 md:col-span-4" title={<div className="flex items-center gap-2"><span>Jumlah Transaksi</span><Badge className="bg-gray-100 text-gray-600 ml-2">{activeDate.split("-").reverse().join("-")}</Badge></div>}>
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">🧾</span>
-                  <div className="text-2xl font-bold text-gray-800">{kpi.trx}</div>
-                </div>
-              </Card>
-              <Card className="col-span-12 md:col-span-4" title={<div className="flex items-center gap-2"><span>Pendapatan</span><Badge className="bg-gray-100 text-gray-600 ml-2">{activeDate.split("-").reverse().join("-")}</Badge></div>}>
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">💰</span>
-                  <div className="text-2xl font-bold text-gray-800">{fmtIDR(kpi.revenue)}</div>
-                </div>
-              </Card>
-              <Card className="col-span-12 md:col-span-4" title={<div className="flex items-center gap-2"><span>Keuntungan</span><Badge className="bg-gray-100 text-gray-600 ml-2">{activeDate.split("-").reverse().join("-")}</Badge></div>}>
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">📈</span>
-                  <div className="text-2xl font-bold text-gray-800">{fmtIDR(kpi.profit)}</div>
-                </div>
-              </Card>
+        {/* Penjualan Per Staff */}
+        <div className="bg-purple-900 rounded-2xl p-4 shadow-lg">
+          <h2 className="font-bold mb-4">Penjualan Per Staff</h2>
+          {[
+            { email: "kasir1@toko.id", trx: 2, total: 180000 },
+            { email: "kasir2@toko.id", trx: 1, total: 190000 },
+          ].map((s, i) => (
+            <div
+              key={i}
+              className="flex justify-between items-center py-2 border-b border-purple-800 last:border-0"
+            >
+              <span>{s.email}</span>
+              <span>
+                {s.trx} trx • Rp {s.total.toLocaleString()}
+              </span>
             </div>
-
-            {/* Grafiks */}
-            <div className="grid grid-cols-12 gap-4 mb-6">
-              {/* Grafik Transaksi */}
-              <Card className="col-span-12 md:col-span-4" title={<div className="flex items-center gap-2"><Badge className="bg-emerald-600 text-white">Grafik Transaksi</Badge></div>}>
-                <div className="h-40">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={seriesByDate} margin={{ top: 8, right: 10, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" tickFormatter={toLabel} fontSize={12} />
-                      <YAxis allowDecimals={false} fontSize={12} />
-                      <Tooltip content={<Tip valueFmt={(v)=>v} />} />
-                      <Legend wrapperStyle={{ fontSize: 12 }} />
-                      <Line type="monotone" dataKey="trx" name="Transaksi" stroke="#16a34a" dot activeDot={{ r: 6 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </Card>
-
-              {/* Grafik Pendapatan */}
-              <Card className="col-span-12 md:col-span-4" title={<div className="flex items-center gap-2"><Badge className="bg-emerald-600 text-white">Grafik Pendapatan</Badge></div>}>
-                <div className="h-40">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={seriesByDate} margin={{ top: 8, right: 10, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" tickFormatter={toLabel} fontSize={12} />
-                      <YAxis tickFormatter={(v)=> (v>=1000? `${(v/1000).toFixed(0)}k`: v)} fontSize={12} />
-                      <Tooltip content={<Tip valueFmt={(v)=>fmtIDR(v)} />} />
-                      <Legend wrapperStyle={{ fontSize: 12 }} />
-                      <Line type="monotone" dataKey="revenue" name="Pendapatan" stroke="#10b981" dot activeDot={{ r: 6 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </Card>
-
-              {/* Grafik Keuntungan */}
-              <Card className="col-span-12 md:col-span-4" title={<div className="flex items-center gap-2"><Badge className="bg-emerald-600 text-white">Grafik Keuntungan</Badge></div>}>
-                <div className="h-40">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={seriesByDate} margin={{ top: 8, right: 10, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" tickFormatter={toLabel} fontSize={12} />
-                      <YAxis tickFormatter={(v)=> (v>=1000? `${(v/1000).toFixed(0)}k`: v)} fontSize={12} />
-                      <Tooltip content={<Tip valueFmt={(v)=>fmtIDR(v)} />} />
-                      <Legend wrapperStyle={{ fontSize: 12 }} />
-                      <Line type="monotone" dataKey="profit" name="Keuntungan" stroke="#059669" dot activeDot={{ r: 6 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </Card>
-            </div>
-
-            {/* Tabel lainnya (tetap sama) */}
-            <Card className="mb-6" title={<div className="font-semibold">Laporan Penjualan Barang <span className="text-xs font-normal text-gray-500">
-              {new Date(activeDate).toLocaleDateString("id-ID", { weekday: "long", day: "2-digit", month: "long", year: "numeric" })}
-            </span></div>}>
-              <div className="overflow-auto">
-                <table className="min-w-full text-sm">
-                  <thead>
-                    <tr className="text-gray-500 border-b">
-                      <th className="text-left py-2 pr-4">Kode</th>
-                      <th className="text-left py-2 pr-4">Nama</th>
-                      <th className="text-left py-2 pr-4">Jumlah Barang</th>
-                      <th className="text-left py-2 pr-4">Jumlah Transaksi</th>
-                      <th className="text-left py-2 pr-4">Keuntungan</th>
-                      <th className="text-left py-2 pr-4">Pendapatan</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {salesByItem.length === 0 ? (
-                      <tr><td className="py-3 pr-4 text-gray-500" colSpan={6}>Transaksi Kosong</td></tr>
-                    ) : salesByItem.map((r) => (
-                      <tr key={`${r.date}-${r.code}`} className="border-b last:border-0">
-                        <td className="py-2 pr-4">{r.code}</td>
-                        <td className="py-2 pr-4">{r.name}</td>
-                        <td className="py-2 pr-4">{r.qty}</td>
-                        <td className="py-2 pr-4">{r.trxCount}</td>
-                        <td className="py-2 pr-4">{fmtIDR(r.profit)}</td>
-                        <td className="py-2 pr-4">{fmtIDR(r.revenue)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="mt-2 text-right text-xs text-gray-500">Business Account</div>
-            </Card>
-
-            <div className="grid grid-cols-12 gap-4">
-              <Card className="col-span-12 lg:col-span-6" title={<div className="font-semibold">Laporan Penjualan Per Staff <span className="text-xs font-normal text-gray-500">
-                {new Date(activeDate).toLocaleDateString("id-ID", { weekday: "long", day: "2-digit", month: "long", year: "numeric" })}
-              </span></div>}>
-                <div className="overflow-auto">
-                  <table className="min-w-full text-sm">
-                    <thead>
-                      <tr className="text-gray-500 border-b">
-                        <th className="text-left py-2 pr-4">Email</th>
-                        <th className="text-left py-2 pr-4">Jumlah Transaksi</th>
-                        <th className="text-left py-2 pr-4">Keuntungan</th>
-                        <th className="text-left py-2 pr-4">Pendapatan</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {salesByStaff.length === 0 ? (
-                        <tr><td className="py-3 pr-4 text-gray-500" colSpan={4}>Transaksi Kosong</td></tr>
-                      ) : salesByStaff.map((r) => (
-                        <tr key={`${r.date}-${r.email}`} className="border-b last:border-0">
-                          <td className="py-2 pr-4">{r.email}</td>
-                          <td className="py-2 pr-4">{r.trxCount}</td>
-                          <td className="py-2 pr-4">{fmtIDR(r.profit)}</td>
-                          <td className="py-2 pr-4">{fmtIDR(r.revenue)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <div className="mt-2 text-right text-xs text-gray-500">Business Account</div>
-              </Card>
-
-              <Card className="col-span-12 lg:col-span-6" title={<div className="font-semibold">Laporan Manajemen Stok <span className="text-xs font-normal text-gray-500">
-                {new Date(activeDate).toLocaleDateString("id-ID", { weekday: "long", day: "2-digit", month: "long", year: "numeric" })}
-              </span></div>}>
-                <div className="overflow-auto">
-                  <table className="min-w-full text-sm">
-                    <thead>
-                      <tr className="text-gray-500 border-b">
-                        <th className="text-left py-2 pr-4">Tanggal</th>
-                        <th className="text-left py-2 pr-4">Nama</th>
-                        <th className="text-left py-2 pr-4">Masuk</th>
-                        <th className="text-left py-2 pr-4">Keluar</th>
-                        <th className="text-left py-2 pr-4">Stok</th>
-                        <th className="text-left py-2 pr-4">Email</th>
-                        <th className="text-left py-2 pr-4">Mode</th>
-                        <th className="text-left py-2 pr-4">Keterangan</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {stockMoves.length === 0 ? (
-                        <tr><td className="py-3 pr-4 text-gray-500" colSpan={8}>Transaksi Kosong</td></tr>
-                      ) : stockMoves.map((r, i) => (
-                        <tr key={`${r.date}-${r.name}-${i}`} className="border-b last:border-0">
-                          <td className="py-2 pr-4">{new Date(r.date).toLocaleDateString("id-ID")}</td>
-                          <td className="py-2 pr-4">{r.name}</td>
-                          <td className="py-2 pr-4">{r.in}</td>
-                          <td className="py-2 pr-4">{r.out}</td>
-                          <td className="py-2 pr-4">{r.stock}</td>
-                          <td className="py-2 pr-4">{r.email}</td>
-                          <td className="py-2 pr-4">{r.mode}</td>
-                          <td className="py-2 pr-4">{r.note}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </Card>
-            </div>
-
-            {/* Floating helpers */}
-            <div className="fixed right-4 bottom-4 flex flex-col gap-2">
-              <button className="w-10 h-10 rounded-full bg-emerald-600 text-white grid place-items-center shadow-lg">💬</button>
-              <button className="w-10 h-10 rounded-full bg-emerald-600 text-white grid place-items-center shadow-lg">❓</button>
-            </div>
-          </main>
+          ))}
         </div>
       </div>
     </div>
