@@ -1,18 +1,20 @@
+// src/components/Navbar.jsx
 import React from "react";
 import { Link } from "react-router-dom";
-import { MdMenu, MdArrowBack, MdSettings } from "react-icons/md";
-
-/** Utility kecil */
-const cx = (...a) => a.filter(Boolean).join(" ");
+import { MdMenu, MdArrowBack, MdSettings, MdDarkMode, MdLightMode, MdColorLens } from "react-icons/md";
+import cx from "../utils/utils";
+import { useTheme } from "../hooks/useTheme.jsx"; 
 
 const baseWrap = "w-full flex items-center justify-between";
-const baseBar  = "bg-white px-4 lg:px-6 py-3 lg:py-4 border-b shadow-sm";
+const baseBar  = "px-4 lg:px-6 py-3 lg:py-4 border-b shadow-sm";
 const baseSticky = "sticky top-0 z-40";
 
-/** Tombol ikon */
+/** IconBtn
+ * - Tombol ikon reusable (link / button)
+ */
 function IconBtn({ as = "button", to, onClick, title, className, children }) {
   const cls = cx(
-    "inline-flex items-center justify-center rounded-full w-12 h-12",
+    "inline-flex items-center justify-center rounded-full w-11 h-11 transition-colors",
     className
   );
   if (as === "link") {
@@ -29,25 +31,35 @@ function IconBtn({ as = "button", to, onClick, title, className, children }) {
   );
 }
 
-/**
- * actions: [
- *  { type:'link', to:'/pesanan', title:'Pesanan', className:'bg-orange-400 text-white', icon: <.../> },
- *  { type:'button', onClick:fn, title:'Favorit', className:'bg-green-600 text-white', icon:<.../> },
- *  { type:'button', onClick:fn, title:'Batalkan', className:'border border-red-500 text-red-500 px-6 py-2 rounded-full font-semibold text-lg', label:'Batalkan' },
- *  { type:'button', onClick:fn, title:'Pengaturan', icon:<MdSettings size={26}/>, className:'w-12 h-12 text-gray-700 hover:bg-gray-100 rounded-full' }
- * ]
+/** Navbar
+ * Props utama:
+ * - variant: 'pos' | 'admin' | 'page'
+ * - title / pageName
+ * - backTo: string | function (opsional)
+ * - onToggleSidebar (opsional)
+ * - sticky: boolean
+ * - rightExtra: node tambahan kanan (opsional)
+ * - actions: array tombol kanan
+ *
+ * Perombakan:
+ * - Warna bar mengikuti CSS variables tema (elegan, B2B).
+ * - Tambah tombol Theme: cycle palette + toggle dark/light.
  */
 export default function Navbar({
-  variant = "page",          // 'pos' | 'admin' | 'page'
+  variant = "page",
   title = "",
-  pageName,                  // alias untuk title kalau kepake
-  backTo,                    // string | undefined
-  onToggleSidebar,           // () => void
+  pageName,
+  backTo,
+  onToggleSidebar,
   sticky = true,
-  rightExtra = null,         // node tambahan di kanan
-  actions = [],              // array tombol kanan
+  rightExtra = null,
+  actions = [],
 }) {
   const finalTitle = title || pageName || "";
+
+  // ⬇️ Ambil kontrol tema global
+  const { state, cyclePalette, setMode } = useTheme();
+  const isDark = state.mode === "dark";
 
   // Kiri: Back / Burger / Title
   const Left = (
@@ -56,56 +68,93 @@ export default function Navbar({
         typeof backTo === "function" ? (
           <button
             onClick={backTo}
-            className="text-2xl text-gray-700 hover:text-gray-900"
+            className="text-2xl hover:opacity-80"
             title="Kembali"
+            style={{ color: "var(--text)" }}
           >
-            <MdArrowBack size={28} />
+            <MdArrowBack size={26} />
           </button>
         ) : (
           <Link
             to={backTo}
-            className="text-2xl text-gray-700 hover:text-gray-900"
+            className="text-2xl hover:opacity-80"
             title="Kembali"
+            style={{ color: "var(--text)" }}
           >
-            <MdArrowBack size={28} />
+            <MdArrowBack size={26} />
           </Link>
         )
       ) : onToggleSidebar ? (
-        <button onClick={onToggleSidebar} title="Toggle Sidebar" className="text-gray-700 hover:text-gray-900">
-          <MdMenu size={28} />
+        <button
+          onClick={onToggleSidebar}
+          title="Toggle Sidebar"
+          className="hover:opacity-80"
+          style={{ color: "var(--text)" }}
+        >
+          <MdMenu size={26} />
         </button>
       ) : null}
 
-      <h1 className={cx("font-bold",
-        variant === "pos" ? "text-2xl" : "text-xl lg:text-2xl"
-      )}>
+      <h1
+        className={cx("font-semibold tracking-tight", variant === "pos" ? "text-2xl" : "text-xl lg:text-2xl")}
+        style={{ color: "var(--text)" }}
+      >
         {finalTitle}
       </h1>
     </div>
   );
 
-  // Kanan: actions + rightExtra
+  // Kanan: Theme buttons + actions + rightExtra
   const Right = (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2">
+      {/* Tombol ganti palette (cycle) */}
+      <IconBtn
+        onClick={cyclePalette}
+        title={`Ganti Tema (palette: ${state.palette})`}
+        className="hover:bg-opacity-10"
+        style={{
+          color: "var(--text)",
+          backgroundColor: "transparent",
+        }}
+      >
+        <MdColorLens size={22} />
+      </IconBtn>
+
+      {/* Tombol toggle mode (light/dark) */}
+      <IconBtn
+        onClick={() => setMode("toggle")}
+        title={`Mode: ${isDark ? "Dark" : "Light"}`}
+        className="hover:bg-opacity-10"
+        style={{
+          color: "var(--text)",
+          backgroundColor: "transparent",
+        }}
+      >
+        {isDark ? <MdLightMode size={22} /> : <MdDarkMode size={22} />}
+      </IconBtn>
+
       {rightExtra}
+
       {actions.map((a, i) => {
-        // Ada dua gaya: tombol ikon bulat atau tombol berlabel
+        // Tombol berlabel
         if (a.label) {
           return (
             <button
               key={i}
               onClick={a.onClick}
-              className={cx(
-                "px-6 py-2 rounded-full font-semibold text-lg",
-                a.className
-              )}
+              className={cx("px-5 py-2 rounded-full font-medium", a.className)}
               title={a.title}
+              style={{
+                // Default brand button jika className tidak override
+                background: a.className ? undefined : "var(--primary-700)",
+                color: a.className ? undefined : "#fff",
+              }}
             >
               {a.label}
             </button>
           );
         }
-        // link/button ikon bulat
+        // Link/button ikon
         return (
           <IconBtn
             key={i}
@@ -113,9 +162,10 @@ export default function Navbar({
             to={a.to}
             onClick={a.onClick}
             title={a.title}
-            className={a.className || "w-12 h-12 text-gray-700 hover:bg-gray-100"}
+            className={a.className || ""}
+            style={{ color: "var(--text)" }}
           >
-            {a.icon || <MdSettings size={24} />}
+            {a.icon || <MdSettings size={22} />}
           </IconBtn>
         );
       })}
@@ -123,7 +173,13 @@ export default function Navbar({
   );
 
   return (
-    <nav className={cx(baseBar, baseWrap, sticky && baseSticky)}>
+    <nav
+      className={cx(baseBar, baseWrap, sticky && baseSticky)}
+      style={{
+        background: "var(--surface)",
+        borderColor: "var(--border)",
+      }}
+    >
       {Left}
       {Right}
     </nav>
