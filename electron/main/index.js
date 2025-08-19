@@ -15,7 +15,7 @@ if (started) {
 }
 
 
-const isDev = 'development' === 'development';
+const isDev = 'production' === 'development';
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
