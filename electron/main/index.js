@@ -15,7 +15,7 @@ if (started) {
 }
 
 
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = 'development' === 'development';
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
