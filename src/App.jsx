@@ -3,8 +3,8 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import Login from "./pages/login/login";
-import Register from "./pages/register/register";
+import Login from "./pages/auth/login";
+import Register from "./pages/auth/Register";
 import PosLayout from "./layouts/pos/poslayout";
 import ShellLayout from "./layouts/ShellLayout";
 import Pos from "./pages/pos/Pos";
@@ -63,7 +63,11 @@ import ManagementRole from "./pages/m_setting/ManajemenRole";
 import PromosiPage from "./pages/m_promosi/Promosi";
 import StokDetail from "./pages/m_stok/StokDetail";
 import LaporanUtangPiutang from "./pages/m_laporan/LaporanUtangPiutang";
-
+import Otp from "./pages/auth/Otp";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
+import CreateToko from "./pages/auth/CreateToko";
+import UjiCoba from "./pages/auth/UjiCoba";
 function App() {
   const [count, setCount] = useState(0);
 
@@ -75,6 +79,17 @@ function App() {
             <Route path="/" element={<Login />} />
 
             <Route path="/register" element={<Register />} />
+            {/* Auth */}
+            <Route path="/otp" element={<Otp />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/create-toko" element={<CreateToko />} />
+            <Route path="/ujicoba" element={<UjiCoba />} />
+            <Route path="/maps" element={<Maps />} />
+            <Route path="/pengaturan-stok" element={<PengaturanStok />} />
+
+
+
 
             <Route element={<ShellLayout />}>
               <Route path="/pos" element={<Pos />} />

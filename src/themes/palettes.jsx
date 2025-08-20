@@ -2,6 +2,8 @@
 // Kumpulan palette brand dalam format cocok untuk CSS variables.
 // Gunakan hex tanpa # agar mudah di-inject sebagai CSS var (# ditambah saat apply).
 
+
+
 export const BRAND_PALETTE = {
   "primary-200": "B2B0E8", // Ungu Muda
   "primary-400": "7A85C1", // Biru Abu
@@ -67,6 +69,7 @@ export const EMERALD_PALETTE = {
   "danger":  "DC2626",
   "info":    "2563EB",
 };
+
 
 // Index palet yang tersedia
 export const PALETTES = {
