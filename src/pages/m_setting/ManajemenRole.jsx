@@ -452,7 +452,7 @@ export default function ManagementRole() {
                         <span
                           className={`px-1.5 py-0.5 rounded ${
                             r.status
-                              ? "bg-violet-100 text-violet-700"
+                              ? "bg-green-100 text-green-700"
                               : "bg-gray-100 text-gray-500"
                           }`}
                         >
