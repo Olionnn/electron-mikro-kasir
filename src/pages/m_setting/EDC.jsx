@@ -19,7 +19,7 @@ const PerangkatEDC = () => {
         {
           type: "span",
           title: "Versi Aplikasi",
-          className: "px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200",
+          className: "px-2 py-1 rounded-full bg-violet-50 text-violet-700 border border-violet-200",
           label: "v2.7.0",
         },
         {
@@ -35,8 +35,8 @@ const PerangkatEDC = () => {
   return (
     <div className="h-full flex flex-col bg-white"> {/* min-h-screen agar full screen */}
       <div className="flex flex-col flex-1 items-center justify-center text-center px-2">
-        <div className="w-20 h-20 rounded-2xl bg-green-50 border border-green-100 flex items-center justify-center">
-          <MdDevicesOther className="text-4xl text-green-600" />
+        <div className="w-20 h-20 rounded-2xl bg-violet-50 border border-violet-100 flex items-center justify-center">
+          <MdDevicesOther className="text-4xl text-violet-600" />
         </div>
         <p className="mt-2 text-gray-500 text-sm">
           Belum ada perangkat EDC yang terhubung
@@ -47,7 +47,7 @@ const PerangkatEDC = () => {
       </div>
 
       <div className="p-1">
-        <button className="w-full inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold shadow-sm transition">
+        <button className="w-full inline-flex items-center justify-center gap-2 bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-xl font-semibold shadow-sm transition">
           <MdAdd className="text-xl" />
           TAMBAH PERANGKAT
         </button>

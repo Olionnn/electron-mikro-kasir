@@ -36,7 +36,7 @@ export default function StrukTransaksi() {
           <label className="flex items-center space-x-2">
             <input type="checkbox" className="w-5 h-5" />
             <span>Jadikan sebagai Printer Utama</span>
-            <span className="text-green-500 text-lg">ⓘ</span>
+            <span className="text-violet-500 text-lg">ⓘ</span>
           </label>
         </div>
 
@@ -119,7 +119,7 @@ export default function StrukTransaksi() {
 
       {/* Simpan */}
       <div className="p-4">
-        <button className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold">
+        <button className="w-full bg-violet-500 text-white py-3 rounded-lg font-semibold">
           Simpan
         </button>
       </div>

@@ -110,7 +110,7 @@ import ManagementRole from "./ManajemenRole";
           {
             type: "span",
             title: "Versi Aplikasi",
-            className: "px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200",
+            className: "px-2 py-1 rounded-full bg-violet-50 text-violet-700 border border-violet-200",
             label: "v2.7.0",
           },
           {
@@ -125,7 +125,7 @@ import ManagementRole from "./ManajemenRole";
     );
   
     const getStatusColor = (status) => {
-      if (status.includes("Aktif") || status.includes("Tersinkron")) return "text-green-700 bg-green-100 border border-green-200";
+      if (status.includes("Aktif") || status.includes("Tersinkron")) return "text-violet-700 bg-violet-100 border border-violet-200";
       if (status.includes("Perlu") || status.includes("Belum")) return "text-orange-700 bg-orange-100 border border-orange-200";
       if (status.includes("Kosong")) return "text-red-700 bg-red-100 border border-red-200";
       return "text-blue-700 bg-blue-100 border border-blue-200";
@@ -189,13 +189,13 @@ import ManagementRole from "./ManajemenRole";
         <aside className="w-full lg:w-2/5 bg-white border-r border-gray-200 flex flex-col">
           <div className="p-6">
             {/* Info Akun */}
-            <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-green-500 to-green-600 text-white shadow-sm">
+            <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-violet-500 to-violet-600 text-white shadow-sm">
               <div className="bg-white/20 p-3 rounded-xl">
                 <MdOutlinePointOfSale size={22} />
               </div>
               <div className="min-w-0">
                 <p className="font-semibold truncate">beastbeeme2@gmail.com</p>
-                <p className="text-xs text-green-100">version 2.7.0 • db version 12</p>
+                <p className="text-xs text-violet-100">version 2.7.0 • db version 12</p>
               </div>
             </div>
           </div>
@@ -208,25 +208,25 @@ import ManagementRole from "./ManajemenRole";
                   onClick={() => handleMenuClick(item)}
                   className={[
                     "group w-full text-left p-4 rounded-2xl border transition-all",
-                    "focus:outline-none focus:ring-2 focus:ring-green-500/40",
-                    isActive(item) ? "bg-green-50 border-green-200 shadow-sm" : "bg-white hover:bg-gray-50 border-gray-200",
+                    "focus:outline-none focus:ring-2 focus:ring-violet-500/40",
+                    isActive(item) ? "bg-violet-50 border-violet-200 shadow-sm" : "bg-white hover:bg-gray-50 border-gray-200",
                   ].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
-                      <span className={["text-[22px] shrink-0", isActive(item) ? "text-green-600" : "text-gray-500"].join(" ")}>
+                      <span className={["text-[22px] shrink-0", isActive(item) ? "text-violet-600" : "text-gray-500"].join(" ")}>
                         {item.icon}
                       </span>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="font-medium">{item.label}</span>
-                          {isActive(item) && <span className="h-1 w-3 rounded-full bg-green-500 inline-block" />}
+                          {isActive(item) && <span className="h-1 w-3 rounded-full bg-violet-500 inline-block" />}
                         </div>
                         <p className="text-sm text-gray-500 line-clamp-1">{item.description}</p>
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-1 shrink-0">
-                      <span className={["text-lg transition-transform", item.hasSubmenu && expandedMenu === item.id ? "rotate-180" : "", isActive(item) ? "text-green-600" : "text-gray-400"].join(" ")}>
+                      <span className={["text-lg transition-transform", item.hasSubmenu && expandedMenu === item.id ? "rotate-180" : "", isActive(item) ? "text-violet-600" : "text-gray-400"].join(" ")}>
                         {item.hasSubmenu ? <GoChevronDown /> : <GoChevronRight />}
                       </span>
                       <span className={`text-[10px] px-2 py-1 rounded-full ${getStatusColor(item.status)}`}>{item.status}</span>
@@ -242,8 +242,8 @@ import ManagementRole from "./ManajemenRole";
                         onClick={() => handleSubmenuClick(sub)}
                         className={[
                           "w-full text-left p-3 rounded-xl transition-colors",
-                          "hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500/30",
-                          selectedMenu === sub.component ? "bg-green-100 text-green-700" : "text-gray-700",
+                          "hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-violet-500/30",
+                          selectedMenu === sub.component ? "bg-violet-100 text-violet-700" : "text-gray-700",
                         ].join(" ")}
                       >
                         <div className="flex items-center gap-2">

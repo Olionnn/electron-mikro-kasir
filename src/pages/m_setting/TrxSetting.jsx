@@ -31,7 +31,7 @@ const Switch = ({ checked, onChange, label, note }) => (
                 checked={checked}
                 onChange={(e) => onChange(e.target.checked)}
             />
-            <div className="w-12 h-6 bg-gray-300 rounded-full peer-checked:bg-green-500 transition-colors relative">
+            <div className="w-12 h-6 bg-gray-300 rounded-full peer-checked:bg-violet-500 transition-colors relative">
                 <span
                     className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${
                         checked ? "translate-x-6" : ""
@@ -49,7 +49,7 @@ const Check = ({ checked, onChange, children }) => (
   <label className="inline-flex items-center gap-2">
     <input
       type="checkbox"
-      className="w-5 h-5 accent-green-600"
+      className="w-5 h-5 accent-violet-600"
       checked={checked}
       onChange={(e) => onChange(e.target.checked)}
     />
@@ -63,7 +63,7 @@ const Radio = ({ name, value, checked, onChange, children }) => (
       type="radio"
       name={name}
       value={value}
-      className="w-5 h-5 accent-green-600"
+      className="w-5 h-5 accent-violet-600"
       checked={checked}
       onChange={(e) => onChange(e.target.value)}
     />
@@ -137,7 +137,7 @@ const TrxSetting = () => {
           title: "Simpan",
           onClick: onSave,
           className:
-            "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-600 text-white font-semibold hover:bg-green-700",
+            "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-600 text-white font-semibold hover:bg-violet-700",
           icon: <MdSave className="text-lg" />,
           label: "Simpan",
         },
@@ -275,7 +275,7 @@ const TrxSetting = () => {
         <div className="flex items-center justify-end">
           <button
             onClick={onSave}
-            className="bg-green-600 text-white py-3 px-6 rounded-xl text-base font-semibold hover:bg-green-700"
+            className="bg-violet-600 text-white py-3 px-6 rounded-xl text-base font-semibold hover:bg-violet-700"
           >
             Simpan
           </button>

@@ -14,7 +14,7 @@ const SyncData = () => {
         {
           type: "span",
           title: "Versi Aplikasi",
-          className: "px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200",
+          className: "px-2 py-1 rounded-full bg-violet-50 text-violet-700 border border-violet-200",
           label: "v2.7.0",
         },
         {
@@ -43,7 +43,7 @@ const SyncData = () => {
               <p className="text-xl font-semibold">Laporan Penjualan</p>
               <p className="text-base text-gray-600">Belum ada data baru</p>
             </div>
-            <MdCheckCircle className="text-3xl text-green-600" />
+            <MdCheckCircle className="text-3xl text-violet-600" />
           </div>
 
           {/* Item: Manajemen */}
@@ -52,7 +52,7 @@ const SyncData = () => {
               <p className="text-xl font-semibold">Manajemen</p>
               <p className="text-base text-gray-600">Belum ada data baru</p>
             </div>
-            <MdCheckCircle className="text-3xl text-green-600" />
+            <MdCheckCircle className="text-3xl text-violet-600" />
           </div>
         </div>
       </div>

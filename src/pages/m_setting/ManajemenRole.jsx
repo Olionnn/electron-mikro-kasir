@@ -179,7 +179,7 @@ function RoleFormModal({ open, onClose, initial, onSubmit }) {
           </button>
           <button
             onClick={submit}
-            className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+            className="px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700"
           >
             {initial ? "Simpan Perubahan" : "Tambah"}
           </button>
@@ -219,7 +219,7 @@ export default function ManagementRole() {
           title: "Tambah Role",
           onClick: onAddRole,
           className:
-            "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-600 text-white font-semibold hover:bg-green-700",
+            "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-600 text-white font-semibold hover:bg-violet-700",
           icon: <MdAdd className="text-lg" />,
           label: "Tambah Role",
         },
@@ -228,7 +228,7 @@ export default function ManagementRole() {
           title: "Bantuan",
           onClick: () => console.log("bantuan"),
           className:
-            "w-10 h-10 inline-flex items-center justify-center rounded-full hover:bg-gray-100 text-green-600",
+            "w-10 h-10 inline-flex items-center justify-center rounded-full hover:bg-gray-100 text-violet-600",
           icon: <MdInfoOutline className="text-2xl" />,
         },
       ],
@@ -389,7 +389,7 @@ export default function ManagementRole() {
         <aside className="w-full md:w-2/5 border-r bg-white flex flex-col min-h-0">
           <div className="p-4 border-b">
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 px-3 py-2 border rounded-xl flex-1 focus-within:ring-2 focus-within:ring-green-500">
+              <div className="flex items-center gap-2 px-3 py-2 border rounded-xl flex-1 focus-within:ring-2 focus-within:ring-violet-500">
                 <MdSearch className="text-gray-400 text-xl" />
                 <input
                   type="text"
@@ -401,7 +401,7 @@ export default function ManagementRole() {
               </div>
               <button
                 onClick={onAddRole}
-                className="px-4 py-2 rounded-xl text-sm bg-green-600 text-white hover:bg-green-700"
+                className="px-4 py-2 rounded-xl text-sm bg-violet-600 text-white hover:bg-violet-700"
                 title="Tambah Role"
               >
                 + Role
@@ -413,8 +413,8 @@ export default function ManagementRole() {
             {filtered.length === 0 ? (
               <div className="h-full flex items-center justify-center p-8">
                 <div className="text-center max-w-sm">
-                  <div className="w-20 h-20 mx-auto rounded-2xl bg-green-50 border border-green-100 flex items-center justify-center">
-                    <MdShield className="text-4xl text-green-600" />
+                  <div className="w-20 h-20 mx-auto rounded-2xl bg-violet-50 border border-violet-100 flex items-center justify-center">
+                    <MdShield className="text-4xl text-violet-600" />
                   </div>
                   <h3 className="mt-4 text-base font-semibold">Belum ada role</h3>
                   <p className="text-sm text-gray-500 mt-1">
@@ -422,7 +422,7 @@ export default function ManagementRole() {
                   </p>
                   <button
                     onClick={onAddRole}
-                    className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-700"
+                    className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700"
                     title="Tambah Role"
                   >
                     <MdAdd className="text-lg" />
@@ -437,7 +437,7 @@ export default function ManagementRole() {
                     key={r.id}
                     onClick={() => setSelected(r)}
                     className={`w-full text-left px-4 py-3 hover:bg-gray-50 flex items-center justify-between ${
-                      selected?.id === r.id ? "bg-green-50" : ""
+                      selected?.id === r.id ? "bg-violet-50" : ""
                     }`}
                   >
                     <div>
@@ -452,7 +452,7 @@ export default function ManagementRole() {
                         <span
                           className={`px-1.5 py-0.5 rounded ${
                             r.status
-                              ? "bg-green-100 text-green-700"
+                              ? "bg-violet-100 text-violet-700"
                               : "bg-gray-100 text-gray-500"
                           }`}
                         >
@@ -495,8 +495,8 @@ export default function ManagementRole() {
           {!selected ? (
             <div className="h-full flex items-center justify-center p-10">
               <div className="max-w-md text-center">
-                <div className="w-24 h-24 mx-auto rounded-3xl bg-green-50 border border-green-100 flex items-center justify-center">
-                  <MdShield className="text-5xl text-green-600" />
+                <div className="w-24 h-24 mx-auto rounded-3xl bg-violet-50 border border-violet-100 flex items-center justify-center">
+                  <MdShield className="text-5xl text-violet-600" />
                 </div>
                 <h3 className="mt-6 text-lg font-semibold">Pilih role</h3>
                 <p className="text-sm text-gray-500 mt-1">
@@ -518,7 +518,7 @@ export default function ManagementRole() {
                   <span
                     className={`px-2 py-1 rounded-full text-xs ${
                       selected.status
-                        ? "bg-green-100 text-green-700"
+                        ? "bg-violet-100 text-violet-700"
                         : "bg-gray-100 text-gray-500"
                     }`}
                   >

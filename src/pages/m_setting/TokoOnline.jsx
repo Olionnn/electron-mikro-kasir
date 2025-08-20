@@ -15,14 +15,14 @@ const OlsopinPage = () => {
           <div className="text-2xl">☰</div>
           <h1 className="text-2xl font-bold">OLSHOPIN</h1>
         </div>
-        <a href="#" className="text-green-600 font-semibold">
+        <a href="#" className="text-violet-600 font-semibold">
           Kunjungi
         </a>
       </div>
 
       {/* Tabs */}
       <div className="flex justify-start items-center border-b border-gray-200 text-center text-lg font-semibold">
-        <div className="w-48 py-4 text-green-600 border-b-4 border-green-600 cursor-pointer flex flex-col items-center">
+        <div className="w-48 py-4 text-violet-600 border-b-4 border-violet-600 cursor-pointer flex flex-col items-center">
           <span className="text-2xl">🛒</span>
           <span>Barang</span>
         </div>
@@ -41,7 +41,7 @@ const OlsopinPage = () => {
         {/* Kiri: Daftar Barang */}
         <div className="w-1/2 p-6 overflow-y-auto">
           {/* Info */}
-          <div className="bg-green-100 text-green-800 px-4 py-3 rounded-lg mb-4 text-base font-medium">
+          <div className="bg-violet-100 text-violet-800 px-4 py-3 rounded-lg mb-4 text-base font-medium">
             Bagikan produk Anda di Whatsapp, Facebook, dan Instagram dengan klik produk di bawah ini
           </div>
 
@@ -69,7 +69,7 @@ const OlsopinPage = () => {
                     <div className="text-gray-600 text-lg">{item.price}</div>
                   </div>
                 </div>
-                <div className="text-green-500 text-2xl">🔗</div>
+                <div className="text-violet-500 text-2xl">🔗</div>
               </div>
             ))}
           </div>

@@ -40,7 +40,7 @@ const MetodePembayaran = () => {
         {
           type: "span",
           title: "Versi Aplikasi",
-          className: "px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200",
+          className: "px-2 py-1 rounded-full bg-violet-50 text-violet-700 border border-violet-200",
           label: "v2.7.0",
         },
         {
@@ -61,7 +61,7 @@ const MetodePembayaran = () => {
       <div className="flex-1 overflow-y-auto px-6 md:px-8 py-6">
         {/* Input tambah metode */}
         <div className="flex items-center gap-3 md:gap-4 mb-6">
-          <div className="flex-1 flex items-center gap-3 px-4 py-3 border rounded-xl text-lg focus-within:ring-2 focus-within:ring-green-500">
+          <div className="flex-1 flex items-center gap-3 px-4 py-3 border rounded-xl text-lg focus-within:ring-2 focus-within:ring-violet-500">
             <span className="inline-block text-gray-400">
               <MdCreditCard className="text-2xl" />
             </span>
@@ -72,7 +72,7 @@ const MetodePembayaran = () => {
             />
           </div>
           <button
-            className="inline-flex items-center gap-2 bg-green-100 text-green-700 font-medium px-5 md:px-6 py-3 rounded-xl hover:bg-green-200 transition"
+            className="inline-flex items-center gap-2 bg-violet-100 text-violet-700 font-medium px-5 md:px-6 py-3 rounded-xl hover:bg-violet-200 transition"
             title="Tambah Metode"
           >
             <MdAdd className="text-xl" />
@@ -92,7 +92,7 @@ const MetodePembayaran = () => {
           {paymentMethods.map((method, index) => (
             <div
               key={method.name}
-              className="flex items-center justify-between bg-gray-50 px-4 sm:px-6 py-4 rounded-xl border border-gray-200 hover:border-green-200 hover:bg-green-50/40 transition"
+              className="flex items-center justify-between bg-gray-50 px-4 sm:px-6 py-4 rounded-xl border border-gray-200 hover:border-violet-200 hover:bg-violet-50/40 transition"
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-white border border-gray-200 flex items-center justify-center">
@@ -106,7 +106,7 @@ const MetodePembayaran = () => {
               <div className="flex items-center gap-4">
                 {method.name !== "Cash" && (
                   <button
-                    className="inline-flex items-center gap-1.5 text-green-600 font-semibold text-sm hover:underline"
+                    className="inline-flex items-center gap-1.5 text-violet-600 font-semibold text-sm hover:underline"
                     title={`Edit ${method.name}`}
                   >
                     <MdEdit className="text-base" />
@@ -122,7 +122,7 @@ const MetodePembayaran = () => {
                     checked={method.checked}
                     onChange={() => toggleMethod(index)}
                   />
-                  <div className="w-14 h-8 rounded-full bg-gray-300 peer-checked:bg-green-500 transition-colors"></div>
+                  <div className="w-14 h-8 rounded-full bg-gray-300 peer-checked:bg-violet-500 transition-colors"></div>
                   <div className="absolute left-1 top-1 w-6 h-6 bg-white rounded-full transition-transform peer-checked:translate-x-6 shadow"></div>
                 </label>
               </div>
@@ -140,7 +140,7 @@ const MetodePembayaran = () => {
               EDC BCA
             </span>
           </div>
-          <button className="text-green-600 font-medium hover:text-green-700">
+          <button className="text-violet-600 font-medium hover:text-violet-700">
             Sambungkan
           </button>
         </div>
@@ -152,7 +152,7 @@ const MetodePembayaran = () => {
 
         {/* Tombol Simpan */}
         <div className="mt-4">
-          <button className="w-full bg-green-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-green-700 transition shadow-sm">
+          <button className="w-full bg-violet-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-violet-700 transition shadow-sm">
             Simpan
           </button>
         </div>

@@ -21,7 +21,7 @@ const PrinterSelection = () => {
 
       {/* Info */}
       <div className="flex items-start px-4 py-3 border-b border-gray-100 text-[13px] text-gray-600">
-        <div className="flex items-center justify-center w-5 h-5 border border-green-500 text-green-500 rounded-full mr-2 text-[12px] font-bold">
+        <div className="flex items-center justify-center w-5 h-5 border border-violet-500 text-violet-500 rounded-full mr-2 text-[12px] font-bold">
           i
         </div>
         <p>
@@ -37,7 +37,7 @@ const PrinterSelection = () => {
           <button className="bg-gray-100 px-4 py-2 rounded-full text-[14px]">
             Driver terinstall
           </button>
-          <button className="flex items-center space-x-1 border border-green-500 text-green-500 px-4 py-2 rounded-full text-[14px]">
+          <button className="flex items-center space-x-1 border border-violet-500 text-violet-500 px-4 py-2 rounded-full text-[14px]">
             <span>Scan</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -92,7 +92,7 @@ const PrinterSelection = () => {
           disabled={!selectedPrinter}
           className={`w-full py-3 rounded-full text-white font-medium ${
             selectedPrinter
-              ? "bg-green-500"
+              ? "bg-violet-500"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
         >

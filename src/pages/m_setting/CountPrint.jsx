@@ -35,7 +35,7 @@ export default function PengaturanPrinter() {
                 <div className="text-sm text-gray-500 mt-0.5">Belum ada yang terhubung</div>
               </div>
               <button
-                className="text-sm border border-green-600 text-green-700 rounded-full px-4 py-2 hover:bg-green-50 transition"
+                className="text-sm border border-violet-600 text-violet-700 rounded-full px-4 py-2 hover:bg-violet-50 transition"
                 onClick={() => alert(`Tambah printer untuk ${label}`)}
               >
                 + Tambah
@@ -65,7 +65,7 @@ export default function PengaturanPrinter() {
                   <div className="text-xs text-gray-500 mt-0.5">Belum ada yang terhubung</div>
                 </div>
                 <button
-                  className="text-xs border border-green-600 text-green-700 rounded-full px-3 py-1.5 hover:bg-green-50 transition"
+                  className="text-xs border border-violet-600 text-violet-700 rounded-full px-3 py-1.5 hover:bg-violet-50 transition"
                   onClick={() => alert(`Tambah printer untuk ${label}`)}
                 >
                   + Tambah

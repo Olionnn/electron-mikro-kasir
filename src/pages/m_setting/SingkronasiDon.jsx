@@ -18,7 +18,7 @@ const SyncPage = () => {
         {
           type: "span",
           title: "Versi Aplikasi",
-          className: "px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200",
+          className: "px-2 py-1 rounded-full bg-violet-50 text-violet-700 border border-violet-200",
           label: "v2.7.0",
         },
         {
@@ -62,7 +62,7 @@ const SyncPage = () => {
 
             {/* Tombol Sinkronkan */}
             <button
-              className="text-green-600 hover:text-green-700 p-2 rounded-lg"
+              className="text-violet-600 hover:text-violet-700 p-2 rounded-lg"
               title="Sinkronkan"
             >
               <MdSync className="text-2xl" />

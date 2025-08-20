@@ -26,7 +26,7 @@ const Lainnya = () => {
                 <p className="text-base text-gray-500">Melihat versi aplikasi saat ini</p>
               </div>
             </div>
-            <span className="text-green-500 text-2xl">›</span>
+            <span className="text-violet-500 text-2xl">›</span>
           </div>
 
           {/* Reset Semua Data */}
@@ -44,7 +44,7 @@ const Lainnya = () => {
                 </p>
               </div>
             </div>
-            <span className="text-green-500 text-2xl">›</span>
+            <span className="text-violet-500 text-2xl">›</span>
           </div>
 
           {/* Logout */}
@@ -60,7 +60,7 @@ const Lainnya = () => {
                 <p className="text-base text-gray-500">Keluar akun</p>
               </div>
             </div>
-            <span className="text-green-500 text-2xl">›</span>
+            <span className="text-violet-500 text-2xl">›</span>
           </div>
         </div>
 

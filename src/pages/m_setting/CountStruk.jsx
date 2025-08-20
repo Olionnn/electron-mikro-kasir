@@ -18,7 +18,7 @@ function Toggle({ checked, onChange }) {
       onClick={onChange}
       className={
         "relative inline-flex h-6 w-11 items-center rounded-full transition " +
-        (checked ? "bg-green-500" : "bg-gray-300")
+        (checked ? "bg-violet-500" : "bg-gray-300")
       }
       aria-pressed={checked}
     >
@@ -61,7 +61,7 @@ export default function PengaturanStruk() {
         title: "Simpan",
         onClick: onSave,
         className:
-          "inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700",
+          "inline-flex items-center gap-2 bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700",
         icon: <MdSave size={18} />,
         label: "Simpan",
       },
@@ -95,12 +95,12 @@ export default function PengaturanStruk() {
       {/* LEFT */}
       <div className="w-2/5 p-6 overflow-y-auto border-r">
         {/* Cloud download banner */}
-        <div className="flex items-center justify-between bg-green-50 border border-green-200 px-4 py-3 rounded-xl">
-          <div className="text-sm text-green-900">
+        <div className="flex items-center justify-between bg-violet-50 border border-violet-200 px-4 py-3 rounded-xl">
+          <div className="text-sm text-violet-900">
             Klik untuk unduh pengaturan dari Cloud
           </div>
           <button
-            className="inline-flex items-center justify-center bg-green-600 text-white w-9 h-9 rounded-full hover:bg-green-700"
+            className="inline-flex items-center justify-center bg-violet-600 text-white w-9 h-9 rounded-full hover:bg-violet-700"
             title="Download dari Cloud"
             onClick={() => alert("Download dari Cloud…")}
           >
@@ -124,7 +124,7 @@ export default function PengaturanStruk() {
                 type="text"
                 value={logoChars}
                 onChange={(e) => setLogoChars(e.target.value)}
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
+                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-200"
               />
             </div>
             <div>
@@ -135,7 +135,7 @@ export default function PengaturanStruk() {
                 type="text"
                 value={logoCanvas}
                 onChange={(e) => setLogoCanvas(e.target.value)}
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
+                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-200"
               />
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function PengaturanStruk() {
             className={[
               "inline-flex items-center gap-2 px-3 py-2 rounded-lg border",
               showOnlineLink
-                ? "border-green-500 text-green-700 bg-green-50"
+                ? "border-violet-500 text-violet-700 bg-violet-50"
                 : "border-gray-300 text-gray-700 hover:bg-gray-50",
             ].join(" ")}
             title="Mode Link"
@@ -199,7 +199,7 @@ export default function PengaturanStruk() {
             className={[
               "inline-flex items-center gap-2 px-3 py-2 rounded-lg border",
               showOnlineQR
-                ? "border-green-500 text-green-700 bg-green-50"
+                ? "border-violet-500 text-violet-700 bg-violet-50"
                 : "border-gray-300 text-gray-700 hover:bg-gray-50",
             ].join(" ")}
             title="Mode QR Code"
@@ -217,7 +217,7 @@ export default function PengaturanStruk() {
             </label>
             <textarea
               rows={3}
-              className="w-full border rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-200"
+              className="w-full border rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200"
             />
           </div>
           <div>
@@ -226,7 +226,7 @@ export default function PengaturanStruk() {
             </label>
             <textarea
               rows={3}
-              className="w-full border rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-200"
+              className="w-full border rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200"
             />
           </div>
         </div>
@@ -239,11 +239,11 @@ export default function PengaturanStruk() {
             <input
               type="text"
               defaultValue="2"
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200"
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-200"
             />
           </div>
           <button
-            className="inline-flex items-center gap-2 border border-green-600 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50"
+            className="inline-flex items-center gap-2 border border-violet-600 text-violet-700 px-3 py-2 rounded-lg hover:bg-violet-50"
             onClick={() => alert("Reset nomor struk…")}
           >
             <MdRestartAlt />
@@ -254,7 +254,7 @@ export default function PengaturanStruk() {
 
       {/* RIGHT – Preview */}
       <div className="w-3/5 bg-gray-50 p-6 flex flex-col items-center">
-        <div className="text-center text-xs text-gray-600 border-b-2 border-green-500 w-full pb-2 mb-4">
+        <div className="text-center text-xs text-gray-600 border-b-2 border-violet-500 w-full pb-2 mb-4">
           32 Karakter
         </div>
 

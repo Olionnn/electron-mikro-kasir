@@ -110,7 +110,7 @@ const FormToko = () => {
               type="text"
               value="+62085707896575"
               disabled
-              className="w-full border rounded-lg px-4 py-3 bg-white text-lg cursor-not-allowed shadow-sm"
+              className="w-full border rounded-lg px-4 py-3 bg-violet-100 text-lg cursor-not-allowed shadow-sm"
             />
             <p className="text-sm text-red-600 mt-1">*Belum Verifikasi</p>
           </div>
