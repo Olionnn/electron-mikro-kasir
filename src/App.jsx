@@ -69,16 +69,18 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import DataTokoForm from "./pages/auth/CreateToko";
 import MasaUjiCoba from "./pages/auth/UjiCoba";
 import PengaturanStok from "./pages/auth/PengaturanStok";
+import ForgotPasswordSuccess from "./pages/auth/Notifotp";
 import Maps from "./pages/auth/Maps";
+
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <>
       <div>
-        <main className="h-screen w-screen">
+        <main className="h-screen w-screen"> 
           <Routes>
-            <Route path="/" element={<OtpVerification />} />
+            <Route path="/" element={<Login />} />
 
             <Route path="/register" element={<Register />} />
             {/* Auth */}
@@ -88,6 +90,7 @@ function App() {
             <Route path="/create-toko" element={<DataTokoForm />} />
             <Route path="/ujicoba" element={<MasaUjiCoba />} />
             <Route path="/maps" element={<Maps />} />
+            <Route path="/Notifotp" element={<ForgotPasswordSuccess />} />
             <Route path="/pengaturan-stok" element={<PengaturanStok />} />
 
 
