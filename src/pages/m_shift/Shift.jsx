@@ -181,8 +181,8 @@ export default function ShiftManagementPage() {
           {/* Hero / Header */}
           <div className="mx-auto w-full max-w-2xl">
             <div className="flex items-center justify-center">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-emerald-50 border border-emerald-100 shadow-sm">
-                <MdPointOfSale className="text-3xl text-emerald-600" />
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-violet-50 border border-violet-100 shadow-sm">
+                <MdPointOfSale className="text-3xl text-violet-600" />
               </div>
             </div>
             <h2 className="mt-4 text-center text-xl font-semibold text-gray-800">Manajemen Shift Kasir</h2>
@@ -193,14 +193,14 @@ export default function ShiftManagementPage() {
               <div className="mt-6 text-center">
                 <button
                   onClick={() => setOpenStart(true)}
-                  className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 rounded-full shadow"
+                  className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white font-semibold px-6 py-3 rounded-full shadow"
                 >
                   <MdAdd size={18} /> Mulai Shift
                 </button>
                 <div className="text-xs text-gray-500 mt-2">Tentukan modal awal laci kas</div>
               </div>
             ) : (
-              <div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+              <div className="mt-6 bg-violet-50 border border-violet-200 rounded-2xl p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <div className="text-sm text-gray-500">Shift Berjalan</div>
@@ -211,7 +211,7 @@ export default function ShiftManagementPage() {
                       Mulai: {new Date(currentShift.startAt).toLocaleString("id-ID")}
                     </div>
                   </div>
-                  <span className="px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700">OPEN</span>
+                  <span className="px-2 py-1 rounded-full text-xs bg-violet-100 text-violet-700">OPEN</span>
                 </div>
 
                 {/* cards */}
@@ -222,7 +222,7 @@ export default function ShiftManagementPage() {
                   </div>
                   <div className="rounded-xl border bg-white p-3">
                     <div className="text-[11px] text-gray-500">Penjualan</div>
-                    <div className="font-semibold text-emerald-700">{fmtIDR(currentShift.sales)}</div>
+                    <div className="font-semibold text-violet-700">{fmtIDR(currentShift.sales)}</div>
                   </div>
                   <div className="rounded-xl border bg-white p-3">
                     <div className="text-[11px] text-gray-500">Kas Masuk</div>
@@ -256,7 +256,7 @@ export default function ShiftManagementPage() {
                   </button>
                   <button
                     onClick={() => setOpenClose(true)}
-                    className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-2"
+                    className="inline-flex items-center justify-center gap-2 bg-violet-600 hover:bg-violet-700 text-white rounded-xl py-2"
                   >
                     Tutup Shift <MdArrowForward />
                   </button>
@@ -291,7 +291,7 @@ export default function ShiftManagementPage() {
                         </div>
                         <div>
                           <div className="text-gray-500">Selisih</div>
-                          <div className={`font-semibold ${variance === 0 ? "text-gray-600" : variance > 0 ? "text-emerald-700" : "text-red-600"}`}>
+                          <div className={`font-semibold ${variance === 0 ? "text-gray-600" : variance > 0 ? "text-violet-700" : "text-red-600"}`}>
                             {fmtIDR(variance)}
                           </div>
                         </div>
@@ -330,7 +330,7 @@ export default function ShiftManagementPage() {
                   <div key={m.id} className="py-3 flex items-start justify-between gap-3">
                     <div>
                       <div className="text-sm font-medium">
-                        {m.type === "cash_in" && <span className="text-emerald-700">Kas Masuk</span>}
+                        {m.type === "cash_in" && <span className="text-violet-700">Kas Masuk</span>}
                         {m.type === "cash_out" && <span className="text-red-600">Kas Keluar</span>}
                         {m.type === "sale" && <span className="text-gray-700">Penjualan</span>}
                       </div>
@@ -338,7 +338,7 @@ export default function ShiftManagementPage() {
                       {m.note && <div className="text-xs text-gray-600 mt-1">{m.note}</div>}
                     </div>
                     <div className="text-right">
-                      <div className={`text-sm font-semibold ${m.type === "cash_out" ? "text-red-600" : "text-emerald-700"}`}>
+                      <div className={`text-sm font-semibold ${m.type === "cash_out" ? "text-red-600" : "text-violet-700"}`}>
                         {fmtIDR(m.amount)}
                       </div>
                       <button
@@ -415,7 +415,7 @@ function Input({ label, suffix, ...props }) {
   return (
     <label className="block">
       <span className="text-sm text-gray-700">{label}</span>
-      <div className="mt-1 flex items-center gap-2 border rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-emerald-200">
+      <div className="mt-1 flex items-center gap-2 border rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-violet-200">
         <input {...props} className="flex-1 outline-none" />
         {suffix}
       </div>
@@ -447,7 +447,7 @@ function StartForm({ onSubmit }) {
         onChange={(e) => setOpeningCash(e.target.value)}
         suffix={<span className="text-xs text-gray-500">IDR</span>}
       />
-      <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg py-2 font-semibold">
+      <button className="w-full bg-violet-600 hover:bg-violet-700 text-white rounded-lg py-2 font-semibold">
         Mulai Shift
       </button>
     </form>
@@ -478,11 +478,11 @@ function CashForm({ label, onSubmit }) {
           rows={3}
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          className="mt-1 w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-emerald-200"
+          className="mt-1 w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-violet-200"
           placeholder="Contoh: setoran awal kasir pengganti"
         />
       </label>
-      <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg py-2 font-semibold">
+      <button className="w-full bg-violet-600 hover:bg-violet-700 text-white rounded-lg py-2 font-semibold">
         Simpan
       </button>
     </form>
@@ -516,7 +516,7 @@ function CloseForm({ expected = 0, onSubmit }) {
       />
       <div className="text-sm">
         Selisih:{" "}
-        <span className={`font-semibold ${variance === 0 ? "text-gray-700" : variance > 0 ? "text-emerald-700" : "text-red-600"}`}>
+        <span className={`font-semibold ${variance === 0 ? "text-gray-700" : variance > 0 ? "text-violet-700" : "text-red-600"}`}>
           {fmtIDR(variance)}
         </span>
       </div>
@@ -526,11 +526,11 @@ function CloseForm({ expected = 0, onSubmit }) {
           rows={3}
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          className="mt-1 w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-emerald-200"
+          className="mt-1 w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-violet-200"
           placeholder="Contoh: uang kurang karena tips belum dihitung"
         />
       </label>
-      <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg py-2 font-semibold">
+      <button className="w-full bg-violet-600 hover:bg-violet-700 text-white rounded-lg py-2 font-semibold">
         Tutup Shift
       </button>
     </form>

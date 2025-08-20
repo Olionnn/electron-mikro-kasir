@@ -86,21 +86,21 @@ export default function LaporanUtangPiutang() {
       type: "button",
       title: "Filter",
       onClick: () => document.getElementById("filter-anchor")?.scrollIntoView({ behavior:"smooth" }),
-      className: "inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50",
+      className: "inline-flex items-center gap-2 bg-white border border-violet-500 text-violet-700 px-3 py-2 rounded-lg hover:bg-violet-50",
       icon: <MdFilterList size={18} />,
     },
     {
       type: "button",
       title: "Export CSV",
       onClick: () => exportCSV(),
-      className: "inline-flex items-center gap-2 bg-white border border-green-500 text-green-700 px-3 py-2 rounded-lg hover:bg-green-50",
+      className: "inline-flex items-center gap-2 bg-white border border-violet-500 text-violet-700 px-3 py-2 rounded-lg hover:bg-violet-50",
       icon: <MdDownload size={18} />,
     },
     {
       type: "button",
       title: "Cetak",
       onClick: () => window.print(),
-      className: "inline-flex items-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700",
+      className: "inline-flex items-center gap-2 bg-violet-600 text-white px-3 py-2 rounded-lg hover:bg-violet-700",
       icon: <MdPrint size={18} />,
     },
     {
@@ -262,13 +262,13 @@ export default function LaporanUtangPiutang() {
     <div className="h-full w-full bg-white flex flex-col">
       {/* Tabs */}
       <div className="px-4 md:px-6 pt-4">
-        <div className="inline-flex bg-green-50 border border-green-200 rounded-xl overflow-hidden">
+        <div className="inline-flex bg-violet-50 border border-violet-200 rounded-xl overflow-hidden">
           <button
-            className={`px-4 py-2 text-sm ${tab==="hutang" ? "bg-green-600 text-white" : "text-green-700 hover:bg-green-100"}`}
+            className={`px-4 py-2 text-sm ${tab==="hutang" ? "bg-violet-600 text-white" : "text-violet-700 hover:bg-violet-100"}`}
             onClick={() => setTab("hutang")}
           >Hutang</button>
           <button
-            className={`px-4 py-2 text-sm ${tab==="piutang" ? "bg-green-600 text-white" : "text-green-700 hover:bg-green-100"}`}
+            className={`px-4 py-2 text-sm ${tab==="piutang" ? "bg-violet-600 text-white" : "text-violet-700 hover:bg-violet-100"}`}
             onClick={() => setTab("piutang")}
           >Piutang</button>
         </div>
@@ -286,39 +286,39 @@ export default function LaporanUtangPiutang() {
       <div id="filter-anchor" className="px-4 md:px-6 pb-3">
         <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
           <div className="relative flex-1">
-            <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-green-700" />
+            <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-violet-700" />
             <input
               value={q}
               onChange={(e)=>setQ(e.target.value)}
               placeholder={`Cari ${tab==="hutang"?"supplier":"pelanggan"} / status / nomor …`}
-              className="w-full border border-green-300 rounded-xl pl-10 pr-4 py-2.5"
+              className="w-full border border-violet-300 rounded-xl pl-10 pr-4 py-2.5"
             />
           </div>
 
-          <select value={statusFilter} onChange={(e)=>setStatusFilter(e.target.value)} className="border border-green-300 rounded-xl px-3 py-2.5">
+          <select value={statusFilter} onChange={(e)=>setStatusFilter(e.target.value)} className="border border-violet-300 rounded-xl px-3 py-2.5">
             <option value="">Status ({tab==="hutang"?"hutang":"piutang"})</option>
             <option value="berjalan">Berjalan</option>
             <option value="lunas">Lunas</option>
           </select>
 
-          <select value={tokoFilter} onChange={(e)=>setTokoFilter(e.target.value)} className="border border-green-300 rounded-xl px-3 py-2.5">
+          <select value={tokoFilter} onChange={(e)=>setTokoFilter(e.target.value)} className="border border-violet-300 rounded-xl px-3 py-2.5">
             <option value="">Semua Toko</option>
             {MASTER_TOKO.map(t=><option key={t.id} value={t.id}>{t.nama}</option>)}
           </select>
 
-          <select value={relasiFilter} onChange={(e)=>setRelasiFilter(e.target.value)} className="border border-green-300 rounded-xl px-3 py-2.5">
+          <select value={relasiFilter} onChange={(e)=>setRelasiFilter(e.target.value)} className="border border-violet-300 rounded-xl px-3 py-2.5">
             <option value="">{tab==="hutang"?"Semua Supplier":"Semua Pelanggan"}</option>
             {(tab==="hutang"?MASTER_SUPPLIER:MASTER_PELANGGAN).map(r=><option key={r.id} value={r.id}>{r.nama}</option>)}
           </select>
 
-          <select value={dueFilter} onChange={(e)=>setDueFilter(e.target.value)} className="border border-green-300 rounded-xl px-3 py-2.5">
+          <select value={dueFilter} onChange={(e)=>setDueFilter(e.target.value)} className="border border-violet-300 rounded-xl px-3 py-2.5">
             <option value="">Semua Jatuh Tempo</option>
             <option value="overdue">Terlambat</option>
             <option value="upcoming">Akan Jatuh Tempo</option>
           </select>
 
-          <input type="date" value={dateFrom} onChange={(e)=>setDateFrom(e.target.value)} className="border border-green-300 rounded-xl px-3 py-2.5" />
-          <input type="date" value={dateTo} onChange={(e)=>setDateTo(e.target.value)} className="border border-green-300 rounded-xl px-3 py-2.5" />
+          <input type="date" value={dateFrom} onChange={(e)=>setDateFrom(e.target.value)} className="border border-violet-300 rounded-xl px-3 py-2.5" />
+          <input type="date" value={dateTo} onChange={(e)=>setDateTo(e.target.value)} className="border border-violet-300 rounded-xl px-3 py-2.5" />
         </div>
       </div>
 
@@ -328,7 +328,7 @@ export default function LaporanUtangPiutang() {
           <div className="bg-white border rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-green-50 sticky top-0">
+                <thead className="bg-violet-50 sticky top-0">
                   <tr>
                     <Th w="80">#</Th>
                     <Th w="120">{tab==="hutang"?"ID Hutang":"ID Piutang"}</Th>
@@ -368,7 +368,7 @@ export default function LaporanUtangPiutang() {
                         </Td>
                         <Td>
                           {nextDue !== "-" ? (
-                            <span className={`px-2 py-0.5 rounded-full text-xs ${isAnyOver?"bg-red-100 text-red-700":"bg-green-100 text-green-700"}`}>
+                            <span className={`px-2 py-0.5 rounded-full text-xs ${isAnyOver?"bg-red-100 text-red-700":"bg-violet-100 text-violet-700"}`}>
                               {nextDue} {isAnyOver && "• Terlambat"}
                             </span>
                           ) : "-"}
@@ -385,7 +385,7 @@ export default function LaporanUtangPiutang() {
                             </button>
                             {r.sisa>0 && (
                               <button
-                                className="px-3 py-1.5 rounded-lg border text-green-700 border-green-500 hover:bg-green-50"
+                                className="px-3 py-1.5 rounded-lg border text-violet-700 border-violet-500 hover:bg-violet-50"
                                 onClick={()=>openAddPayment(r)}
                                 title="Tambah Pembayaran/Cicilan"
                               >
@@ -432,14 +432,14 @@ export default function LaporanUtangPiutang() {
               <Info label={detailType==="hutang"?"Supplier":"Pelanggan"} value={detailRow.relasi_nama} />
               <Info label="Total" value={rp(detailType==="hutang"?detailRow.total_hutang:detailRow.total_piutang)} />
               <Info label="Dibayar" value={rp(detailRow.total_dibayar)} />
-              <Info label="Sisa" value={<span className={detailRow.sisa>0?"text-amber-700 font-semibold":"text-green-700 font-semibold"}>{rp(detailRow.sisa)}</span>} />
-              <Info label="Status" value={<span className="px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-700">{(detailType==="hutang"?detailRow.status_hutang:detailRow.status_piutang).toUpperCase()}</span>} />
+              <Info label="Sisa" value={<span className={detailRow.sisa>0?"text-amber-700 font-semibold":"text-violet-700 font-semibold"}>{rp(detailRow.sisa)}</span>} />
+              <Info label="Status" value={<span className="px-2 py-0.5 rounded-full text-xs bg-violet-100 text-violet-700">{(detailType==="hutang"?detailRow.status_hutang:detailRow.status_piutang).toUpperCase()}</span>} />
             </div>
 
             <h4 className="font-semibold mb-2">Rincian Tagihan</h4>
             <div className="overflow-auto border rounded-xl">
               <table className="w-full text-sm">
-                <thead className="bg-green-50">
+                <thead className="bg-violet-50">
                   <tr>
                     <Th w="80">ID</Th>
                     <Th w="140">No. Struk</Th>
@@ -463,7 +463,7 @@ export default function LaporanUtangPiutang() {
                         <Td>{rp(bayar)}</Td>
                         <Td>
                           {d.jatuh_tempo ? (
-                            <span className={`px-2 py-0.5 rounded-full text-xs ${overdue?"bg-red-100 text-red-700":"bg-green-100 text-green-700"}`}>
+                            <span className={`px-2 py-0.5 rounded-full text-xs ${overdue?"bg-red-100 text-red-700":"bg-violet-100 text-violet-700"}`}>
                               {d.jatuh_tempo}{overdue && " • Terlambat"}
                             </span>
                           ) : "-"}
@@ -486,7 +486,7 @@ export default function LaporanUtangPiutang() {
                     <div className="text-xs text-gray-500">{h.tanggal_bayar} • Sisa: {rp(h.nominal_belum_bayar)}</div>
                     {h.keterangan && <div className="text-xs text-gray-400 mt-0.5">{h.keterangan}</div>}
                   </div>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-green-50 border border-green-200 text-green-700">Cicilan</span>
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-violet-50 border border-violet-200 text-violet-700">Cicilan</span>
                 </div>
               ))}
               {getHistories(detailRow, detailType).length===0 && (
@@ -496,7 +496,7 @@ export default function LaporanUtangPiutang() {
 
             {detailRow.sisa>0 && (
               <div className="mt-6">
-                <button className="px-4 py-2 rounded-lg border text-green-700 border-green-500 hover:bg-green-50" onClick={()=>openAddPayment(detailRow)}>
+                <button className="px-4 py-2 rounded-lg border text-violet-700 border-violet-500 hover:bg-violet-50" onClick={()=>openAddPayment(detailRow)}>
                   + Tambah Pembayaran / Cicilan
                 </button>
               </div>
@@ -547,7 +547,7 @@ export default function LaporanUtangPiutang() {
 
               <div className="flex justify-end gap-2 pt-1">
                 <button className="px-4 py-2 rounded-lg border hover:bg-gray-50" onClick={()=>setOpenBayar(false)}>Batal</button>
-                <button className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700" onClick={savePayment}>Simpan</button>
+                <button className="px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700" onClick={savePayment}>Simpan</button>
               </div>
             </div>
           </div>
@@ -563,13 +563,13 @@ export default function LaporanUtangPiutang() {
 ========================= */
 function StatCard({ icon, label, value }) {
   return (
-    <div className="rounded-xl border border-green-200 bg-green-50/40 p-4 flex items-center gap-3">
-      <div className="w-10 h-10 rounded-lg bg-white border border-green-200 flex items-center justify-center text-green-700">
+    <div className="rounded-xl border border-violet-200 bg-violet-50/40 p-4 flex items-center gap-3">
+      <div className="w-10 h-10 rounded-lg bg-white border border-violet-200 flex items-center justify-center text-violet-700">
         {icon}
       </div>
       <div>
         <div className="text-xs text-gray-500">{label}</div>
-        <div className="text-lg font-semibold text-green-700">{value}</div>
+        <div className="text-lg font-semibold text-violet-700">{value}</div>
       </div>
     </div>
   );
@@ -615,7 +615,7 @@ function Pagination({ page, totalPages, onPrev, onNext, onGoto }) {
       {nums.map((n,idx)=>(
         <React.Fragment key={n}>
           {idx>0 && nums[idx-1]+1!==n && <span className="px-1">…</span>}
-          <button onClick={()=>onGoto(n)} className={`px-3 py-1.5 rounded-lg border text-sm ${n===page?"bg-green-600 text-white border-green-600":"hover:bg-gray-50"}`}>{n}</button>
+          <button onClick={()=>onGoto(n)} className={`px-3 py-1.5 rounded-lg border text-sm ${n===page?"bg-violet-600 text-white border-violet-600":"hover:bg-gray-50"}`}>{n}</button>
         </React.Fragment>
       ))}
       <button onClick={onNext} disabled={page===totalPages} className="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-50">Next</button>

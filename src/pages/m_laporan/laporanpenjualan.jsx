@@ -59,7 +59,7 @@ const LaporanPenjualan = () => {
             className="inline-flex items-center border border-gray-300 rounded-lg px-3 py-2 text-sm hover:bg-gray-50"
             title="Filter tanggal"
           >
-            <FiCalendar className="text-green-500 mr-2" />
+            <FiCalendar className="text-violet-500 mr-2" />
             {dateRange || "Pilih tanggal"}
           </button>
 
@@ -69,7 +69,7 @@ const LaporanPenjualan = () => {
             <input
               type="text"
               placeholder="Cari Struk"
-              className="border border-gray-300 rounded-lg pl-9 pr-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400"
+              className="border border-gray-300 rounded-lg pl-9 pr-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-400"
               value={q}
               onChange={(e) => setQ(e.target.value)}
             />
@@ -79,15 +79,15 @@ const LaporanPenjualan = () => {
 
       {/* Summary */}
       <div className="flex gap-2 p-4">
-        <div className="flex-1 bg-green-500 text-white text-center rounded-full py-2 shadow-sm">
+        <div className="flex-1 bg-violet-500 text-white text-center rounded-full py-2 shadow-sm">
           <p className="text-xs opacity-90">Jml Transaksi</p>
           <p className="font-bold text-sm">0</p>
         </div>
-        <div className="flex-1 bg-green-600 text-white text-center rounded-full py-2 shadow-sm">
+        <div className="flex-1 bg-violet-600 text-white text-center rounded-full py-2 shadow-sm">
           <p className="text-xs opacity-90">Pendapatan</p>
           <p className="font-bold text-sm">Rp 0</p>
         </div>
-        <div className="flex-1 bg-green-700 text-white text-center rounded-full py-2 shadow-sm">
+        <div className="flex-1 bg-violet-700 text-white text-center rounded-full py-2 shadow-sm">
           <p className="text-xs opacity-90">Keuntungan</p>
           <p className="font-bold text-sm">Rp 0</p>
         </div>
@@ -142,7 +142,7 @@ const LaporanPenjualan = () => {
         </button>
         <button
           onClick={onExport}
-          className="inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm"
+          className="inline-flex items-center justify-center gap-2 bg-violet-600 hover:bg-violet-700 text-white px-3 py-2 rounded-lg text-sm"
         >
           <FiDownload /> Export
         </button>

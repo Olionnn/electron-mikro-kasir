@@ -93,7 +93,7 @@ function insertArusKeuanganDetail({
 /* ============================ Komponen UI ============================= */
 const chip = "inline-flex items-center px-3 py-1.5 rounded-full text-sm border";
 const labelCls = "block mb-2 font-semibold text-gray-700";
-const inputCls = "w-full border rounded-2xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white";
+const inputCls = "w-full border rounded-2xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-violet-500 bg-white";
 
 const Keuangan = () => {
   const navigate = useNavigate();
@@ -168,7 +168,7 @@ const Keuangan = () => {
           type: "button",
           title: "Simpan",
           onClick: onSave,
-          className: "inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50",
+          className: "inline-flex items-center gap-2 bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700 disabled:opacity-50",
           label: saving ? "Menyimpan..." : "Simpan",
         },
       ],
@@ -217,12 +217,12 @@ const Keuangan = () => {
   ];
 
   return (
-    <div className="h-full w-screen bg-gradient-to-b from-emerald-50 to-white text-gray-800 flex flex-col">
+    <div className="h-full w-screen bg-gradient-to-b from-violet-50 to-white text-gray-800 flex flex-col">
       {/* Banner sukses / error */}
       {(saved || error) && (
         <div className="px-4 pt-3">
           {saved && (
-            <div className="mb-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-green-800">
+            <div className="mb-3 rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-violet-800">
               Data tersimpan ke localStorage ✅
             </div>
           )}
@@ -245,7 +245,7 @@ const Keuangan = () => {
                   <button
                     key={t}
                     className={`px-6 md:px-8 py-3 md:py-3.5 rounded-xl font-semibold text-base md:text-lg transition
-                      ${tab === t ? "bg-emerald-500 text-white shadow" : "text-gray-600 hover:bg-gray-100"}`}
+                      ${tab === t ? "bg-violet-500 text-white shadow" : "text-gray-600 hover:bg-gray-100"}`}
                     onClick={() => setTab(t)}
                   >
                     {t}
@@ -274,7 +274,7 @@ const Keuangan = () => {
                     <button
                       key={p}
                       type="button"
-                      className={`${chip} border-emerald-300 text-emerald-700 hover:bg-emerald-50`}
+                      className={`${chip} border-violet-300 text-violet-700 hover:bg-violet-50`}
                       onClick={() => {
                         const cur = parseRupiahToInt(nominal);
                         const next = cur + p;
@@ -338,7 +338,7 @@ const Keuangan = () => {
                 <label className="inline-flex items-center gap-3 cursor-pointer select-none">
                   <input
                     type="checkbox"
-                    className="w-6 h-6 accent-emerald-600"
+                    className="w-6 h-6 accent-violet-600"
                     checked={cashdrawer}
                     onChange={() => setCashdrawer((v) => !v)}
                   />
@@ -348,7 +348,7 @@ const Keuangan = () => {
                 <button
                   onClick={onSave}
                   disabled={saving}
-                  className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 transition text-white font-semibold px-6 py-3 rounded-xl shadow-sm"
+                  className="bg-violet-600 hover:bg-violet-700 disabled:opacity-50 transition text-white font-semibold px-6 py-3 rounded-xl shadow-sm"
                 >
                   {saving ? "Menyimpan..." : "Simpan"}
                 </button>
@@ -375,9 +375,9 @@ const Keuangan = () => {
                           "py-5 md:py-6 rounded-xl transition active:scale-[0.99] shadow-sm " +
                           (isWideZero ? "col-span-2 " : "") +
                           (isFunction
-                            ? "bg-emerald-100 hover:bg-emerald-200 text-emerald-800"
+                            ? "bg-violet-100 hover:bg-violet-200 text-violet-800"
                             : isOperator
-                            ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                            ? "bg-violet-600 text-white hover:bg-violet-700"
                             : "bg-white border hover:bg-gray-50")
                         }
                         onClick={() => handleCalcClick(btn)}

@@ -10,7 +10,7 @@ const menus = [
     key: "hubungi",
     title: "Hubungi Kami",
     desc: "Kontak kami berdasar kebutuhan Anda",
-    accentClass: "text-green-700",
+    accentClass: "text-violet-700",
     render: () => <ContactList />,
   },
   {
@@ -100,7 +100,7 @@ export default function Bantuan() {
                     "w-full p-4 rounded-xl shadow-sm flex items-start justify-between transition text-left",
                     "hover:shadow",
                     isActive
-                      ? "bg-green-50 border border-green-200"
+                      ? "bg-violet-50 border border-violet-200"
                       : "bg-white border",
                   ].join(" ")}
                 >
@@ -118,7 +118,7 @@ export default function Bantuan() {
                   <FiChevronRight
                     className={[
                       "text-2xl transition",
-                      isActive ? "text-green-600" : "text-gray-400",
+                      isActive ? "text-violet-600" : "text-gray-400",
                     ].join(" ")}
                   />
                 </button>

@@ -31,7 +31,7 @@ const FormToko = () => {
   }, [namaToko, jenisUsaha, pajak, pemilik]);
 
   return (
-    <div className="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+    <div className="bg-violet-100 text-gray-800 min-h-screen flex flex-col">
       {/* Konten scrollable */}
       <div className="flex-1 overflow-y-auto px-6 py-10">
         {/* Foto Profil Toko */}
@@ -40,10 +40,10 @@ const FormToko = () => {
             <img
               src="https://via.placeholder.com/150"
               alt="Foto Toko"
-              className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-32 h-32 rounded-full border-4 border-violet-500 shadow-lg object-cover transition-transform duration-300 group-hover:scale-105"
             />
-            <button className="absolute bottom-2 right-2 bg-white border rounded-full p-2 shadow-md hover:shadow-lg transition">
-              <span className="material-icons text-green-600">image</span>
+            <button className="absolute bottom-2 right-2 bg-violet-400  rounded-full p-2 shadow-md hover:shadow-lg transition">
+              <span className=" text-white">image</span>
             </button>
 
             {/* Overlay ganti foto */}
@@ -61,7 +61,7 @@ const FormToko = () => {
             <select
               value={jenisUsaha}
               onChange={(e) => setJenisUsaha(e.target.value)}
-              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-green-400 focus:outline-none shadow-sm"
+              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-violet-400 focus:outline-none shadow-sm"
             >
               <option value="">Pilih jenis usaha...</option>
               <option value="makanan">Makanan</option>
@@ -77,7 +77,7 @@ const FormToko = () => {
               type="text"
               value={namaToko}
               onChange={(e) => setNamaToko(e.target.value)}
-              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-green-400 focus:outline-none shadow-sm"
+              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-violet-400 focus:outline-none shadow-sm"
             />
           </div>
 
@@ -88,7 +88,7 @@ const FormToko = () => {
               type="number"
               value={pajak}
               onChange={(e) => setPajak(e.target.value)}
-              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-green-400 focus:outline-none shadow-sm"
+              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-violet-400 focus:outline-none shadow-sm"
             />
           </div>
 
@@ -99,7 +99,7 @@ const FormToko = () => {
               type="text"
               value={pemilik}
               onChange={(e) => setPemilik(e.target.value)}
-              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-green-400 focus:outline-none shadow-sm"
+              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-violet-400 focus:outline-none shadow-sm"
             />
           </div>
 
@@ -110,7 +110,7 @@ const FormToko = () => {
               type="text"
               value="+62085707896575"
               disabled
-              className="w-full border rounded-lg px-4 py-3 bg-gray-100 text-lg cursor-not-allowed shadow-sm"
+              className="w-full border rounded-lg px-4 py-3 bg-white text-lg cursor-not-allowed shadow-sm"
             />
             <p className="text-sm text-red-600 mt-1">*Belum Verifikasi</p>
           </div>

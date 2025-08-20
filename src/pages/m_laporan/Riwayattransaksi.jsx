@@ -49,7 +49,7 @@ function LaporanNeraca({ onDetailClick }) {
           <option>Kasir</option>
         </select>
         <div className="flex gap-2 col-span-1">
-          <button className="flex-1 px-3 py-2 bg-emerald-600 text-white rounded-lg text-sm hover:bg-emerald-700">
+          <button className="flex-1 px-3 py-2 bg-violet-600 text-white rounded-lg text-sm hover:bg-violet-700">
             Download
           </button>
         </div>
@@ -77,7 +77,7 @@ function LaporanNeraca({ onDetailClick }) {
             <td className="px-3 py-2">
               <button
                 onClick={onDetailClick}
-                className="text-emerald-600 hover:underline"
+                className="text-green-600 hover:underline"
               >
                 Detail
               </button>
@@ -98,7 +98,7 @@ function DetailHistoryTransaksi({ onBackClick }) {
         </h2>
         <button
           onClick={onBackClick}
-          className="px-3 py-2 bg-gray-200 rounded-lg text-sm hover:bg-gray-300"
+          className="px-3 py-2 bg-violet-200 rounded-lg text-sm hover:bg-violet-300"
         >
           Kembali
         </button>

@@ -47,7 +47,7 @@ const InformasiToko = () => {
           key={idx}
           className="flex items-center gap-4 px-4 py-3 hover:bg-gray-50 transition-colors"
         >
-          <span className="text-green-600 text-2xl">{item.icon}</span>
+          <span className="text-violet-600 text-2xl">{item.icon}</span>
           <div>
             <div className="text-sm text-gray-500">{item.label}</div>
             <div className="font-semibold text-gray-900">{item.value}</div>
@@ -67,24 +67,24 @@ const InformasiToko = () => {
           type: "link",
           title: "Edit Toko",
           to: "/pengaturan/edittoko",
-          className: "bg-green-100 hover:bg-green-200 text-green-700 font-semibold px-4 py-2 rounded-lg flex items-center gap-2",
+          className: "bg-violet-100 hover:bg-violet-200 text-violet-700 font-semibold px-4 py-2 rounded-lg flex items-center gap-2",
           icon: <MdEdit className="text-lg" />,
         },
       ],
     });
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-green-50 to-white">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-violet-50 to-white">
 
       {/* Avatar / Logo */}
       <div className="flex flex-col items-center py-8 relative">
         <div className="relative group">
           <img
             src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png"
-            className="w-28 h-28 md:w-32 md:h-32 rounded-full ring-4 ring-green-100 shadow-lg transform group-hover:scale-105 transition-transform"
+            className="w-28 h-28 md:w-32 md:h-32 rounded-full ring-4 ring-violet-100 shadow-lg transform group-hover:scale-105 transition-transform"
             alt="Store Logo"
           />
-          <span className="absolute bottom-0 right-0 bg-green-500 text-white p-2 rounded-full shadow-md">
+          <span className="absolute bottom-0 right-0 bg-violet-500 text-white p-2 rounded-full shadow-md">
             <MdEdit />
           </span>
         </div>

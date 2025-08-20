@@ -847,14 +847,14 @@ const PembeliSuplier = () => {
   };
 
   return (
-    <div className="flex h-full w-full bg-gradient-to-br from-emerald-50 via-white to-sky-50">
+    <div className="flex h-full w-full bg-gradient-to-br from-violet-50 via-white to-sky-50">
       {/* LEFT: daftar barang */}
-      <div className="w-[60%] border-r border-emerald-100/70 bg-white/80 backdrop-blur-sm flex flex-col p-6 gap-4">
+      <div className="w-[60%] border-r border-violet-100/70 bg-white/80 backdrop-blur-sm flex flex-col p-6 gap-4">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Filter dropdown */}
-          <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">
-            <FiFilter className="w-5 h-5 text-emerald-700" />
+          <div className="flex items-center gap-2 bg-violet-50 border border-violet-200 rounded-xl px-3 py-2">
+            <FiFilter className="w-5 h-5 text-violet-700" />
             <select
               className="bg-transparent text-sm outline-none"
               value={sortKey}
@@ -866,7 +866,7 @@ const PembeliSuplier = () => {
               <option value="stok">Stok</option>
             </select>
             <button
-              className="text-xs inline-flex items-center gap-1 border border-emerald-300 rounded-full px-2 py-0.5 bg-white hover:bg-emerald-50"
+              className="text-xs inline-flex items-center gap-1 border border-violet-300 rounded-full px-2 py-0.5 bg-white hover:bg-violet-50"
               onClick={() => setSortAsc((v) => !v)}
               title="Urut naik/turun"
             >
@@ -876,7 +876,7 @@ const PembeliSuplier = () => {
 
           {/* Notifikasi stok */}
           <button
-            className="relative text-emerald-700 inline-flex items-center gap-2 border border-emerald-300 bg-emerald-50 px-4 py-2 rounded-xl hover:bg-emerald-100"
+            className="relative text-violet-700 inline-flex items-center gap-2 border border-violet-300 bg-violet-50 px-4 py-2 rounded-xl hover:bg-violet-100"
             title="Notifikasi Stok"
             onClick={() => setNotifOpen(true)}
           >
@@ -888,7 +888,7 @@ const PembeliSuplier = () => {
             <button
               className={`inline-flex items-center justify-center w-11 h-11 rounded-xl border ${
                 searchMode === "nama"
-                  ? "bg-emerald-600 text-white border-emerald-600"
+                  ? "bg-violet-600 text-white border-violet-600"
                   : "bg-white text-gray-700 hover:bg-gray-50 border-gray-300"
               }`}
               title="Cari Nama"
@@ -899,7 +899,7 @@ const PembeliSuplier = () => {
             <button
               className={`inline-flex items-center justify-center w-11 h-11 rounded-xl border ${
                 searchMode === "kode"
-                  ? "bg-emerald-600 text-white border-emerald-600"
+                  ? "bg-violet-600 text-white border-violet-600"
                   : "bg-white text-gray-700 hover:bg-gray-50 border-gray-300"
               }`}
               title="Cari Kode / Barcode"
@@ -911,7 +911,7 @@ const PembeliSuplier = () => {
 
           {/* Input search */}
           <div className="flex-1 relative">
-            <FiSearch className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-emerald-700" />
+            <FiSearch className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-violet-700" />
             <input
               type="text"
               placeholder={
@@ -921,12 +921,12 @@ const PembeliSuplier = () => {
               }
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full border-2 border-emerald-400 rounded-full pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200"
+              className="w-full border-2 border-violet-400 rounded-full pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200"
             />
           </div>
 
           <button
-            className="text-emerald-700 inline-flex items-center justify-center w-12 h-12 border border-emerald-500 rounded-xl hover:bg-emerald-50"
+            className="text-violet-700 inline-flex items-center justify-center w-12 h-12 border border-violet-500 rounded-xl hover:bg-violet-50"
             title="Refresh"
             onClick={() => window.location.reload()}
           >
@@ -936,7 +936,7 @@ const PembeliSuplier = () => {
 
         {/* Kategori dummy */}
         <div className="flex items-center gap-2">
-          <button className="border px-4 py-2 rounded-full text-sm hover:bg-emerald-50 border-emerald-300 text-emerald-700">
+          <button className="border px-4 py-2 rounded-full text-sm hover:bg-violet-50 border-violet-300 text-violet-700">
             Semua
           </button>
           <button className="border px-4 py-2 rounded-full text-sm hover:bg-amber-50 border-amber-300 text-amber-700">
@@ -953,15 +953,15 @@ const PembeliSuplier = () => {
             <button
               key={it.id}
               onClick={() => addToCart(it)}
-              className="text-left rounded-xl border border-emerald-200 hover:shadow-md transition p-3 bg-white/70"
+              className="text-left rounded-xl border border-violet-200 hover:shadow-md transition p-3 bg-white/70"
               title="Tambah ke keranjang"
             >
               <div className="flex items-center gap-3">
-                <div className="bg-gradient-to-br from-emerald-50 to-white border border-emerald-200 rounded-xl w-12 h-12 flex items-center justify-center text-[10px] font-bold text-emerald-700">
+                <div className="bg-gradient-to-br from-violet-50 to-white border border-violet-200 rounded-xl w-12 h-12 flex items-center justify-center text-[10px] font-bold text-violet-700">
                   {it.kode}
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold text-emerald-800">
+                  <div className="font-semibold text-violet-800">
                     {it.nama}
                   </div>
                   <div className="text-xs text-gray-500 flex items-center gap-2">
@@ -979,8 +979,8 @@ const PembeliSuplier = () => {
         </div>
 
         <div>
-          <button className="flex items-center gap-3 text-emerald-700 hover:text-emerald-900 text-sm">
-            <span className="w-10 h-10 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center">
+          <button className="flex items-center gap-3 text-violet-700 hover:text-violet-900 text-sm">
+            <span className="w-10 h-10 bg-violet-50 border border-violet-200 rounded-full flex items-center justify-center">
               <FiPlus className="text-lg" />
             </span>
             <span className="font-semibold">Tambah Barang Baru</span>
@@ -994,7 +994,7 @@ const PembeliSuplier = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={openCost}
-              className="text-xs inline-flex items-center gap-2 border px-3 py-1.5 rounded-full hover:bg-emerald-50 border-emerald-300 text-emerald-700 bg-white"
+              className="text-xs inline-flex items-center gap-2 border px-3 py-1.5 rounded-full hover:bg-violet-50 border-violet-300 text-violet-700 bg-white"
               title="Tambah biaya (ongkir/jasa)"
             >
               + Biaya (Ctrl+B)
@@ -1002,7 +1002,7 @@ const PembeliSuplier = () => {
           </div>
         </div>
 
-        <div className="rounded-xl border border-emerald-200 p-3 grid gap-3 bg-white/80">
+        <div className="rounded-xl border border-violet-200 p-3 grid gap-3 bg-white/80">
           <label className="grid gap-1">
             <span className="text-xs text-gray-600">Supplier</span>
             <select
@@ -1082,7 +1082,7 @@ const PembeliSuplier = () => {
           </div>
         </div>
 
-        <div className="flex-1 rounded-xl border border-emerald-200 p-3 overflow-auto bg-white/80">
+        <div className="flex-1 rounded-xl border border-violet-200 p-3 overflow-auto bg-white/80">
           {cart.length === 0 ? (
             <div className="h-full border-2 border-dashed rounded-xl flex items-center justify-center text-gray-500 text-sm">
               Belum ada barang yang dipilih
@@ -1092,25 +1092,25 @@ const PembeliSuplier = () => {
               {cart.map((row) => (
                 <div
                   key={row.id}
-                  className="border rounded-lg p-2 flex items-center justify-between bg-gradient-to-r from-white to-emerald-50 cursor-pointer"
+                  className="border rounded-lg p-2 flex items-center justify-between bg-gradient-to-r from-white to-violet-50 cursor-pointer"
                   onClick={() => openLineEdit(row)}
                   title="Klik untuk edit baris"
                 >
                   <div className="min-w-0">
-                    <div className="font-medium text-sm truncate text-emerald-800">
+                    <div className="font-medium text-sm truncate text-violet-800">
                       {row.nama}
                     </div>
                     <div className="text-xs text-gray-500">
                       {row.kode} • {rp(row.harga)}
                       {row.discountType === "pct" &&
                         Number(row.diskonPerQtyPct || 0) > 0 && (
-                          <span className="ml-2 text-emerald-700">
+                          <span className="ml-2 text-violet-700">
                             • Diskon/qty: {row.diskonPerQtyPct}%
                           </span>
                         )}
                       {row.discountType !== "pct" &&
                         Number(row.diskonPerQtyRp || 0) > 0 && (
-                          <span className="ml-2 text-emerald-700">
+                          <span className="ml-2 text-violet-700">
                             • Diskon/qty: {rp(row.diskonPerQtyRp)}
                           </span>
                         )}
@@ -1178,7 +1178,7 @@ const PembeliSuplier = () => {
         </div>
 
         {/* Rangkuman */}
-        <div className="rounded-xl border border-emerald-300 overflow-hidden bg-white">
+        <div className="rounded-xl border border-violet-300 overflow-hidden bg-white">
           <div className="px-4 py-3 grid gap-1 text-sm">
             <div className="flex justify-between">
               <span>Subtotal (Sebelum diskon)</span>
@@ -1212,12 +1212,12 @@ const PembeliSuplier = () => {
             </div>
             <div className="border-t pt-2 flex justify-between">
               <span className="font-semibold text-xl">Total</span>
-              <span className="font-bold text-emerald-700 text-xl">
+              <span className="font-bold text-violet-700 text-xl">
                 {rp(grandTotal)}
               </span>
             </div>
           </div>
-          <div className="flex items-center justify-between px-4 py-4 bg-emerald-50">
+          <div className="flex items-center justify-between px-4 py-4 bg-violet-50">
             <button
               onClick={saveDraft}
               className="border-2 w-40 border-amber-600 text-amber-700 py-3 hover:bg-amber-50 text-sm font-semibold rounded-xl"
@@ -1226,7 +1226,7 @@ const PembeliSuplier = () => {
             </button>
             <button
               onClick={proceedToPay}
-              className="border-2 w-48 border-emerald-600 text-emerald-700 py-3 hover:bg-emerald-100 text-sm font-semibold rounded-xl"
+              className="border-2 w-48 border-violet-600 text-violet-700 py-3 hover:bg-violet-100 text-sm font-semibold rounded-xl"
             >
               Bayar (F12)
             </button>
@@ -1301,7 +1301,7 @@ const PembeliSuplier = () => {
                 </button>
                 <button
                   onClick={saveCost}
-                  className="px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
+                  className="px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700"
                 >
                   Simpan
                 </button>
@@ -1421,7 +1421,7 @@ const PembeliSuplier = () => {
                                   ? "text-red-600"
                                   : i.stok <= MENIPIS_THRESHOLD
                                   ? "text-amber-700"
-                                  : "text-emerald-700"
+                                  : "text-violet-700"
                               }
                             >
                               {i.stok}
@@ -1430,7 +1430,7 @@ const PembeliSuplier = () => {
                           </div>
                         </div>
                         <button
-                          className="text-xs border px-3 py-1 rounded-full bg-emerald-50 border-emerald-300 text-emerald-700 hover:bg-emerald-100"
+                          className="text-xs border px-3 py-1 rounded-full bg-violet-50 border-violet-300 text-violet-700 hover:bg-violet-100"
                           onClick={() => addToCart(i)}
                         >
                           + Keranjang
@@ -1449,7 +1449,7 @@ const PembeliSuplier = () => {
                   <div className="mt-4 flex justify-end">
                     <button
                       onClick={() => setNotifDetailOpen(false)}
-                      className="px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
+                      className="px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700"
                     >
                       Tutup
                     </button>
@@ -1500,7 +1500,7 @@ const PembeliSuplier = () => {
                     type="button"
                     className={`px-3 py-1.5 rounded-lg border ${
                       lineForm.discountType === "rp"
-                        ? "bg-emerald-600 text-white border-emerald-600"
+                        ? "bg-violet-600 text-white border-violet-600"
                         : "bg-white hover:bg-gray-50"
                     }`}
                     onClick={() =>
@@ -1514,7 +1514,7 @@ const PembeliSuplier = () => {
                     type="button"
                     className={`px-3 py-1.5 rounded-lg border ${
                       lineForm.discountType === "pct"
-                        ? "bg-emerald-600 text-white border-emerald-600"
+                        ? "bg-violet-600 text-white border-violet-600"
                         : "bg-white hover:bg-gray-50"
                     }`}
                     onClick={() =>

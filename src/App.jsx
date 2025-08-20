@@ -47,10 +47,10 @@ import AbsensiPage from "./pages/m_absensi/Absen";
 import ShiftPage from "./pages/m_shift/Shift";
 import OlsopinPage from "./pages/m_setting/TokoOnline";
 import BarangStokPage from "./pages/m_stok/Stok";
-import LaporanPembelian from "./pages/m_laporan/LaporanPembelian";
-import LaporanPenjualan from "./pages/m_laporan/LaporanPenjualan";
+import LaporanPembelian from "./pages/m_laporan/laporanpembelian";
+import LaporanPenjualan from "./pages/m_laporan/laporanpenjualan";
 import LaporanKeuangan from "./pages/m_laporan/LaporanKeuangan";
-import LaporanKeuanganPage from "./pages/m_laporan/DetailKeuangan";
+import LaporanKeuanganPage from "./pages/m_laporan/detailkeuangan";
 import ContactList from "./pages/m_bantuan/HubungiKami";
 import FeedbackForm from "./pages/m_bantuan/feedbackapk";
 import DashboardKasir from "./pages/m_dasbord/dasbord";
@@ -63,11 +63,11 @@ import ManagementRole from "./pages/m_setting/ManajemenRole";
 import PromosiPage from "./pages/m_promosi/Promosi";
 import StokDetail from "./pages/m_stok/StokDetail";
 import LaporanUtangPiutang from "./pages/m_laporan/LaporanUtangPiutang";
-import Otp from "./pages/auth/Otp";
+import OtpVerification from "./pages/auth/Otp";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
-import CreateToko from "./pages/auth/CreateToko";
-import UjiCoba from "./pages/auth/UjiCoba";
+import DataTokoForm from "./pages/auth/CreateToko";
+import MasaUjiCoba from "./pages/auth/UjiCoba";
 import PengaturanStok from "./pages/auth/PengaturanStok";
 import Maps from "./pages/auth/Maps";
 function App() {
@@ -78,15 +78,15 @@ function App() {
       <div>
         <main className="h-screen w-screen">
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<OtpVerification />} />
 
             <Route path="/register" element={<Register />} />
             {/* Auth */}
-            <Route path="/otp" element={<Otp />} />
+            <Route path="/otp" element={<OtpVerification />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/create-toko" element={<CreateToko />} />
-            <Route path="/ujicoba" element={<UjiCoba />} />
+            <Route path="/create-toko" element={<DataTokoForm />} />
+            <Route path="/ujicoba" element={<MasaUjiCoba />} />
             <Route path="/maps" element={<Maps />} />
             <Route path="/pengaturan-stok" element={<PengaturanStok />} />
 

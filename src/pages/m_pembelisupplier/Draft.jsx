@@ -119,7 +119,7 @@ export default function DraftPembelianPage() {
               <div
                 key={row.id}
                 className={`rounded-lg p-4 shadow-sm border mb-3 cursor-pointer ${
-                  active ? "bg-emerald-50 border-emerald-300" : "bg-gray-50"
+                  active ? "bg-violet-50 border-violet-300" : "bg-gray-50"
                 }`}
                 onClick={() => setSelected(row)}
                 title="Lihat detail"
@@ -252,9 +252,9 @@ export default function DraftPembelianPage() {
             </div>
 
             {/* Total */}
-            <div className="mt-3 border rounded-lg p-3 bg-emerald-50 border-emerald-200 flex items-center justify-between">
+            <div className="mt-3 border rounded-lg p-3 bg-violet-50 border-violet-200 flex items-center justify-between">
               <div className="font-semibold">TOTAL</div>
-              <div className="text-xl font-bold text-emerald-700">
+              <div className="text-xl font-bold text-violet-700">
                 {rp(selected.total || 0)}
               </div>
             </div>
@@ -276,12 +276,12 @@ export default function DraftPembelianPage() {
                         <div className="text-xs text-gray-500">
                           {it.kode} • {rp(it.harga_beli || it.harga || 0)} × {it.qty}
                           {Number(it.diskon_per_qty_pct || 0) > 0 && (
-                            <span className="ml-2 text-emerald-700">
+                            <span className="ml-2 text-violet-700">
                               • Disc/qty: {it.diskon_per_qty_pct}%
                             </span>
                           )}
                           {Number(it.diskon_per_qty_rp || 0) > 0 && (
-                            <span className="ml-2 text-emerald-700">
+                            <span className="ml-2 text-violet-700">
                               • Disc/qty: {rp(it.diskon_per_qty_rp)}
                             </span>
                           )}

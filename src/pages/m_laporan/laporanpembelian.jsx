@@ -27,7 +27,7 @@ const LaporanPembelian = () => {
           onClick: onExport,
           label: "Export",
           className:
-            "hidden sm:inline-flex items-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-green-700",
+            "hidden sm:inline-flex items-center gap-2 bg-violet-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-violet-700",
         },
       ],
       rightExtra: (
@@ -51,8 +51,8 @@ const LaporanPembelian = () => {
       {/* Filter Bar */}
       <div className="p-4 border-b flex flex-wrap gap-3 items-center bg-white">
         {/* Date Picker */}
-        <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 text-sm flex-1 max-w-[360px] focus-within:ring-2 focus-within:ring-green-200">
-          <FiCalendar className="text-green-600 mr-2" />
+        <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 text-sm flex-1 max-w-[360px] focus-within:ring-2 focus-within:ring-violet-200">
+          <FiCalendar className="text-violet-600 mr-2" />
           <button
             onClick={onOpenFilterDate}
             className="text-left flex-1 truncate hover:opacity-80"
@@ -77,14 +77,14 @@ const LaporanPembelian = () => {
             placeholder="Cari Struk"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400"
+            className="w-full border border-gray-300 rounded-lg pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-400"
           />
         </div>
 
         {/* Export (mobile) */}
         <button
           onClick={onExport}
-          className="sm:hidden inline-flex items-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-green-700"
+          className="sm:hidden inline-flex items-center gap-2 bg-violet-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-violet-700"
         >
           <FiDownload /> Export
         </button>
@@ -92,15 +92,15 @@ const LaporanPembelian = () => {
 
       {/* Summary */}
       <div className="flex px-4 py-3 gap-2">
-        <div className="flex-1 bg-green-500 text-white text-center rounded-full py-2 shadow-sm">
+        <div className="flex-1 bg-violet-500 text-white text-center rounded-full py-2 shadow-sm">
           <p className="text-[11px] opacity-90">Jumlah Pembelian</p>
           <p className="font-bold text-sm">0</p>
         </div>
-        <div className="flex-1 bg-green-600 text-white text-center rounded-full py-2 shadow-sm">
+        <div className="flex-1 bg-violet-600 text-white text-center rounded-full py-2 shadow-sm">
           <p className="text-[11px] opacity-90">Total Tagihan</p>
           <p className="font-bold text-sm">Rp 0</p>
         </div>
-        <div className="flex-1 bg-green-700 text-white text-center rounded-full py-2 shadow-sm">
+        <div className="flex-1 bg-violet-700 text-white text-center rounded-full py-2 shadow-sm">
           <p className="text-[11px] opacity-90">Yang Dibayarkan</p>
           <p className="font-bold text-sm">Rp 0</p>
         </div>
