@@ -1,14 +1,12 @@
-// { success: true, data: { items: [...] }, pagination?: {...} }
-
 import { useCallback, useEffect, useRef, useState } from "react";
 import { normalizeRow } from "../utils/utils";
 
-// --- IPC bridge ---
+
 const kategoriIpc = {
   getList: (params) => window.electronAPI.getKategoriList(params),
   getById: (id) => window.electronAPI.getKategoriById(id),
   create: (data) => window.electronAPI.createKategori(data),
-  update: (id, data) => window.electronAPI.updateKategori(id, data),
+  update: (id, data) => window.electronAPI.updateKategori( id, data ),
   remove: (id) => window.electronAPI.deleteKategori(id),
 };
 
@@ -17,8 +15,13 @@ const kategoriIpc = {
 const toBackend = (p = {}) => ({
   nama: p.nama ?? "",
   status: p.status ?? true,
-  toko_id: p.toko_id ?? "",
+  toko_id: p.toko_id ?? 0,
+  created_by: p.created_by ?? 1,
+  updated_by: p.updated_by ?? 1,
+  sync_at: p.sync_at ?? null
 });
+
+
 const fromBackend = (row = {}) => {
   const r = normalizeRow(row);
   return {
@@ -28,10 +31,12 @@ const fromBackend = (row = {}) => {
     toko_id: r.toko_id ?? null,
     created_at: r.created_at ?? null,
     updated_at: r.updated_at ?? null,
+    created_by: r.created_by ?? 1,
+    updated_by: r.updated_by ?? 1,
+    sync_at: r.sync_at ?? null  
   };
 };
 
-// --- defaults ---
 const DEFAULT_PARAMS = {
   pagination: { page: 1, limit: 10 },
   filter: { search: "", status: "", toko_id: "" },
@@ -59,9 +64,8 @@ export function useKategori(initialParams = DEFAULT_PARAMS) {
       const res = await kategoriIpc.getList(paramsRef.current);
       if (!res?.success) throw new Error(res?.error || "Gagal memuat kategori");
 
-      const list = res.data?.items ?? [];
+      const list = res.data?.data ?? [];
       const pager = res.pagination ?? {};
-
       const page = pager.page ?? paramsRef.current.pagination.page ?? 1;
       const limit = pager.limit ?? paramsRef.current.pagination.limit ?? 10;
       const total = pager.total ?? list.length;
@@ -81,7 +85,7 @@ export function useKategori(initialParams = DEFAULT_PARAMS) {
     const res = await kategoriIpc.create(toBackend(payload));
     if (!res?.success) throw new Error(res?.error || "Gagal membuat kategori");
     await refresh();
-    return res.data; // bisa { item } sesuai backend Anda
+    return res.data; 
   }, [refresh]);
 
   const update = useCallback(async (id, payload) => {
@@ -101,12 +105,11 @@ export function useKategori(initialParams = DEFAULT_PARAMS) {
   const getById = useCallback(async (id) => {
     const res = await kategoriIpc.getById(id);
     if (!res?.success) throw new Error(res?.error || "Gagal mengambil kategori");
-    // backend Anda saat ini mengirim { data: { items: <obj> } } untuk getById
-    const raw = res.data?.item ?? res.data?.items ?? null;
+    const raw = res.data?.data ?? res.data?.item ?? null;
     return raw ? fromBackend(raw) : null;
   }, []);
 
-  useEffect(() => { refresh(initialParams); }, []); // load sekali
+  useEffect(() => { refresh(initialParams); }, []); 
 
   return { items, pagination, loading, error, refresh, create, update, remove, getById };
 }
