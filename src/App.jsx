@@ -68,6 +68,8 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 import CreateToko from "./pages/auth/CreateToko";
 import UjiCoba from "./pages/auth/UjiCoba";
+import PengaturanStok from "./pages/auth/PengaturanStok";
+import Maps from "./pages/auth/Maps";
 function App() {
   const [count, setCount] = useState(0);
 
