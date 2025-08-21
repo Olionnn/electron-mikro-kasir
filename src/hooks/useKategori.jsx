@@ -6,7 +6,6 @@ import { getAccessToken } from "../utils/jwt";
 const kategoriIpc = {
   getList: (params) => {
     const token = getAccessToken();
-    console.log("Fetching kategori list with token:", token); 
     if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
     return window.electronAPI.getKategoriList(params, token);
   },
@@ -75,7 +74,6 @@ export function useKategori(initialParams = DEFAULT_PARAMS) {
   const paramsRef = useRef(initialParams);
 
   const refresh = useCallback(async (nextParams = {}) => {
-    console.log("masuk");
     setLoading(true);
     setError(null);
     try {
@@ -94,7 +92,6 @@ export function useKategori(initialParams = DEFAULT_PARAMS) {
 
       const res = await kategoriIpc.getList(paramsRef.current);
       if (!res?.success) throw new Error(res?.error || "Gagal memuat kategori");
-      console.log("Kategori list fetched successfully:", res);
       // Server returns: res.data = { data: [...], pagination: {...} }
       const payload = res.data || {};
       const list = Array.isArray(payload.data)
