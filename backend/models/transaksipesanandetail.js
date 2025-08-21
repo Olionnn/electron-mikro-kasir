@@ -21,7 +21,7 @@ const TransaksiPesananDetail = db.define('transaksi_pesanan_detail', {
     type: DataTypes.INTEGER,
     allowNull: true,
     references: {
-      model: 'transaksiPesanan',
+      model: 'transaksi_pesanan',
       key: 'id',
     },
     onDelete: 'CASCADE',

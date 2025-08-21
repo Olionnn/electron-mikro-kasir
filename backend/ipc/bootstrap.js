@@ -35,6 +35,7 @@ import TransaksiDetail from '../models/transaksidetail.js';
 import TransaksiPesanan from '../models/transaksipesanan.js';
 import TransaksiPesananDetail from '../models/transaksipesanandetail.js';
 import Users from '../models/users.js';
+import Pembelian from '../models/pembelian.js';
 
 
 async function initDatabase() {
@@ -68,6 +69,7 @@ async function initDatabase() {
     await Pajak.sync();
     await PajakDefault.sync();
     await Pelanggan.sync();
+    await Pembelian.sync();
     await PembelianDetail.sync();
     await PengaturanStruk.sync();
     await Piutang.sync();

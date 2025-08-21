@@ -119,37 +119,31 @@ async function GetDataById(id) {
 async function CreateData(trx, data) {
   try {
     const kategori = await Kategori.create(data, { transaction: trx });
-    await trx.commit();
     return kategori;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
 
 async function UpdateData(trx, id, data) {
   try {
-    console.log('Updating kategori with ID:', id);
     const kategori = await Kategori.findByPk(id);
     if (!kategori) throw new Error('Kategori not found');
     await kategori.update(data, { transaction: trx });
-    await trx.commit();
+
     return kategori;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
 
-async function DeleteData(trx, id) {
+async function DeleteData( id) {
   try {
-    const item = await Kategori.findByPk(id);
-    if (!item) throw new Error('Kategori not found');
-    await item.destroy({ transaction: trx });
-    await trx.commit();
+    const kategori = await Kategori.findOne({ where: { id } });
+    if (!kategori) throw new Error('Kategori not found');
+    await kategori.destroy({ force: true });
     return { message: 'Kategori deleted successfully' };
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }

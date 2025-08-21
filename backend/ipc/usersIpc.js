@@ -113,23 +113,23 @@ ipcMain.handle("usersIpc:register", async (event, payload) => {
 
 
 
-ipcMain.handle("usersIpc:logout", async (event, payload) => {
-  try {
-    const { user_id } = parsePayload(payload);
-    if (!user_id) return createErrorResponse("user_id missing");
+// ipcMain.handle("usersIpc:logout", async (event, payload) => {
+//   try {
+//     const { user_id } = parsePayload(payload);
+//     if (!user_id) return createErrorResponse("user_id missing");
 
-    await db.transaction(async (t) => {
-      const user = await GetUserById(user_id);
-      if (!user) throw new Error("User not found");
-      const nextTV = (user.token_version ?? 0) + 1;
-      await UpdateUser(t, user_id, { token_version: nextTV });
-    });
+//     // await db.transaction(async (t) => {
+//     //   const user = await GetUserById(user_id);
+//     //   if (!user) throw new Error("User not found");
+//     //   const nextTV = (user.token_version ?? 0) + 1;
+//     //   await UpdateUser(t, user_id, { token_version: nextTV });
+//     // });
 
-    return createSuccessResponse("Logged out", { data: {}, pagination: {} });
-  } catch (err) {
-    return createErrorResponse(err?.message || "Gagal logout");
-  }
-});
+//     return createSuccessResponse("Logged out", { data: {}, pagination: {} });
+//   } catch (err) {
+//     return createErrorResponse(err?.message || "Gagal logout");
+//   }
+// });
 
 
 

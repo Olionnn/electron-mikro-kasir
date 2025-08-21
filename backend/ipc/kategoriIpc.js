@@ -51,17 +51,19 @@ ipcMain.handle(
 
 ipcMain.handle(
   "kategoriIpc:create",
-  requireAuth(async (event, { data }) => {
-    const trx = await db.transaction();
+  requireAuth(async (_, { data }) => {
     try {
-      const created = await CreateData(trx, data);
-      await trx.commit?.();
+      const res = await db.transaction(async (trx) => {
+        const created = await CreateData(trx, data);
+        if (!created) throw new Error("Gagal membuat kategori");
+
+        return created;
+      }, data);
       return createSuccessResponse("Kategori Berhasil Dibuat", {
-        data: created,
+        data: res,
         pagination: {},
       });
     } catch (error) {
-      await trx.rollback?.();
       return createErrorResponse(error, "creating kategoriIpc");
     }
   })
@@ -69,17 +71,17 @@ ipcMain.handle(
 
 ipcMain.handle(
   "kategoriIpc:update",
-  requireAuth(async (event, { id, data }) => {
-    const trx = await db.transaction();
+  requireAuth(async (_, { id, data }) => {
     try {
-      const updated = await UpdateData(trx, id, data);
-      await trx.commit?.();
+      const res = await db.transaction(async (trx) => {
+        const updated = await UpdateData(trx, id, data);
+        return updated;
+      }, id, data);
       return createSuccessResponse("Kategori Berhasil DiUbah", {
-        data: updated,
+        data: res,
         pagination: {},
       });
     } catch (error) {
-      await trx.rollback?.();
       return createErrorResponse(error, "updating kategoriIpc");
     }
   })
@@ -88,16 +90,14 @@ ipcMain.handle(
 ipcMain.handle(
   "kategoriIpc:delete",
   requireAuth(async (event, { id }) => {
-    const trx = await db.transaction();
     try {
-      const deleted = await DeleteData(trx, id);
-      await trx.commit?.();
+      await DeleteData( id);
+
       return createSuccessResponse("Kategori Berhasil Dihapus", {
-        data: deleted,
+        data: null,
         pagination: {},
       });
     } catch (error) {
-      await trx.rollback?.();
       return createErrorResponse(error, "deleting kategoriIpc");
     }
   })
