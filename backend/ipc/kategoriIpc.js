@@ -1,87 +1,104 @@
-import { ipcMain } from 'electron';
-import { 
-  GetDataList, 
-  GetDataById, 
-  CreateData, 
-  UpdateData, 
-  DeleteData 
-} from '../models/kategori.js';
-import { calculatePagination } from '../helpers/paginate.js';
-import { createSuccessResponse, createErrorResponse } from '../helpers/response.js';
-import db from '../../config/database.js';
-import { requireAuth } from '../middleware/auth.js';
+// backend/ipc/kategoriIpc.js
+import { ipcMain } from "electron";
+import {
+  GetDataList,
+  GetDataById,
+  CreateData,
+  UpdateData,
+  DeleteData,
+} from "../models/kategori.js";
+import { calculatePagination } from "../helpers/paginate.js";
+import {
+  createSuccessResponse,
+  createErrorResponse,
+} from "../helpers/response.js";
+import db from "../../config/database.js";
+import { requireAuth } from "../middleware/auth.js";
 
-ipcMain.handle('kategoriIpc:getList', requireAuth(async (event, args) => {
+ipcMain.handle(
+  "kategoriIpc:getList",
+  requireAuth(async (event, args) => {
     try {
-      console.log("KategoriIpc:getList", { args });
-      const result = await GetDataList(args.pagination, args.filter);
-      const paginationData = calculatePagination(args.pagination, result.totalRows);
+      const { pagination = {}, filter = {} } = args || {};
+      const result = await GetDataList(pagination, filter);
+      const paginationData = calculatePagination(pagination, result.totalRows);
 
-      console.log("KategoriIpc:getList", { result, paginationData });
-      return createSuccessResponse({
+      // Return shape: res.data = { data: [...], pagination: {...} }
+      return createSuccessResponse("Kategori list fetched successfully", {
         data: result.kategoriList,
-        pagination: paginationData
+        pagination: paginationData,
       });
-
     } catch (error) {
-      return createErrorResponse(error, 'getting kategoriIpc list');
+      return createErrorResponse(error, "getting kategoriIpc list");
     }
-}));
+  })
+);
 
-ipcMain.handle('kategoriIpc:getById', requireAuth(async (event, { id, auth }) => {
-  try {
-    const kategoriIpc = await GetDataById(id);
-    return createSuccessResponse({
-        items: kategoriIpc,
-        pagination: {}
-    });
-  } catch (error) {
-    console.error('Error getting kategoriIpc by ID:', error);
-      return createErrorResponse(error, 'getting kategoriIpc by ID');
-  }
-}));
-
-ipcMain.handle('kategoriIpc:create', requireAuth(async (event, { data, auth }) => {
-  const trx = await db.transaction();
+ipcMain.handle(
+  "kategoriIpc:getById",
+  requireAuth(async (event, { id }) => {
     try {
-        const kategoriIpc = await CreateData(trx, data);
-        return createSuccessResponse({
-            items: kategoriIpc,
-            pagination: {}
-        });
+      const row = await GetDataById(id);
+      return createSuccessResponse("KategoriIpc fetched successfully", {
+        data: row,
+        pagination: {},
+      });
     } catch (error) {
-        console.error('Error creating kategoriIpc:', error);
-        return createErrorResponse(error, 'creating kategoriIpc');
+      return createErrorResponse(error, "getting kategoriIpc by ID");
     }
-}));
+  })
+);
 
-ipcMain.handle('kategoriIpc:update', requireAuth(async (event, { id, data, auth }) => {
-  const trx = await db.transaction();
-  try {
-    console.log('Updating kategoriIpc with ID:', id, data);
-    const kategoriIpc = await UpdateData(trx, id, data);
-    return createSuccessResponse({
-        items: kategoriIpc,
-        pagination: {}
-        });
+ipcMain.handle(
+  "kategoriIpc:create",
+  requireAuth(async (event, { data }) => {
+    const trx = await db.transaction();
+    try {
+      const created = await CreateData(trx, data);
+      await trx.commit?.();
+      return createSuccessResponse("Kategori Berhasil Dibuat", {
+        data: created,
+        pagination: {},
+      });
+    } catch (error) {
+      await trx.rollback?.();
+      return createErrorResponse(error, "creating kategoriIpc");
+    }
+  })
+);
 
-  } catch (error) {
-    console.error('Error updating kategoriIpc:', error);
-    return createErrorResponse(error, 'updating kategoriIpc');
-  }
-}));
+ipcMain.handle(
+  "kategoriIpc:update",
+  requireAuth(async (event, { id, data }) => {
+    const trx = await db.transaction();
+    try {
+      const updated = await UpdateData(trx, id, data);
+      await trx.commit?.();
+      return createSuccessResponse("Kategori Berhasil DiUbah", {
+        data: updated,
+        pagination: {},
+      });
+    } catch (error) {
+      await trx.rollback?.();
+      return createErrorResponse(error, "updating kategoriIpc");
+    }
+  })
+);
 
-ipcMain.handle('kategoriIpc:delete', requireAuth(async (event, { id, auth }) => {
-  const trx = await db.transaction();
-  try {
-    const result = await DeleteData(trx, id);
-    return createSuccessResponse({
-        items: result,
-        pagination: {}
-        });
-  } catch (error) {
-    console.error('Error deleting kategoriIpc:', error);
-    return createErrorResponse(error, 'deleting kategoriIpc');
-  }
-}));
-
+ipcMain.handle(
+  "kategoriIpc:delete",
+  requireAuth(async (event, { id }) => {
+    const trx = await db.transaction();
+    try {
+      const deleted = await DeleteData(trx, id);
+      await trx.commit?.();
+      return createSuccessResponse("Kategori Berhasil Dihapus", {
+        data: deleted,
+        pagination: {},
+      });
+    } catch (error) {
+      await trx.rollback?.();
+      return createErrorResponse(error, "deleting kategoriIpc");
+    }
+  })
+);

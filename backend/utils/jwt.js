@@ -1,11 +1,36 @@
+// backend/utils/jwt.js
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "adawdasdinaowidnaoisnion2-1w0eoqw0oeq0wdkq-w0dkq-w0kdq-0wdkq-w0kdq-w0dkq-w0dkq-w0kdq0-wdkq-0wkdq-w0dq-0wk0-qw";
-const ACCESS_TTL = "2h"; // contoh: 2h / 30m
+// Always resolve a single primary secret, with optional fallbacks (for rotation)
+const PRIMARY_SECRET =
+  process.env.JWT_SECRET ||
+  process.env.APP_JWT_SECRET ||      // optional alias
+  "asdasdsadaskdmaosidmaowidoaiwdaw-awdoawndiawnodanwiods";                       // safe default for dev
 
-export function signAccessToken(payload) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: ACCESS_TTL });
+const FALLBACK_SECRETS = [
+  process.env.JWT_SECRET_OLD,        // rotate: put previous secret here if needed
+  process.env.APP_JWT_SECRET_OLD,
+].filter(Boolean);
+
+/** Sign access token */
+export function signAccessToken(payload, opts = {}) {
+  // keep algo consistent
+  return jwt.sign(payload, PRIMARY_SECRET, {
+    algorithm: "HS256",
+    expiresIn: opts.expiresIn || "2h",
+  });
 }
+
+/** Verify access token (try primary, then fallbacks) */
 export function verifyAccessToken(token) {
-  return jwt.verify(token, JWT_SECRET);
+  const candidates = [PRIMARY_SECRET, ...FALLBACK_SECRETS];
+  let lastErr;
+  for (const secret of candidates) {
+    try {
+      return jwt.verify(String(token).trim(), secret, { algorithms: ["HS256"] });
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr; // preserves JsonWebTokenError: invalid signature
 }

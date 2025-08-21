@@ -124,7 +124,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   updateInfo: (id, data) => ipcRenderer.invoke("infoIpc:update", { id, data }),
   deleteInfo: (id) => ipcRenderer.invoke("infoIpc:delete", id),
 
-  //kategori - with auth (token passed from React)
+  // kategori
   getKategoriList: (params, token) =>
     ipcRenderer.invoke("kategoriIpc:getList", withAuth(params || {}, token)),
   getKategoriById: (id, token) =>
@@ -324,6 +324,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // auth
   login: (data) => ipcRenderer.invoke("usersIpc:login", data),
   register: (data) => ipcRenderer.invoke("usersIpc:register", data),
+  logout:       (data) => ipcRenderer.invoke('usersIpc:logout', data),
+
 
   withAuth: (data, token) => withAuth(data, token),
 });

@@ -1,3 +1,4 @@
+// frontend/src/hooks/useKategori.js
 import { useCallback, useEffect, useRef, useState } from "react";
 import { normalizeRow } from "../utils/utils";
 import { getAccessToken } from "../utils/jwt";
@@ -5,22 +6,28 @@ import { getAccessToken } from "../utils/jwt";
 const kategoriIpc = {
   getList: (params) => {
     const token = getAccessToken();
-    return window.electronAPI.getKategoriList( ...params, token );
+    console.log("Fetching kategori list with token:", token); 
+    if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
+    return window.electronAPI.getKategoriList(params, token);
   },
   getById: (id) => {
     const token = getAccessToken();
+    if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
     return window.electronAPI.getKategoriById(id, token);
   },
   create: (data) => {
     const token = getAccessToken();
+    if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
     return window.electronAPI.createKategori(data, token);
   },
   update: (id, data) => {
     const token = getAccessToken();
+    if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
     return window.electronAPI.updateKategori(id, data, token);
   },
   remove: (id) => {
     const token = getAccessToken();
+    if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
     return window.electronAPI.deleteKategori(id, token);
   },
 };
@@ -39,7 +46,8 @@ const fromBackend = (row = {}) => {
   return {
     id: r.id,
     nama: r.nama ?? "",
-    status: r.status ?? true,
+    // coerce 0/1/"0"/"1"/true/false:
+    status: typeof r.status === "boolean" ? r.status : !!Number(r.status ?? 1),
     toko_id: r.toko_id ?? null,
     created_at: r.created_at ?? null,
     updated_at: r.updated_at ?? null,
@@ -67,6 +75,7 @@ export function useKategori(initialParams = DEFAULT_PARAMS) {
   const paramsRef = useRef(initialParams);
 
   const refresh = useCallback(async (nextParams = {}) => {
+    console.log("masuk");
     setLoading(true);
     setError(null);
     try {
@@ -85,15 +94,15 @@ export function useKategori(initialParams = DEFAULT_PARAMS) {
 
       const res = await kategoriIpc.getList(paramsRef.current);
       if (!res?.success) throw new Error(res?.error || "Gagal memuat kategori");
-
-      // ✅ payload consistent di bawah res.data
-      console.log("KategoriIpc:getList response:", res);
+      console.log("Kategori list fetched successfully:", res);
+      // Server returns: res.data = { data: [...], pagination: {...} }
       const payload = res.data || {};
       const list = Array.isArray(payload.data)
         ? payload.data
         : Array.isArray(payload.items)
         ? payload.items
         : [];
+
       const pager = payload.pagination || {};
 
       const page = pager.page ?? paramsRef.current.pagination.page ?? 1;
@@ -101,8 +110,7 @@ export function useKategori(initialParams = DEFAULT_PARAMS) {
       const total =
         pager.total ??
         (typeof pager.totalRows === "number" ? pager.totalRows : list.length);
-      const pages =
-        pager.pages ?? Math.max(1, Math.ceil((total || 0) / (limit || 10)));
+      const pages = pager.pages ?? Math.max(1, Math.ceil((total || 0) / (limit || 10)));
 
       setItems(list.map(fromBackend));
       setPagination({ page, limit, total, pages });
@@ -117,7 +125,6 @@ export function useKategori(initialParams = DEFAULT_PARAMS) {
     async (payload) => {
       const res = await kategoriIpc.create(toBackend(payload));
       if (!res?.success) throw new Error(res?.error || "Gagal membuat kategori");
-      // banyak handler mengembalikan { items: ... }
       const created = (res.data && (res.data.items || res.data.data)) || null;
       await refresh();
       return created;
@@ -150,8 +157,7 @@ export function useKategori(initialParams = DEFAULT_PARAMS) {
   const getById = useCallback(async (id) => {
     const res = await kategoriIpc.getById(id);
     if (!res?.success) throw new Error(res?.error || "Gagal mengambil kategori");
-    const raw =
-      (res.data && (res.data.items || res.data.data || res.data.item)) || null;
+    const raw = (res.data && (res.data.items || res.data.data || res.data.item)) || null;
     return raw ? fromBackend(raw) : null;
   }, []);
 
@@ -172,3 +178,4 @@ export function useKategori(initialParams = DEFAULT_PARAMS) {
     getById,
   };
 }
+

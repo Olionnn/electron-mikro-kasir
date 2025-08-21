@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo/logo.png";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth, useAuthController } from "../../hooks/useAuth";
 import Alert from "../../component/Alert";        // ⬅️ pastikan path
 import { getFlash, clearFlash } from "../../utils/utils";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
@@ -15,6 +15,7 @@ export default function Login() {
   const [flash, setFlash] = useState(null);
   const [localError, setLocalError] = useState(null);
   const [form, setForm] = useState({ email: "", password: "" });
+  const { loginOk } = useAuthController();
 
   useEffect(() => { document.title = "Masuk | Aplikasi"; }, []);
 
@@ -41,8 +42,11 @@ export default function Login() {
     }
 
     try {
-      await login({ email: form.email.trim(), password: form.password });
-      nav("/pos"); 
+      const data = await login({ email: form.email.trim(), password: form.password });
+      loginOk(data);
+      const to = (history.state && history.state.usr && history.state.usr.from?.pathname) || "/pos";
+      nav(to, { replace: true });
+      nav.bind("/pos");
     } catch (err) {
       setLocalError(err?.message || "Gagal login");
     }

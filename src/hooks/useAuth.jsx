@@ -11,25 +11,28 @@ const authIpc = {
 export function useAuth() {
   const [items, setItems] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError]   = useState(null);
 
-  const login = useCallback(async (email, password) => {
+  // TERIMA SATU OBJEK { email, password }
+  const login = useCallback(async (payload) => {
     setLoading(true);
     setError(null);
     try {
+      const res = await authIpc.login(payload);
 
-      const res = await authIpc.login(email, password);
-      
       if (!res?.success) throw new Error(res?.error || "Login failed");
 
-      const data = res.data?.data || res.data?.items || null;
-      console.log("Login response:", res);
-      setItems(data);
-      localStorage.setItem("au", JSON.stringify(data));
-      return data;
-    } catch (err) {
-      setError(err?.message || "Login failed");
-      throw err;
+      // Backend kamu mengirim: createSuccessResponse("Login successful", { data: {...}, pagination: {} })
+      const out = res?.data?.data ?? res?.data ?? null;
+      if (!out?.accesstoken) throw new Error("Token tidak ditemukan pada respons login");
+
+      localStorage.setItem("au", JSON.stringify(out));
+      setItems(out);
+      return out;
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setError(msg);        // <- string, supaya Alert tampil
+      throw new Error(msg); // <- biar onSubmit catch dan setLocalError jalan
     } finally {
       setLoading(false);
     }
@@ -39,16 +42,15 @@ export function useAuth() {
     setLoading(true);
     setError(null);
     try {
-        
       const res = await authIpc.register(userData);
       if (!res?.success) throw new Error(res?.error || "Registration failed");
-
-      const data = res.data?.data || res.data?.items || null;
-      setItems(data);
-      return data;
-    } catch (err) {
-      setError(err?.message || "Registration failed");
-      throw err; // lempar lagi untuk flash/alert di caller
+      const out = res?.data?.data ?? res?.data ?? null;
+      setItems(out);
+      return out;
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setError(msg);
+      throw new Error(msg);
     } finally {
       setLoading(false);
     }
@@ -56,7 +58,6 @@ export function useAuth() {
 
   return { items, loading, error, login, register };
 }
-
 
 const AuthCtx = createContext(null);
 
