@@ -2,28 +2,27 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { normalizeRow } from "../utils/utils";
 
 
-const transaksipesanandetailIpc = {
-  getList: (params) => window.electronAPI.getTransaksiPesananDetailList(params),
-  getById: (id) => window.electronAPI.getTransaksiPesananDetailById(id),
-  create: (data) => window.electronAPI.createTransaksiPesananDetail(data),
-  update: (id, data) => window.electronAPI.updateTransaksiPesananDetail( id, data ),
-  remove: (id) => window.electronAPI.deleteTransaksiPesananDetail(id),
+const barangconfigIpc = {
+  getList: (params) => window.electronAPI.getBarangConfigList(params),
+  getById: (id) => window.electronAPI.getBarangConfigById(id),
+  create: (data) => window.electronAPI.createBarangConfig(data),
+  update: (id, data) => window.electronAPI.updateBarangConfig( id, data ),
+  remove: (id) => window.electronAPI.deleteBarangConfig(id),
 };
 
 
 
 const toBackend = (p = {}) => ({
   toko_id: p.toko_id ?? "",
-  transaksi_pesanan_id: p.transaksi_pesanan_id ?? true,
-  barang_id: p.barang_id ?? 0,
-  jumlah: p.jumlah ?? 1,
-  harga: p.harga ?? 1,
-  diskon_item: p.diskon_item ?? null,
-  total_harga: p.total_harga ?? 1,
-  keterangan: p.keterangan ?? 1,
+  notif_jumlah: p.notif_jumlah ?? 0,
+  is_harrga_tampil: p.is_harrga_tampil ?? true,
+  is_stok_tampil: p.is_stok_tampil ?? true,
+  is_kode_tampil: p.is_kode_tampil ?? true,
+  created_by: p.created_by ?? 1,
   updated_by: p.updated_by ?? 1,
   sync_at: p.sync_at ?? null,
   status: p.status ?? true,
+
 });
 
 
@@ -31,20 +30,19 @@ const fromBackend = (row = {}) => {
   const r = normalizeRow(row);
   return {
     id: r.id,
-    toko_id: r.toko_id ?? "",
-    transaksi_pesanan_id: r.transaksi_pesanan_id ?? true,
-    barang_id: r.barang_id ?? 0,
-    jumlah: r.jumlah ?? 1,
-    harga: r.harga ?? 1,
-    diskon_item: r.diskon_item ?? null,
-    total_harga: r.total_harga ?? 1,
-    keterangan: r.keterangan ?? 1,
+    toko_id: r.toko_id ?? null,
+    notif_jumlah: r.notif_jumlah ?? 0,
+    is_harrga_tampil: r.is_harrga_tampil ?? true,
+    is_stok_tampil: r.is_stok_tampil ?? true,
+    is_kode_tampil: r.is_kode_tampil ?? true,
+    created_by: r.created_by ?? 1,
     updated_by: r.updated_by ?? 1,
     sync_at: r.sync_at ?? null,
     status: r.status ?? true,
+ 
     created_at: r.created_at ?? null,
     updated_at: r.updated_at ?? null,
-     
+    
   };
 };
 
@@ -53,7 +51,7 @@ const DEFAULT_PARAMS = {
   filter: { search: "", status: "", toko_id: "" },
 };
 
-export function useTransaksiPesananDetail(initialParams = DEFAULT_PARAMS) {
+export function useBarangConfig(initialParams = DEFAULT_PARAMS) {
   const [items, setItems] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, limit: 10, total: 0, pages: 1 });
   const [loading, setLoading] = useState(false);
@@ -72,7 +70,7 @@ export function useTransaksiPesananDetail(initialParams = DEFAULT_PARAMS) {
         filter: { ...paramsRef.current.filter, ...(nextParams.filter || {}) },
       };
 
-      const res = await transaksipesanandetailIpc.getList(paramsRef.current);
+      const res = await barangconfigIpc.getList(paramsRef.current);
       if (!res?.success) throw new Error(res?.error || "Gagal memuat kategori");
 
       const list = res.data?.data ?? [];
@@ -93,28 +91,28 @@ export function useTransaksiPesananDetail(initialParams = DEFAULT_PARAMS) {
   }, []);
 
   const create = useCallback(async (payload) => {
-    const res = await transaksipesanandetailIpc.create(toBackend(payload));
+    const res = await barangconfigIpc.create(toBackend(payload));
     if (!res?.success) throw new Error(res?.error || "Gagal membuat kategori");
     await refresh();
     return res.data; 
   }, [refresh]);
 
   const update = useCallback(async (id, payload) => {
-    const res = await transaksipesanandetailIpc.update(id, toBackend(payload));
+    const res = await barangconfigIpc.update(id, toBackend(payload));
     if (!res?.success) throw new Error(res?.error || "Gagal mengubah kategori");
     await refresh();
     return res.data;
   }, [refresh]);
 
   const remove = useCallback(async (id) => {
-    const res = await transaksipesanandetailIpc.remove(id);
+    const res = await barangconfigIpc.remove(id);
     if (!res?.success) throw new Error(res?.error || "Gagal menghapus kategori");
     await refresh();
     return res.data;
   }, [refresh]);
 
   const getById = useCallback(async (id) => {
-    const res = await transaksipesanandetailIpc.getById(id);
+    const res = await barangconfigIpc.getById(id);
     if (!res?.success) throw new Error(res?.error || "Gagal mengambil kategori");
     const raw = res.data?.data ?? res.data?.item ?? null;
     return raw ? fromBackend(raw) : null;
