@@ -20,7 +20,7 @@ export default function Register() {
     no_telp: "",
     alamat: "",
     role: 1,
-    status: 1,
+    status: 0,
   });
 
   useEffect(() => { document.title = "Daftar Akun | Aplikasi"; }, []);
@@ -44,9 +44,11 @@ export default function Register() {
       setSuccessMsg("Registrasi berhasil! Mengarahkan ke halaman masuk...");
       // set flash untuk halaman login
       setFlash("success", "Registrasi berhasil. Silakan masuk dengan kredensial Anda.");
-      setTimeout(() => nav("/"), 900);
+      // setTimeout(() => nav("/"), 900);
+
+      
+      nav("/create-toko");
     } catch (e2) {
-      // error sudah di-set di hook, tapi kita tampilkan juga lokal
       setLocalError(e2?.message || "Gagal registrasi");
     }
   };

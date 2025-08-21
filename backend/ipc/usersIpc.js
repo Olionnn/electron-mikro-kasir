@@ -31,7 +31,6 @@ var EXP_SECONDS = 60 * 60 * 2; // 2 jam
 ipcMain.handle("usersIpc:login", async (event, payload) => {
   try {
     const { email, password } = parsePayload(payload);
-    console.log("Login attempt with payload:", parsePayload(payload));
     const user = await findUserByEmail(email);
     if (!user) return createErrorResponse("User not found");
 
@@ -70,14 +69,13 @@ ipcMain.handle("usersIpc:register", async (event, payload) => {
 
     try {
         var { nama, email, password, username, no_telp, alamat, role, status } = parsePayload(payload);
-        const trx = await db.transaction();
         const existingUser = await findUserByEmail(email);
 
         if (existingUser != null) {
             return createErrorResponse("Email already in use");
         }
 
-        const result = await db.transaction(async (t) => {
+        await db.transaction(async (t) => {
             const toko = await CreateToko(t, {
                 nama_toko: `Toko ${nama}`,
                 nama_pemilik: nama,
@@ -94,7 +92,7 @@ ipcMain.handle("usersIpc:register", async (event, payload) => {
                 no_telp,
                 alamat,
                 role,
-                status: !!status,
+                status,
                 toko_id: toko.id,
                 is_valid: 1,
                 password: await hashPassword(password),
@@ -102,10 +100,28 @@ ipcMain.handle("usersIpc:register", async (event, payload) => {
 
             return { toko, user };
         });
-        return createSuccessResponse({
-            message: "User registered successfully",
-            data: UsersResponse(result.user)
+
+        const user = await findUserByEmail(email);
+        if (!user) return createErrorResponse("User not found");
+
+        const ok = await verifyPassword(password, user.password);
+        if (!ok) return createErrorResponse("Invalid password");
+
+        const token = signAccessToken(
+          { id: user.id, toko_id: user.toko_id, role: user.role },
+        );
+
+        const res = {
+          accesstoken: token,
+          expire_in: EXP_SECONDS,
+          user: UsersResponse(user),
+        };
+
+        return createSuccessResponse("User registered successfully",{
+          data: res,
+          pagination: {}
         });
+
     } catch (err) {
         return createErrorResponse(err?.message || "Gagal registrasi");
     }

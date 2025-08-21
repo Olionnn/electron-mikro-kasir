@@ -3,8 +3,6 @@ import db from '../../config/database.js';
 import { Op } from 'sequelize';
 import { toJakarta } from "../helpers/timestamps.js";
 
-
-
 const Toko = db.define('toko', {
     id: {
         type: DataTypes.INTEGER,
@@ -65,7 +63,9 @@ const Toko = db.define('toko', {
     timestamps: false, 
 });
 
-
+Toko.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at',toJakarta(inst.getDataValue('updated_at')));
+});
 
 async function GetDataList(pagination, filter) {
 

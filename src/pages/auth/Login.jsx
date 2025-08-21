@@ -44,9 +44,14 @@ export default function Login() {
     try {
       const data = await login({ email: form.email.trim(), password: form.password });
       loginOk(data);
-      const to = (history.state && history.state.usr && history.state.usr.from?.pathname) || "/pos";
-      nav(to, { replace: true });
-      nav.bind("/pos");
+
+      if (data?.user.status === 0) {
+        nav("/create-toko");
+      } else {
+        const to = (history.state && history.state.usr && history.state.usr.from?.pathname) || "/pos";
+        nav(to, { replace: true });
+      }
+
     } catch (err) {
       setLocalError(err?.message || "Gagal login");
     }

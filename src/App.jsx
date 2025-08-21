@@ -86,7 +86,6 @@ function App() {
               <Route path="/otp" element={<OtpVerification />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/create-toko" element={<DataTokoForm />} />
               <Route path="/ujicoba" element={<MasaUjiCoba />} />
               <Route path="/maps" element={<Maps />} />
               <Route path="/Notifotp" element={<ForgotPasswordSuccess />} />
@@ -94,6 +93,8 @@ function App() {
             </Route>
 
             <Route element={<RequireAuth redirect="/" />}>
+              <Route path="/create-toko" element={<DataTokoForm />} />
+
               <Route element={<ShellLayout />}>
                 <Route path="/pos" element={<Pos />} />
 

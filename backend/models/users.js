@@ -89,6 +89,10 @@ const Users = db.define(
   }
 );
 
+Users.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at',toJakarta(inst.getDataValue('updated_at')));
+});
+
 export function UsersResponse(u)  {
       return {
       id: u.id,

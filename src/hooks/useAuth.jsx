@@ -45,6 +45,9 @@ export function useAuth() {
       const res = await authIpc.register(userData);
       if (!res?.success) throw new Error(res?.error || "Registration failed");
       const out = res?.data?.data ?? res?.data ?? null;
+
+      localStorage.setItem("au", JSON.stringify(out));
+
       setItems(out);
       return out;
     } catch (e) {
