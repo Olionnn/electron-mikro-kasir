@@ -1,8 +1,9 @@
 
 
-function createSuccessResponse(data, pagination = null) {
+function createSuccessResponse(message= '', data, pagination = null) {
     const response = {
         success: true,
+        message: message || "Operation successful",
         data
     };
 
@@ -17,7 +18,7 @@ function createErrorResponse(error, context = '') {
     console.error(`Error ${context}:`, error);
     return {
         success: false,
-        error: error.message || 'An unexpected error occurred'
+        error: error || 'An unexpected error occurred'
     };
 }
 

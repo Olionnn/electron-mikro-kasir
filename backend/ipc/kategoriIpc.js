@@ -9,21 +9,26 @@ import {
 import { calculatePagination } from '../helpers/paginate.js';
 import { createSuccessResponse, createErrorResponse } from '../helpers/response.js';
 import db from '../../config/database.js';
+import { requireAuth } from '../middleware/auth.js';
 
-ipcMain.handle('kategoriIpc:getList', async (event, { pagination = {}, filter = {} }) => {
+ipcMain.handle('kategoriIpc:getList', requireAuth(async (event, args) => {
     try {
-      const result = await GetDataList(pagination, filter);
-      const paginationData = calculatePagination(pagination, result.totalRows);
+      console.log("KategoriIpc:getList", { args });
+      const result = await GetDataList(args.pagination, args.filter);
+      const paginationData = calculatePagination(args.pagination, result.totalRows);
+
+      console.log("KategoriIpc:getList", { result, paginationData });
       return createSuccessResponse({
-        items: result.kategoriList,
+        data: result.kategoriList,
         pagination: paginationData
       });
+
     } catch (error) {
       return createErrorResponse(error, 'getting kategoriIpc list');
     }
-});
+}));
 
-ipcMain.handle('kategoriIpc:getById', async (event, id) => {
+ipcMain.handle('kategoriIpc:getById', requireAuth(async (event, { id, auth }) => {
   try {
     const kategoriIpc = await GetDataById(id);
     return createSuccessResponse({
@@ -34,9 +39,9 @@ ipcMain.handle('kategoriIpc:getById', async (event, id) => {
     console.error('Error getting kategoriIpc by ID:', error);
       return createErrorResponse(error, 'getting kategoriIpc by ID');
   }
-});
+}));
 
-ipcMain.handle('kategoriIpc:create', async (event, data) => {
+ipcMain.handle('kategoriIpc:create', requireAuth(async (event, { data, auth }) => {
   const trx = await db.transaction();
     try {
         const kategoriIpc = await CreateData(trx, data);
@@ -48,11 +53,12 @@ ipcMain.handle('kategoriIpc:create', async (event, data) => {
         console.error('Error creating kategoriIpc:', error);
         return createErrorResponse(error, 'creating kategoriIpc');
     }
-});
+}));
 
-ipcMain.handle('kategoriIpc:update', async (event, { id, data }) => {
+ipcMain.handle('kategoriIpc:update', requireAuth(async (event, { id, data, auth }) => {
   const trx = await db.transaction();
   try {
+    console.log('Updating kategoriIpc with ID:', id, data);
     const kategoriIpc = await UpdateData(trx, id, data);
     return createSuccessResponse({
         items: kategoriIpc,
@@ -63,9 +69,9 @@ ipcMain.handle('kategoriIpc:update', async (event, { id, data }) => {
     console.error('Error updating kategoriIpc:', error);
     return createErrorResponse(error, 'updating kategoriIpc');
   }
-});
+}));
 
-ipcMain.handle('kategoriIpc:delete', async (event, id) => {
+ipcMain.handle('kategoriIpc:delete', requireAuth(async (event, { id, auth }) => {
   const trx = await db.transaction();
   try {
     const result = await DeleteData(trx, id);
@@ -77,5 +83,5 @@ ipcMain.handle('kategoriIpc:delete', async (event, id) => {
     console.error('Error deleting kategoriIpc:', error);
     return createErrorResponse(error, 'deleting kategoriIpc');
   }
-});
+}));
 

@@ -3,7 +3,7 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import Login from "./pages/auth/login";
+import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import PosLayout from "./layouts/pos/poslayout";
 import ShellLayout from "./layouts/ShellLayout";
@@ -50,7 +50,7 @@ import BarangStokPage from "./pages/m_stok/Stok";
 import LaporanPembelian from "./pages/m_laporan/laporanpembelian";
 import LaporanPenjualan from "./pages/m_laporan/laporanpenjualan";
 import LaporanKeuangan from "./pages/m_laporan/LaporanKeuangan";
-import LaporanKeuanganPage from "./pages/m_laporan/detailkeuangan";
+import LaporanKeuanganPage from "./pages/m_laporan/DetailKeuangan";
 import ContactList from "./pages/m_bantuan/HubungiKami";
 import FeedbackForm from "./pages/m_bantuan/feedbackapk";
 import DashboardKasir from "./pages/m_dasbord/dasbord";
@@ -71,169 +71,190 @@ import MasaUjiCoba from "./pages/auth/UjiCoba";
 import PengaturanStok from "./pages/auth/PengaturanStok";
 import ForgotPasswordSuccess from "./pages/auth/Notifotp";
 import Maps from "./pages/auth/Maps";
+import { RequireAuth, PublicOnly } from "./middleware/RouteMiddleware.jsx";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
       <div>
-        <main className="h-screen w-screen"> 
+        <main className="h-screen w-screen">
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route element={<PublicOnly redirect="/pos" />}>
+              <Route path="/" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              {/* Auth */}
+              <Route path="/otp" element={<OtpVerification />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/create-toko" element={<DataTokoForm />} />
+              <Route path="/ujicoba" element={<MasaUjiCoba />} />
+              <Route path="/maps" element={<Maps />} />
+              <Route path="/Notifotp" element={<ForgotPasswordSuccess />} />
+              <Route path="/pengaturan-stok" element={<PengaturanStok />} />
+            </Route>
 
-            <Route path="/register" element={<Register />} />
-            {/* Auth */}
-            <Route path="/otp" element={<OtpVerification />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/create-toko" element={<DataTokoForm />} />
-            <Route path="/ujicoba" element={<MasaUjiCoba />} />
-            <Route path="/maps" element={<Maps />} />
-            <Route path="/Notifotp" element={<ForgotPasswordSuccess />} />
-            <Route path="/pengaturan-stok" element={<PengaturanStok />} />
+            <Route element={<RequireAuth redirect="/" />}>
+              <Route element={<ShellLayout />}>
+                <Route path="/pos" element={<Pos />} />
 
+                {/* Barang  */}
+                <Route path="/barang-jasa" element={<BarangAtwJasa />} />
+                <Route path="/barang/tambah" element={<AddEditBarang />} />
+                <Route path="/barang/edit/:id" element={<AddEditBarang />} />
 
+                {/* Kategori Barang */}
+                <Route
+                  path="/kategori-barang"
+                  element={<KategoriBarangPage />}
+                />
 
+                {/* Pengaturan */}
+                <Route path="/pengaturan" element={<SettingsPage />} />
+                <Route path="/pengaturan/bantuan" element={<Bantuan />} />
+                <Route
+                  path="/pengaturan/informasitoko"
+                  element={<InformasiToko />}
+                />
+                <Route path="/pengaturan/counstruk" element={<CountStruk />} />
+                <Route path="/pengaturan/countprint" element={<CountPrint />} />
+                <Route
+                  path="/pengaturan/singkronasidon"
+                  element={<SingkronasiDon />}
+                />
+                <Route
+                  path="/pengaturan/singkronasiup"
+                  element={<SingkronasiUp />}
+                />
+                <Route path="/pengaturan/edc" element={<EDC />} />
+                <Route
+                  path="/pengaturan/editprofil"
+                  element={<EditParentProfile />}
+                />
+                <Route path="/pengaturan/edittoko" element={<EditToko />} />
+                <Route path="/pengaturan/metpem" element={<MetPem />} />
+                <Route path="/pengaturan/tokoonline" element={<TokoOnline />} />
+                <Route path="/pengaturan/profil" element={<Profil />} />
+                <Route path="/pengaturan/lainnnya" element={<Lainnya />} />
+                <Route
+                  path="/pengaturan/manajemenstaf"
+                  element={<ManajemenStaf />}
+                />
+                <Route path="/pengaturan/pos" element={<TrxSetting />} />
+                <Route
+                  path="/pengaturan/printsetting"
+                  element={<CountPrint />}
+                />
+                <Route
+                  path="/pengaturan/struksetting"
+                  element={<CountStruk />}
+                />
+                <Route path="/pengaturan/roles" element={<ManagementRole />} />
 
-            <Route element={<ShellLayout />}>
-              <Route path="/pos" element={<Pos />} />
+                {/* Keuangan */}
+                <Route path="/keuangan" element={<Keuangan />} />
 
-              {/* Barang  */}
-              <Route path="/barang-jasa" element={<BarangAtwJasa />} />
-              <Route path="/barang/tambah" element={<AddEditBarang />} />
-              <Route path="/barang/edit/:id" element={<AddEditBarang />} />
+                {/* Laporan */}
+                <Route path="/laporan" element={<LaporanPage />} />
+                <Route
+                  path="/laporan/laporan-pembelian"
+                  element={<LaporanPembelian />}
+                />
+                <Route
+                  path="/laporan/laporan-penjualan"
+                  element={<LaporanPenjualan />}
+                />
+                <Route
+                  path="/laporan/laporan-keuangan"
+                  element={<LaporanKeuangan />}
+                />
+                <Route
+                  path="/laporan/laporan-keuangan/detail"
+                  element={<LaporanKeuanganPage />}
+                />
+                <Route
+                  path="/laporan/laporan-neraca"
+                  element={<LaporanNeraca />}
+                />
+                <Route
+                  path="/laporan/laporan-shift"
+                  element={<Laporanshift />}
+                />
+                <Route
+                  path="/laporan/riwayat-transaksi"
+                  element={<Riwayattransaksi />}
+                />
+                <Route
+                  path="/laporan/laporan-utang-piutang"
+                  element={<LaporanUtangPiutang />}
+                />
 
-              {/* Kategori Barang */}
-              <Route path="/kategori-barang" element={<KategoriBarangPage />} />
+                {/* Absensi */}
+                <Route path="/absensi" element={<AbsensiPage />} />
 
-              {/* Pengaturan */}
-              <Route path="/pengaturan" element={<SettingsPage />} />
-              <Route path="/pengaturan/bantuan" element={<Bantuan />} />
-              <Route
-                path="/pengaturan/informasitoko"
-                element={<InformasiToko />}
-              />
-              <Route path="/pengaturan/counstruk" element={<CountStruk />} />
-              <Route path="/pengaturan/countprint" element={<CountPrint />} />
-              <Route
-                path="/pengaturan/singkronasidon"
-                element={<SingkronasiDon />}
-              />
-              <Route
-                path="/pengaturan/singkronasiup"
-                element={<SingkronasiUp />}
-              />
-              <Route path="/pengaturan/edc" element={<EDC />} />
-              <Route path="/pengaturan/editprofil" element={<EditParentProfile />} />
-              <Route path="/pengaturan/edittoko" element={<EditToko />} />
-              <Route path="/pengaturan/metpem" element={<MetPem />} />
-              <Route path="/pengaturan/tokoonline" element={<TokoOnline />} />
-              <Route path="/pengaturan/profil" element={<Profil />} />
-              <Route path="/pengaturan/lainnnya" element={<Lainnya />} />
-              <Route
-                path="/pengaturan/manajemenstaf"
-                element={<ManajemenStaf />}
-              />
-              <Route path="/pengaturan/pos" element={<TrxSetting/>} />
-              <Route path="/pengaturan/printsetting" element={<CountPrint />} />
-              <Route path="/pengaturan/struksetting" element={<CountStruk />} />
-              <Route path="/pengaturan/roles" element={<ManagementRole />} />
+                {/* Shift */}
+                <Route path="/shift" element={<ShiftPage />} />
 
+                {/* Pembelian Supplier */}
+                <Route
+                  path="/pembelian-supplier"
+                  element={<PembeliSuplier />}
+                />
+                <Route
+                  path="/pembelian-supplier/draft"
+                  element={<DraftPembelianPage />}
+                />
 
-              {/* Keuangan */}
-              <Route path="/keuangan" element={<Keuangan />} />
+                {/* Management */}
+                <Route path="/management" element={<Management />} />
+                <Route path="/pelanggan" element={<PelangganPage />} />
+                <Route path="/supplier" element={<SupplierPage />} />
+                <Route path="/pajak" element={<PajakPage />} />
+                <Route path="/diskon" element={<DiskonPage />} />
+                <Route path="/biaya" element={<BiayaPage />} />
+                <Route path="/barang-jasa" element={<BarangAtwJasa />} />
+                <Route path="/barang/tambah" element={<AddEditBarang />} />
+                <Route path="/barang/edit/:id" element={<AddEditBarang />} />
+                <Route path="/promosi" element={<PromosiPage />} />
 
+                {/* Toko Online */}
+                <Route path="/toko-online" element={<OlsopinPage />} />
 
-              {/* Laporan */}
-              <Route path="/laporan" element={<LaporanPage/>} />
-              <Route path="/laporan/laporan-pembelian" element={<LaporanPembelian />} />
-              <Route path="/laporan/laporan-penjualan" element={<LaporanPenjualan />} />
-              <Route path="/laporan/laporan-keuangan" element={<LaporanKeuangan />} />
-              <Route path="/laporan/laporan-keuangan/detail" element={<LaporanKeuanganPage />} />
-              <Route path="/laporan/laporan-neraca" element={<LaporanNeraca/>} />
-              <Route path="/laporan/laporan-shift" element={<Laporanshift/>} />
-              <Route path="/laporan/riwayat-transaksi" element={<Riwayattransaksi/>} />
-              <Route path="/laporan/laporan-utang-piutang" element={<LaporanUtangPiutang/>} />
+                {/* Pusat Bantuan */}
+                <Route path="/pusat-bantuan" element={<Bantuan />} />
+                <Route path="/hubungi-kami" element={<ContactList />} />
+                <Route path="/medsos" element={<div>Sosials</div>} />
+                <Route path="/feedback" element={<FeedbackForm />} />
 
-            
+                {/* Kirim Masukan */}
+                <Route path="/kirim-masukan" element={<FeedbackForm />} />
 
-              {/* Absensi */}
-              <Route path="/absensi" element={<AbsensiPage/>} />
+                {/* Stok */}
+                <Route path="/stok" element={<BarangStokPage />} />
+                <Route path="/stok/:id" element={<StokDetail />} />
+                <Route
+                  path="/stok/tambah"
+                  element={<div>Tambah Stok Page</div>}
+                />
+                <Route
+                  path="/stok/edit/:id"
+                  element={<div>Edit Stok Page</div>}
+                />
+                <Route path="/stokopname" element={<StokOpnamePage />} />
 
+                {/* Cart And Preview */}
+                <Route path="/pesanan/tambah" element={<BuatPesanan />} />
+                <Route path="/pesanan/edit/:id" element={<BuatPesanan />} />
+                <Route path="/pesanan" element={<Pesanan />} />
+                <Route path="/review" element={<Review />} />
+                <Route path="/trx" element={<Transaksi />} />
+                <Route path="/struk" element={<Struk />} />
 
-              {/* Shift */}
-              <Route path="/shift" element={<ShiftPage/>} />
+                {/* Users */}
+                <Route path="/users/staff" element={<ManajemenStaf />} />
 
-
-              {/* Pembelian Supplier */}
-              <Route path="/pembelian-supplier" element={<PembeliSuplier />} />
-              <Route path="/pembelian-supplier/draft" element={<DraftPembelianPage/>} />
-
-
-              {/* Management */}
-              <Route path="/management" element={<Management />} />
-              <Route path="/pelanggan" element={<PelangganPage />} />
-              <Route path="/supplier" element={<SupplierPage />} />
-              <Route path="/pajak" element={<PajakPage />} />
-              <Route path="/diskon" element={<DiskonPage />} />
-              <Route path="/biaya" element={<BiayaPage />} />
-              <Route path="/barang-jasa" element={<BarangAtwJasa />} />
-              <Route path="/barang/tambah" element={<AddEditBarang />} />
-              <Route path="/barang/edit/:id" element={<AddEditBarang />} />
-              <Route path="/promosi" element={<PromosiPage/>}/>
-
-
-              {/* Toko Online */}
-              <Route path="/toko-online" element={<OlsopinPage/>} />
-
-
-              {/* Pusat Bantuan */}
-              <Route path="/pusat-bantuan" element={<Bantuan />} />
-              <Route path="/hubungi-kami" element={<ContactList />} />
-              <Route path="/medsos" element={<div>Sosials</div>} />
-              <Route path="/feedback" element={<FeedbackForm />} />
-
-
-              {/* Kirim Masukan */}
-              <Route path="/kirim-masukan" element={<FeedbackForm />} />
-
-
-              {/* Stok */}
-              <Route path="/stok" element={<BarangStokPage/>} />
-              <Route path="/stok/:id" element={<StokDetail/>} />
-              <Route path="/stok/tambah" element={<div>Tambah Stok Page</div>} />
-              <Route path="/stok/edit/:id" element={<div>Edit Stok Page</div>} />
-              <Route path="/stokopname" element={<StokOpnamePage/>} />
-
-
-              {/* Cart And Preview */}
-              <Route path="/pesanan/tambah" element={<BuatPesanan />} />
-              <Route path="/pesanan/edit/:id" element={<BuatPesanan />} />
-              <Route path="/pesanan" element={<Pesanan />} />
-              <Route path="/review" element={<Review />} />
-              <Route path="/trx" element={<Transaksi />} />
-              <Route path="/struk" element={<Struk />} />
-
-
-              {/* Users */}
-              <Route path="/users/staff" element={<ManajemenStaf/>} />
-
-              {/* Dasboard */}
-              <Route path="/dashboard" element={<DashboardKasir/>} />
-
-
-
-
-
-
-
-
-          
-
-
-
-
+                {/* Dasboard */}
+                <Route path="/dashboard" element={<DashboardKasir />} />
+              </Route>
             </Route>
           </Routes>
         </main>

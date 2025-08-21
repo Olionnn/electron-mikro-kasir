@@ -3,6 +3,7 @@ import { Sequelize } from "sequelize";
 import fs from "fs";
 import path from "path";
 import { getDatabasePath, getDataDirectory, getLogsDirectory } from "./paths.js";
+import { registerManualTimestamps } from "../backend/helpers/timestamps.js";
 
 const dbPath = getDatabasePath();
 const dataDir = getDataDirectory();
@@ -36,12 +37,19 @@ const db = new Sequelize({
   retry: { max: 3 },
   dialectOptions: {
     // foreignKeys PRAGMA akan di-set manual di bawah
+    // timezone is not supported for SQLite
   },
   define: {
     freezeTableName: true, // pakai nama tabel apa adanya
     underscored: false,
   },
   quoteIdentifiers: true,
+  // timezone is not supported for SQLite
+});
+
+registerManualTimestamps(db, {
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
 });
 
 export async function initDatabase() {

@@ -108,7 +108,7 @@ export default function Navbar({
   const Right = (
     <div className="flex items-center gap-2">
       {/* Tombol ganti palette (cycle) */}
-      <IconBtn
+      {/* <IconBtn
         onClick={cyclePalette}
         title={`Ganti Tema (palette: ${state.palette})`}
         className="hover:bg-opacity-10"
@@ -118,7 +118,7 @@ export default function Navbar({
         }}
       >
         <MdColorLens size={22} />
-      </IconBtn>
+      </IconBtn> */}
 
       {/* Tombol toggle mode (light/dark) */}
       {/* <IconBtn

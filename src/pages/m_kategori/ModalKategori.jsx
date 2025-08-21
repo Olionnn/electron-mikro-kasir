@@ -1,4 +1,6 @@
 import React from "react";
+import Modal from "../../component/Modal";
+
 
 function ModalAddKategori({
   isModalOpen,
@@ -39,15 +41,17 @@ function ModalAddKategori({
             onClick={() => setIsModalOpen(false)}
             className="rounded-xl px-4 py-2.5 text-slate-700 bg-slate-100 hover:bg-slate-200"
           >
+            Batal
+          </button>
           <button
             type="submit"
             disabled={!newCategoryName.trim() || saving}
-            className="rounded-xl px-4 py-2.5 text-white disabled:opacity-60 disabled:cursor-not-allowed gradient-btn"
+              className="rounded-xl px-4 py-2.5 text-white disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{ background: "linear-gradient(90deg, var(--blue-700), var(--navy-800))" }}
           >
             {saving ? "Menyimpan..." : "Tambah"}
           </button>
-            {saving ? "Menyimpan..." : "Tambah"}
-          </button>
+
         </div>
       </form>
     </Modal>
@@ -96,7 +100,8 @@ function ModalEditKategori({
           <button
             type="submit"
             disabled={saving}
-            className="rounded-xl px-4 py-2.5 text-white disabled:opacity-60 disabled:cursor-not-allowed gradient-btn"
+            className="rounded-xl px-4 py-2.5 text-white disabled:opacity-60 disabled:cursor-not-allowed"
+            style={{ background: "linear-gradient(90deg, var(--blue-700), var(--navy-800))" }}
           >
             {saving ? "Menyimpan..." : "Simpan"}
           </button>
@@ -106,4 +111,7 @@ function ModalEditKategori({
   );
 }
 
-export { ModalAddKategori, ModalEditKategori };
+export { 
+  ModalAddKategori, 
+  ModalEditKategori 
+};

@@ -6,6 +6,8 @@ import { fileURLToPath } from 'url';
 import started from 'electron-squirrel-startup';
 import initDatabase from '../../backend/ipc/bootstrap.js';
 import '../../backend/ipc/kategoriIpc.js';
+import '../../backend/ipc/usersIpc.js';
+import '../../backend/middleware/auth.js'
 
 
 const __filename = fileURLToPath(import.meta.url);

@@ -1,16 +1,29 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { normalizeRow } from "../utils/utils";
-
+import { getAccessToken } from "../utils/jwt";
 
 const kategoriIpc = {
-  getList: (params) => window.electronAPI.getKategoriList(params),
-  getById: (id) => window.electronAPI.getKategoriById(id),
-  create: (data) => window.electronAPI.createKategori(data),
-  update: (id, data) => window.electronAPI.updateKategori( id, data ),
-  remove: (id) => window.electronAPI.deleteKategori(id),
+  getList: (params) => {
+    const token = getAccessToken();
+    return window.electronAPI.getKategoriList( ...params, token );
+  },
+  getById: (id) => {
+    const token = getAccessToken();
+    return window.electronAPI.getKategoriById(id, token);
+  },
+  create: (data) => {
+    const token = getAccessToken();
+    return window.electronAPI.createKategori(data, token);
+  },
+  update: (id, data) => {
+    const token = getAccessToken();
+    return window.electronAPI.updateKategori(id, data, token);
+  },
+  remove: (id) => {
+    const token = getAccessToken();
+    return window.electronAPI.deleteKategori(id, token);
+  },
 };
-
-
 
 const toBackend = (p = {}) => ({
   nama: p.nama ?? "",
@@ -18,9 +31,8 @@ const toBackend = (p = {}) => ({
   toko_id: p.toko_id ?? 0,
   created_by: p.created_by ?? 1,
   updated_by: p.updated_by ?? 1,
-  sync_at: p.sync_at ?? null
+  sync_at: p.sync_at ?? null,
 });
-
 
 const fromBackend = (row = {}) => {
   const r = normalizeRow(row);
@@ -33,7 +45,7 @@ const fromBackend = (row = {}) => {
     updated_at: r.updated_at ?? null,
     created_by: r.created_by ?? 1,
     updated_by: r.updated_by ?? 1,
-    sync_at: r.sync_at ?? null  
+    sync_at: r.sync_at ?? null,
   };
 };
 
@@ -44,7 +56,12 @@ const DEFAULT_PARAMS = {
 
 export function useKategori(initialParams = DEFAULT_PARAMS) {
   const [items, setItems] = useState([]);
-  const [pagination, setPagination] = useState({ page: 1, limit: 10, total: 0, pages: 1 });
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    pages: 1,
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const paramsRef = useRef(initialParams);
@@ -53,26 +70,41 @@ export function useKategori(initialParams = DEFAULT_PARAMS) {
     setLoading(true);
     setError(null);
     try {
-      // merge tipis
       paramsRef.current = {
         ...paramsRef.current,
         ...nextParams,
-        pagination: { ...paramsRef.current.pagination, ...(nextParams.pagination || {}) },
-        filter: { ...paramsRef.current.filter, ...(nextParams.filter || {}) },
+        pagination: {
+          ...paramsRef.current.pagination,
+          ...(nextParams.pagination || {}),
+        },
+        filter: {
+          ...paramsRef.current.filter,
+          ...(nextParams.filter || {}),
+        },
       };
 
       const res = await kategoriIpc.getList(paramsRef.current);
       if (!res?.success) throw new Error(res?.error || "Gagal memuat kategori");
 
-      const list = res.data?.data ?? [];
-      const pager = res.pagination ?? {};
+      // ✅ payload consistent di bawah res.data
+      console.log("KategoriIpc:getList response:", res);
+      const payload = res.data || {};
+      const list = Array.isArray(payload.data)
+        ? payload.data
+        : Array.isArray(payload.items)
+        ? payload.items
+        : [];
+      const pager = payload.pagination || {};
+
       const page = pager.page ?? paramsRef.current.pagination.page ?? 1;
       const limit = pager.limit ?? paramsRef.current.pagination.limit ?? 10;
-      const total = pager.total ?? list.length;
-      const pages = pager.pages ?? Math.max(1, Math.ceil(total / limit));
+      const total =
+        pager.total ??
+        (typeof pager.totalRows === "number" ? pager.totalRows : list.length);
+      const pages =
+        pager.pages ?? Math.max(1, Math.ceil((total || 0) / (limit || 10)));
 
       setItems(list.map(fromBackend));
-
       setPagination({ page, limit, total, pages });
     } catch (e) {
       setError(e instanceof Error ? e : new Error(String(e)));
@@ -81,35 +113,62 @@ export function useKategori(initialParams = DEFAULT_PARAMS) {
     }
   }, []);
 
-  const create = useCallback(async (payload) => {
-    const res = await kategoriIpc.create(toBackend(payload));
-    if (!res?.success) throw new Error(res?.error || "Gagal membuat kategori");
-    await refresh();
-    return res.data; 
-  }, [refresh]);
+  const create = useCallback(
+    async (payload) => {
+      const res = await kategoriIpc.create(toBackend(payload));
+      if (!res?.success) throw new Error(res?.error || "Gagal membuat kategori");
+      // banyak handler mengembalikan { items: ... }
+      const created = (res.data && (res.data.items || res.data.data)) || null;
+      await refresh();
+      return created;
+    },
+    [refresh]
+  );
 
-  const update = useCallback(async (id, payload) => {
-    const res = await kategoriIpc.update(id, toBackend(payload));
-    if (!res?.success) throw new Error(res?.error || "Gagal mengubah kategori");
-    await refresh();
-    return res.data;
-  }, [refresh]);
+  const update = useCallback(
+    async (id, payload) => {
+      const res = await kategoriIpc.update(id, toBackend(payload));
+      if (!res?.success) throw new Error(res?.error || "Gagal mengubah kategori");
+      const updated = (res.data && (res.data.items || res.data.data)) || null;
+      await refresh();
+      return updated;
+    },
+    [refresh]
+  );
 
-  const remove = useCallback(async (id) => {
-    const res = await kategoriIpc.remove(id);
-    if (!res?.success) throw new Error(res?.error || "Gagal menghapus kategori");
-    await refresh();
-    return res.data;
-  }, [refresh]);
+  const remove = useCallback(
+    async (id) => {
+      const res = await kategoriIpc.remove(id);
+      if (!res?.success) throw new Error(res?.error || "Gagal menghapus kategori");
+      const removed = (res.data && (res.data.items || res.data.data)) || null;
+      await refresh();
+      return removed;
+    },
+    [refresh]
+  );
 
   const getById = useCallback(async (id) => {
     const res = await kategoriIpc.getById(id);
     if (!res?.success) throw new Error(res?.error || "Gagal mengambil kategori");
-    const raw = res.data?.data ?? res.data?.item ?? null;
+    const raw =
+      (res.data && (res.data.items || res.data.data || res.data.item)) || null;
     return raw ? fromBackend(raw) : null;
   }, []);
 
-  useEffect(() => { refresh(initialParams); }, []); 
+  useEffect(() => {
+    refresh(initialParams);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  return { items, pagination, loading, error, refresh, create, update, remove, getById };
+  return {
+    items,
+    pagination,
+    loading,
+    error,
+    refresh,
+    create,
+    update,
+    remove,
+    getById,
+  };
 }

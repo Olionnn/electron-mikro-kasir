@@ -80,3 +80,20 @@ export function formatDate(v) {
     return String(v);
   }
 }
+
+export function setFlash(type, message) {
+  sessionStorage.setItem('flash', JSON.stringify({ type, message, ts: Date.now() }));
+}
+
+export function getFlash() {
+  try {
+    const raw = sessionStorage.getItem('flash');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function clearFlash() {
+  sessionStorage.removeItem('flash');
+}

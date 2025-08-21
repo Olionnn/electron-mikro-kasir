@@ -1,6 +1,8 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
+
 
 
 const Toko = db.define('toko', {
@@ -39,12 +41,16 @@ const Toko = db.define('toko', {
         allowNull: true
     },
     created_at: {
-        type: DataTypes.DATE,
-        allowNull: true
+      type: DataTypes.DATE,
+      get() {
+        return toJakarta(this.getDataValue("created_at"));
+      },
     },
     updated_at: {
-        type: DataTypes.DATE,
-        allowNull: true
+      type: DataTypes.DATE,
+      get() {
+        return toJakarta(this.getDataValue("updated_at"));
+      },
     },
     sync_at: {
         type: DataTypes.DATE,
@@ -56,9 +62,7 @@ const Toko = db.define('toko', {
     }
 }, {
     tableName: 'toko',
-    timestamps: true, 
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    timestamps: false, 
 });
 
 
@@ -126,11 +130,9 @@ async function GetDataList(pagination, filter) {
   async function CreateData(trx, data) {
     try {
       const toko = await Toko.create(data, { transaction: trx });
-      await trx.commit();
       return toko;
     } catch (error) {
-      await trx.rollback();
-      throw error;
+      throw new Error("Error creating toko: " + error.message);
     }
   }
   

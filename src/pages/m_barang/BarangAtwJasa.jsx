@@ -51,7 +51,7 @@ const emptyBarang = {
   status: true,
 };
 
-export default function BarangJasa({ variant = "A" }) {
+export default function BarangJasa({ variant = "B" }) {
   // ----------------------- THEME TOKENS --------------------------------
   /** Ambil token warna dari ThemeProvider (runtime) */
   const { token } = useTheme?.() || { token: () => "" };
