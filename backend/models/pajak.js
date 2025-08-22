@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 
 const Pajak = db.define('pajak', {
@@ -47,10 +48,11 @@ const Pajak = db.define('pajak', {
     }
 }, {
     tableName: 'pajak',
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    timestamps: false,
 });
+Pajak.beforeUpdate((inst) => {
+    inst.setDataValue('updated_at', toJakarta(inst.getDataValue('updated_at')))
+  });
 
 
 
@@ -115,10 +117,8 @@ async function GetDataList(pagination, filter) {
   async function CreateData(trx, data) {
     try {
       const pajak = await Pajak.create(data, { transaction: trx });
-      await trx.commit();
       return pajak;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -131,10 +131,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('Pajak not found');
       }
       await pajak.update(data, { transaction: trx });
-      await trx.commit();
       return pajak;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -146,10 +144,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('Pajak not found');
       }
       await pajak.destroy({ transaction: trx });
-      await trx.commit();
       return { message: 'Pajak deleted successfully' };
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }

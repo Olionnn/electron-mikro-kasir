@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const TransaksiPesananDetail = db.define('transaksi_pesanan_detail', {
   id: {
@@ -83,9 +84,10 @@ const TransaksiPesananDetail = db.define('transaksi_pesanan_detail', {
   },
 }, {
   tableName: 'transaksi_pesanan_detail',
-  timestamps: true, 
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  timestamps: false,
+});
+TransaksiPesananDetail.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at', toJakarta(inst.getDataValue('updated_at')));
 });
 
 
@@ -155,10 +157,8 @@ async function GetDataById(id) {
 async function CreateData(trx, data) {
   try {
     const transaksiPesananDetail = await TransaksiPesananDetail.create(data, { transaction: trx });
-    await trx.commit();
     return transaksiPesananDetail;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -171,10 +171,8 @@ async function UpdateData(trx, id, data) {
       throw new Error('Transaksi Pesanan Detail not found');
     }
     await transaksiPesananDetail.update(data, { transaction: trx });
-    await trx.commit();
     return transaksiPesananDetail;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -186,10 +184,8 @@ async function DeleteData(trx, id) {
       throw new Error('Transaksi Pesanan Detail not found');
     }
     await transaksiPesananDetail.destroy({ transaction: trx });
-    await trx.commit();
     return { message: 'Transaksi Pesanan Detail deleted successfully' };
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }

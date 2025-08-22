@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const ArusKeuanganDetail = db.define('arus_keuangan_detail', {
   id: {
@@ -92,9 +93,12 @@ const ArusKeuanganDetail = db.define('arus_keuangan_detail', {
   },
 }, {
   tableName: 'arus_keuangan_detail',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  timestamps: false,
+  
+});
+
+ArusKeuanganDetail.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at',toJakarta(inst.getDataValue('updated_at')));
 });
 
 async function GetDataList(pagination, filter) {
@@ -166,10 +170,8 @@ async function GetDataById(id) {
 async function CreateData(trx, data) {
   try {
     const arusKeuanganDetail = await ArusKeuanganDetail.create(data, { transaction: trx });
-    await trx.commit();
     return arusKeuanganDetail;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -182,10 +184,8 @@ async function UpdateData(trx, id, data) {
       throw new Error('ArusKeuanganDetail not found');
     }
     await arusKeuanganDetail.update(data, { transaction: trx });
-    await trx.commit();
     return arusKeuanganDetail;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -197,10 +197,8 @@ async function DeleteData(trx, id) {
       throw new Error('ArusKeuanganDetail not found');
     }
     await arusKeuanganDetail.destroy({ transaction: trx });
-    await trx.commit();
     return { message: 'ArusKeuanganDetail deleted successfully' };
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }

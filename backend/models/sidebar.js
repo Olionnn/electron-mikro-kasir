@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const Sidebar = db.define('sidebar', {
     id: {
@@ -46,9 +47,7 @@ const Sidebar = db.define('sidebar', {
     }
 },{
     tableName: 'sidebar',
-    timestamps: true,
-    createdAt: 'created_at',    
-    updatedAt: 'updated_at',
+    timestamps: false,
 });
 
 
@@ -109,10 +108,8 @@ async function GetDataList(pagination, filter) {
   async function CreateData(trx, data) {
     try {
       const sidebar = await Sidebar.create(data, { transaction: trx });
-      await trx.commit();
       return sidebar;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -125,10 +122,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('Sidebar not found');
       }
       await sidebar.update(data, { transaction: trx });
-      await trx.commit();
       return sidebar;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -140,10 +135,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('Sidebar not found');
       }
       await sidebar.destroy({ transaction: trx });
-      await trx.commit();
       return { message: 'Sidebar deleted successfully' };
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }

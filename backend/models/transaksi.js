@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const Transaksi = db.define('transaksi', {
   id: {
@@ -118,9 +119,10 @@ const Transaksi = db.define('transaksi', {
   },
 }, {
   tableName: 'transaksi',
-  timestamps: true, 
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  timestamps: false,
+});
+Transaksi.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at',toJakarta(inst.getDataValue('updated_at')));
 });
 
 
@@ -185,10 +187,8 @@ async function GetDataById(id) {
 async function CreateData(trx, data) {
   try {
     const transaksi = await Transaksi.create(data, { transaction: trx });
-    await trx.commit();
     return transaksi;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -201,10 +201,8 @@ async function UpdateData(trx, id, data) {
       throw new Error('Transaksi not found');
     }
     await transaksi.update(data, { transaction: trx });
-    await trx.commit();
     return transaksi;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -216,10 +214,8 @@ async function DeleteData(trx, id) {
       throw new Error('Transaksi not found');
     }
     await transaksi.destroy({ transaction: trx });
-    await trx.commit();
     return { message: 'Transaksi deleted successfully' };
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }

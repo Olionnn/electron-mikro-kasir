@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const StokOpnameDetail = db.define('stok_opname_detail', {
   id: {
@@ -75,9 +76,7 @@ const StokOpnameDetail = db.define('stok_opname_detail', {
   },
 }, {
   tableName: 'stok_opname_detail',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  timestamps: false,
 });
 
 
@@ -146,10 +145,8 @@ async function GetDataById(id) {
 async function CreateData(trx, data) {
   try {
     const stokOpnameDetail = await StokOpnameDetail.create(data, { transaction: trx });
-    await trx.commit();
     return stokOpnameDetail;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -162,10 +159,8 @@ async function UpdateData(trx, id, data) {
       throw new Error('StokOpnameDetail not found');
     }
     await stokOpnameDetail.update(data, { transaction: trx });
-    await trx.commit();
     return stokOpnameDetail;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -177,10 +172,8 @@ async function DeleteData(trx, id) {
       throw new Error('StokOpnameDetail not found');
     }
     await stokOpnameDetail.destroy({ transaction: trx });
-    await trx.commit();
     return { message: 'StokOpnameDetail deleted successfully' };
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }

@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const SidebarAkses = db.define('sidebar_akses', {
     id: {
@@ -49,9 +50,10 @@ const SidebarAkses = db.define('sidebar_akses', {
     },
 }, {
     tableName: 'sidebar_akses',
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    timestamps: false,
+});
+SidebarAkses.beforeUpdate((inst) => {
+    inst.updated_at = toJakarta(new Date());
 });
 
 
@@ -116,10 +118,8 @@ async function GetDataList(pagination, filter) {
   async function CreateData(trx, data) {
     try {
       const sidebarAkses = await SidebarAkses.create(data, { transaction: trx });
-      await trx.commit();
       return sidebarAkses;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -132,10 +132,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('SidebarAkses not found');
       }
       await sidebarAkses.update(data, { transaction: trx });
-      await trx.commit();
       return sidebarAkses;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -147,10 +145,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('SidebarAkses not found');
       }
       await sidebarAkses.destroy({ transaction: trx });
-      await trx.commit();
       return { message: 'SidebarAkses deleted successfully' };
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }

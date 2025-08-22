@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const Pembelian = db.define('pembelian', {
     id: {
@@ -102,9 +103,10 @@ const Pembelian = db.define('pembelian', {
     },
 },{
     tableName: 'pembelian',
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    timestamps: false,
+});
+Pembelian.beforeUpdate((inst) => {
+    inst.setDataValue('updated_at', toJakarta(inst.getDataValue('updated_at')))
 });
 
 
@@ -169,10 +171,8 @@ async function GetDataList(pagination, filter) {
   async function CreateData(trx, data) {
     try {
       const pembelian = await Pembelian.create(data, { transaction: trx });
-      await trx.commit();
       return pembelian;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -185,10 +185,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('Pembelian not found');
       }
       await pembelian.update(data, { transaction: trx });
-      await trx.commit();
       return pembelian;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -200,10 +198,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('Pembelian not found');
       }
       await pembelian.destroy({ transaction: trx });
-      await trx.commit();
       return { message: 'Pembelian deleted successfully' };
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }

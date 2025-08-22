@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const HutangDetail = db.define('hutang_detail', {
   id: {
@@ -90,9 +91,10 @@ const HutangDetail = db.define('hutang_detail', {
   },
 }, {
   tableName: 'hutang_detail',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  timestamps: false,
+});
+HutangDetail.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at', toJakarta(inst.getDataValue('updated_at')))
 });
 
 async function GetDataList(pagination, filter) {
@@ -155,10 +157,8 @@ async function GetDataById(id) {
 async function CreateData(trx, data) {
   try {
     const hutangDetail = await HutangDetail.create(data, { transaction: trx });
-    await trx.commit();
     return hutangDetail;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -171,10 +171,8 @@ async function UpdateData(trx, id, data) {
       throw new Error('HutangDetail not found');
     }
     await hutangDetail.update(data, { transaction: trx });
-    await trx.commit();
     return hutangDetail;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -186,10 +184,8 @@ async function DeleteData(trx, id) {
       throw new Error('HutangDetail not found');
     }
     await hutangDetail.destroy({ transaction: trx });
-    await trx.commit();
     return { message: 'HutangDetail deleted successfully' };
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }

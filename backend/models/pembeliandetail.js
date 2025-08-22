@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const PembelianDetail = db.define('pembelian_detail', {
   id: {
@@ -83,9 +84,10 @@ const PembelianDetail = db.define('pembelian_detail', {
   },
 }, {
   tableName: 'pembelian_detail',
-  timestamps: true, 
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  timestamps: false,
+});
+PembelianDetail.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at', toJakarta(inst.getDataValue('updated_at')));
 });
 
 
@@ -150,10 +152,8 @@ async function GetDataById(id) {
 async function CreateData(trx, data) {
   try {
     const pembelianDetail = await PembelianDetail.create(data, { transaction: trx });
-    await trx.commit();
     return pembelianDetail;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -166,10 +166,8 @@ async function UpdateData(trx, id, data) {
       throw new Error('PembelianDetail not found');
     }
     await pembelianDetail.update(data, { transaction: trx });
-    await trx.commit();
     return pembelianDetail;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -181,10 +179,8 @@ async function DeleteData(trx, id) {
       throw new Error('PembelianDetail not found');
     }
     await pembelianDetail.destroy({ transaction: trx });
-    await trx.commit();
     return { message: 'PembelianDetail deleted successfully' };
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }

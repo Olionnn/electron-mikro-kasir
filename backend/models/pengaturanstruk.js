@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const PengaturanStruk = db.define('pengaturan_struk', {
     id: {
@@ -102,10 +103,12 @@ const PengaturanStruk = db.define('pengaturan_struk', {
     }
 }, {
   tableName: 'pengaturan_struk',
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    timestamps: false,
 });
+PengaturanStruk.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at', toJakarta(inst.getDataValue('updated_at')))
+  });
+  
 
 
 async function GetDataList(pagination, filter) {
@@ -169,10 +172,8 @@ async function GetDataList(pagination, filter) {
   async function CreateData(trx, data) {
     try {
       const pengaturanStruk = await PengaturanStruk.create(data, { transaction: trx });
-      await trx.commit();
       return pengaturanStruk;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -185,10 +186,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('PengaturanStruk not found');
       }
       await pengaturanStruk.update(data, { transaction: trx });
-      await trx.commit();
       return pengaturanStruk;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -200,10 +199,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('PengaturanStruk not found');
       }
       await pengaturanStruk.destroy({ transaction: trx });
-      await trx.commit();
       return { message: 'PengaturanStruk deleted successfully' };
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }

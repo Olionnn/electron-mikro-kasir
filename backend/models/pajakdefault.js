@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const PajakDefault = db.define('pajak_default', {
     id: {
@@ -42,9 +43,10 @@ const PajakDefault = db.define('pajak_default', {
     }
 }, {
     tableName: 'pajak_default',
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    timestamps: false,
+});
+PajakDefault.beforeUpdate((inst) => {
+    inst.setDataValue('updated_at', toJakarta(inst.getDataValue('updated_at')))
 });
 
 
@@ -110,10 +112,8 @@ async function GetDataList(pagination, filter) {
   async function CreateData(trx, data) {
     try {
       const pajakDefault = await PajakDefault.create(data, { transaction: trx });
-      await trx.commit();
       return pajakDefault;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -126,10 +126,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('PajakDefault not found');
       }
       await pajakDefault.update(data, { transaction: trx });
-      await trx.commit();
       return pajakDefault;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -141,10 +139,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('PajakDefault not found');
       }
       await pajakDefault.destroy({ transaction: trx });
-      await trx.commit();
       return { message: 'PajakDefault deleted successfully' };
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }

@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 
 const Supplier = db.define('supplier', {
@@ -67,9 +68,10 @@ const Supplier = db.define('supplier', {
     }
 }, {
     tableName: 'supplier',
-    timestamps: true, 
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    timestamps: false,
+});
+Supplier.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at',toJakarta(inst.getDataValue('updated_at')));
 });
 
 
@@ -132,10 +134,8 @@ async function GetDataList(pagination, filter) {
   async function CreateData(trx, data) {
     try {
       const supplier = await Supplier.create(data, { transaction: trx });
-      await trx.commit();
       return supplier;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -148,10 +148,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('Supplier not found');
       }
       await supplier.update(data, { transaction: trx });
-      await trx.commit();
       return supplier;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -163,10 +161,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('Supplier not found');
       }
       await supplier.destroy({ transaction: trx });
-      await trx.commit();
       return { message: 'Supplier deleted successfully' };
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }

@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import db from "../../config/database.js";
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const Biaya = db.define("biaya", {
     id: {
@@ -54,9 +55,10 @@ const Biaya = db.define("biaya", {
     }
 }, {
     tableName: 'biaya',
-    timestamps: true, 
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    timestamps: false,
+});
+Biaya.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at', toJakarta(inst.getDataValue('updated_at')));
 });
 async function GetDataList(pagination, filter) {
 
@@ -118,10 +120,8 @@ async function GetDataById(id) {
 async function CreateData(trx, data) {
   try {
     const biaya = await Biaya.create(data, { transaction: trx });
-    await trx.commit();
     return biaya;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -134,10 +134,8 @@ async function UpdateData(trx, id, data) {
       throw new Error('Biaya not found');
     }
     await biaya.update(data, { transaction: trx });
-    await trx.commit();
     return biaya;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -149,10 +147,8 @@ async function DeleteData(trx, id) {
       throw new Error('Biaya not found');
     }
     await biaya.destroy({ transaction: trx });
-    await trx.commit();
     return { message: 'Biaya deleted successfully' };
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }

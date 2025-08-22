@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const HutangHistoryBayar = db.define('hutang_history_bayar', {
   id: {
@@ -74,9 +75,10 @@ const HutangHistoryBayar = db.define('hutang_history_bayar', {
   }
 }, {
   tableName: 'hutang_history_bayar',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  timestamps: false,
+});
+HutangHistoryBayar.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at', toJakarta(inst.getDataValue('updated_at')))
 });
 
 async function GetDataList(pagination, filter) {
@@ -138,10 +140,8 @@ async function GetDataById(id) {
 async function CreateData(trx, data) {
   try {
     const HutangHistoryBayar = await HutangHistoryBayar.create(data, { transaction: trx });
-    await trx.commit();
     return HutangHistoryBayar;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -154,10 +154,8 @@ async function UpdateData(trx, id, data) {
       throw new Error('HutangHistoryBayar not found');
     }
     await HutangHistoryBayar.update(data, { transaction: trx });
-    await trx.commit();
     return HutangHistoryBayar;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -169,10 +167,8 @@ async function DeleteData(trx, id) {
       throw new Error('HutangHistoryBayar not found');
     }
     await HutangHistoryBayar.destroy({ transaction: trx });
-    await trx.commit();
     return { message: 'HutangHistoryBayar deleted successfully' };
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }

@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const Piutang = db.define('piutang', {
   id: {
@@ -70,9 +71,10 @@ const Piutang = db.define('piutang', {
   },
 }, {
   tableName: 'piutang',
-  timestamps: true, 
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  timestamps: false,
+});
+Piutang.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at', toJakarta(inst.getDataValue('updated_at')));
 });
 
 
@@ -153,10 +155,8 @@ async function UpdateData(trx, id, data) {
       throw new Error('Piutang not found');
     }
     await piutang.update(data, { transaction: trx });
-    await trx.commit();
     return piutang;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -168,10 +168,8 @@ async function DeleteData(trx, id) {
       throw new Error('Piutang not found');
     }
     await piutang.destroy({ transaction: trx });
-    await trx.commit();
     return { message: 'Piutang deleted successfully' };
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }

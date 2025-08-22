@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const Diskon = db.define('diskon', {
     id: {
@@ -58,10 +59,12 @@ const Diskon = db.define('diskon', {
     }
 }, {
     tableName: 'diskon',
-    timestamps: true, // Automatically manage createdAt and updatedAt fields
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    timestamps: false
 });
+Diskon.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at', toJakarta(inst.getDataValue('updated_at')));
+});
+
 
 async function GetDataList(pagination, filter) {
 
@@ -123,10 +126,8 @@ async function GetDataById(id) {
 async function CreateData(trx, data) {
   try {
     const diskon = await Diskon.create(data, { transaction: trx });
-    await trx.commit();
     return diskon;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -139,10 +140,8 @@ async function UpdateData(trx, id, data) {
       throw new Error('Diskon not found');
     }
     await diskon.update(data, { transaction: trx });
-    await trx.commit();
     return diskon;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -154,10 +153,8 @@ async function DeleteData(trx, id) {
       throw new Error('Diskon not found');
     }
     await diskon.destroy({ transaction: trx });
-    await trx.commit();
     return { message: 'Diskon deleted successfully' };
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }

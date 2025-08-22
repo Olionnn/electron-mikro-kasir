@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import db from "../../config/database.js";
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const BarangConfig = db.define("barang_config", {
     id: {
@@ -62,9 +63,11 @@ const BarangConfig = db.define("barang_config", {
     }
 }, {
     tableName: 'barang_config',
-    timestamps: true, 
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    timestamps: false, 
+   
+});
+BarangConfig.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at', toJakarta(inst.getDataValue('updated_at')));
 });
 
 async function GetDataList(pagination, filter) {
@@ -127,10 +130,8 @@ async function GetDataById(id) {
 async function CreateData(trx, data) {
   try {
     const barangConfig = await BarangConfig.create(data, { transaction: trx });
-    await trx.commit();
     return barangConfig;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -143,10 +144,8 @@ async function UpdateData(trx, id, data) {
       throw new Error('BarangConfig not found');
     }
     await barangConfig.update(data, { transaction: trx });
-    await trx.commit();
     return barangConfig;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -158,10 +157,8 @@ async function DeleteData(trx, id) {
       throw new Error('BarangConfig not found');
     }
     await barangConfig.destroy({ transaction: trx });
-    await trx.commit();
     return { message: 'BarangConfig deleted successfully' };
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
