@@ -1,4 +1,3 @@
-// backend/ipc/kategoriIpc.js
 import { ipcMain } from "electron";
 import {
   GetDataList,

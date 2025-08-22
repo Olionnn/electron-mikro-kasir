@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../../config/database.js';
 import { Op } from 'sequelize';
+import { toJakarta } from "../helpers/timestamps.js";
 
 const Barang = db.define('barang', {
   id: {
@@ -84,11 +85,26 @@ const Barang = db.define('barang', {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
   },
+      created_at: {
+      type: DataTypes.DATE,
+      get() {
+        return toJakarta(this.getDataValue("created_at"));
+      },
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      get() {
+        return toJakarta(this.getDataValue("updated_at"));
+      },
+    },
 }, {
   tableName: 'barang',
-  timestamps: true, 
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  timestamps: false, 
+});
+
+
+Barang.beforeUpdate((inst) => {
+  inst.setDataValue('updated_at',toJakarta(inst.getDataValue('updated_at')));
 });
 
 
@@ -146,7 +162,6 @@ async function GetDataById(id) {
   const barang = await Barang.findOne({
     where: { id },
   });
-
   return barang;
 }
 
@@ -162,7 +177,7 @@ async function CreateData(trx, data) {
 
 async function UpdateData(trx, id, data) {
   try {
-    const barang = await Barang.findByPk(id);
+    const barang = await Barang.findOne({ where: { id } });
     if (!barang) {
       throw new Error('Barang not found');
     }
@@ -175,7 +190,7 @@ async function UpdateData(trx, id, data) {
 
 async function DeleteData(trx, id) {
   try {
-    const barang = await Barang.findByPk(id);
+    const barang = await Barang.findOne({ where: { id } });
     if (!barang) {
       throw new Error('Barang not found');
     }

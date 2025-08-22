@@ -117,7 +117,7 @@ ipcMain.handle('tokoIpc:update', async (event, { id, data }) => {
       alamat_toko: data?.alamat_toko ?? existing.alamat_toko ?? "",
       no_telp: (data?.no_telp ?? existing.no_telp) ?? null,
       status: (typeof data?.status === "boolean" ? data.status : existing.status) ?? true,
-      image: newImagePath,
+      image: newImagePath ?? existing.image ?? "",
     };
 
     const updated = await db.transaction(async (trx) => {
@@ -162,7 +162,7 @@ ipcMain.handle('tokoIpc:delete', async (event, id) => {
     }
 
     return createSuccessResponse("Berhasil Menghapus Toko", {
-      data: deleted,
+      data: null,
       pagination: {},
     });
   } catch (error) {

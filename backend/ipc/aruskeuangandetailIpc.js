@@ -12,6 +12,7 @@ import {
   createErrorResponse,
 } from "../helpers/response.js";
 import db from "../../config/database.js";
+import { requireAuth } from "../middleware/auth.js";
 
 ipcMain.handle(
   "aruskeuangandetailIpc:getList",
@@ -42,43 +43,49 @@ ipcMain.handle(
       return createSuccessResponse(
         "Berhasil Mendapatkan Arus Keuangan Detail",
         {
-          items: arusKeuanganDetail,
+          data: arusKeuanganDetail,
           pagination: {},
         }
       );
     } catch (error) {
-      console.error("Error getting arusKeuanganDetail by ID:", error);
       return createErrorResponse(error, "getting arusKeuanganDetail by ID");
     }
   })
 );
 
-ipcMain.handle("aruskeuangandetailIpc:create", async (event, data) => {
-  const trx = await db.transaction();
-  try {
-    const aruskeuangandetailIpc = await CreateData(trx, data);
-    return createSuccessResponse("Berhasil Membuat Arus Keuangan Detail", {
-      items: aruskeuangandetailIpc,
-      pagination: {},
-    });
-  } catch (error) {
-    return createErrorResponse(error, "creating aruskeuangandetailIpc");
-  }
-});
+ipcMain.handle(
+  "aruskeuangandetailIpc:create",
+  requireAuth(async (event, { data }) => {
+    try {
 
-ipcMain.handle("aruskeuangandetailIpc:update", async (event, { id, data }) => {
-  const trx = await db.transaction();
-  try {
-    const aruskeuangandetailIpc = await UpdateData(trx, id, data);
-    return createSuccessResponse({
-      items: aruskeuangandetailIpc,
-      pagination: {},
-    });
-  } catch (error) {
-    console.error("Error updating aruskeuangandetailIpc:", error);
-    return createErrorResponse(error, "updating aruskeuangandetailIpc");
-  }
-});
+      
+      const aruskeuangandetail = await CreateData(trx, data);
+      return createSuccessResponse("Berhasil Membuat Arus Keuangan Detail", {
+        data: aruskeuangandetail,
+        pagination: {},
+      });
+    } catch (error) {
+      return createErrorResponse(error, "creating aruskeuangandetailIpc");
+    }
+  })
+);
+
+ipcMain.handle(
+  "aruskeuangandetailIpc:update",
+  requireAuth(async (event, { id, data }) => {
+    const trx = await db.transaction();
+    try {
+      const aruskeuangandetail = await UpdateData(trx, id, data);
+      return createSuccessResponse({
+        data: aruskeuangandetail,
+        pagination: {},
+      });
+    } catch (error) {
+      console.error("Error updating aruskeuangandetailIpc:", error);
+      return createErrorResponse(error, "updating aruskeuangandetailIpc");
+    }
+  })
+);
 
 ipcMain.handle("aruskeuangandetailIpc:delete", async (event, id) => {
   const trx = await db.transaction();

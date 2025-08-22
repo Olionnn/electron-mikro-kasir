@@ -123,7 +123,6 @@ async function GetDataList(pagination, filter) {
     const toko = await Toko.findOne({
       where: { id },
     });
-  
     return toko;
   }
   
@@ -139,7 +138,7 @@ async function GetDataList(pagination, filter) {
   
   async function UpdateData(trx, id, data) {
     try {
-      const toko = await Toko.findByPk(id);
+      const toko = await Toko.findOne({ where: { id } });
       if (!toko) {
         throw new Error('Toko not found');
       }
@@ -149,10 +148,12 @@ async function GetDataList(pagination, filter) {
       throw error;
     }
   }
+
+
   
   async function DeleteData(trx, id) {
     try {
-      const toko = await Toko.findByPk(id);
+      const toko = await Toko.findOne({ where: { id } });
       if (!toko) {
         throw new Error('Toko not found');
       }

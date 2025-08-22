@@ -168,7 +168,6 @@ ipcMain.handle("usersIpc:getList", requireAuth(async (event, params) => {
 
 ipcMain.handle("usersIpc:getById", requireAuth(async (event, { id }) => {
   try {
-    console.log('Getting user by ID:', id);
     const user = await GetUserById(id);
     if (!user) {
       return createErrorResponse("User not found");
