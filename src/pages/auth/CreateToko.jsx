@@ -1,7 +1,37 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useTheme } from "../../hooks/useTheme";
 import { useNavbar } from "../../hooks/useNavbar";
 import MapPinField from "../../component/MapsPin"; // pastikan path ini benar
+import { useToko } from "../../hooks/useToko";
+import { useUser } from "../../hooks/useUser";
+import Alert from "../../component/Alert";
+import { setFlash } from "../../utils/utils";
+import { useNavigate } from "react-router-dom";
+
+
+
+async function toImagePayload(file) {
+  if (!file || !(file instanceof File)) return null;
+  const dataUrl = await fileToBase64(file);
+  // pisahkan header dataURL
+  const [, base64] = (dataUrl || "").split(",");
+  return {
+    name: file.name,
+    type: file.type,
+    dataBase64: base64 || null,
+  };
+}
+
+async function fileToBase64(file) {
+  if (!file) return null;
+  const reader = new FileReader();
+  return new Promise((resolve, reject) => {
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file); // menghasilkan "data:<mime>;base64,XXXXX"
+  });
+}
+
 
 /** ----------------------- Ikon util kecil ----------------------- */
 function Icon({ name, className = "w-5 h-5" }) {
@@ -25,13 +55,13 @@ function Icon({ name, className = "w-5 h-5" }) {
   return icons[name] ?? null;
 }
 
-/** ----------------------- UI atoms ----------------------- */
 function Field({
   label,
   name,
   type = "text",
   placeholder,
   required = false,
+  defaultValue = "",
   helper,
   error,
   rightAddon,
@@ -51,6 +81,7 @@ function Field({
           type={type}
           placeholder={placeholder}
           aria-invalid={!!error}
+          defaultValue={defaultValue}
           className="w-full bg-surface text-app border border-app rounded-lg px-3 py-2 focus:outline-none focus:ring-2
                      transition-shadow duration-150 ease-out
                      focus:ring-[color:var(--primary-400)] focus:border-[color:var(--primary-400)]"
@@ -176,6 +207,25 @@ function TokoFormFields({ form, setForm, lokasi, setLokasi, compact = false }) {
     }
   }
 
+  useEffect(() => {
+    try {
+      const local = JSON.parse(localStorage.getItem("au") || "{}");
+      if (local?.user) {
+        setForm((s) => ({
+          ...s,
+          id: local.user.toko_id || "",
+          nama_pemilik: local.user.nama || "",
+          no_telp: local.user.no_telp || "",
+        }));
+      }
+    } catch {
+      // ignore parsing error
+    }
+  }, []);
+
+
+
+ 
   return (
     <div className={`grid ${compact ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-2"} gap-4`}>
       {/* nama_toko */}
@@ -212,7 +262,7 @@ function TokoFormFields({ form, setForm, lokasi, setLokasi, compact = false }) {
       </SelectField>
 
       {/* tampilan_id -> mapping contoh */}
-      <SelectField
+      {/* <SelectField
         label="Tampilan UI"
         name="tampilan_id"
         value={form.tampilan_id}
@@ -221,7 +271,7 @@ function TokoFormFields({ form, setForm, lokasi, setLokasi, compact = false }) {
         <option value={0}>Default</option>
         <option value={1}>Modern</option>
         <option value={2}>Compact</option>
-      </SelectField>
+      </SelectField> */}
 
       {/* no_telp */}
       <Field
@@ -279,18 +329,30 @@ function TokoFormFields({ form, setForm, lokasi, setLokasi, compact = false }) {
 
 /* ---------------------------------- Page ---------------------------------- */
 export default function DataTokoForm({ variant = "card" }) {
+  const {
+    update: updateToko,
+  } = useToko();
+
+  const { 
+    update: updateUser,
+    getById: getUserById
+   } = useUser();
   const { token } = useTheme();
+  const [localError, setLocalError] = useState(null);
+  const [successMsg, setSuccessMsg] = useState(null);
   useNavbar({ title: "Data Toko / Usaha", variant: "page", uiPreset: "solid", actions: [] }, []);
+  const navigate = useNavigate();
 
   // State form selaras DB
   const [form, setForm] = useState({
+    id: 0,
     nama_toko: "",
     nama_pemilik: "",
     tampilan_id: 0,
     jenis_toko_id: 0,
     no_telp: "",
     image: null, // File
-    status: true,
+    status: 1,
   });
 
   // Alamat via MapPinField
@@ -303,28 +365,78 @@ export default function DataTokoForm({ variant = "card" }) {
   const accent = useMemo(() => token("--primary-700") || "#3B38A0", [token]);
 
   /** Submit → payload 100% sama dengan kolom DB */
-  function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSubmit(e) {
+  e.preventDefault();
 
-    // bentuk payload ke backend/IPC
-    const payload = {
-      nama_toko: form.nama_toko,
-      nama_pemilik: form.nama_pemilik,
-      tampilan_id: Number(form.tampilan_id) || 0,
-      jenis_toko_id: Number(form.jenis_toko_id) || 0,
-      alamat_toko: lokasi.address || "", // <— mapping penting
-      no_telp: form.no_telp || null,
-      image: form.image || null,         // kirim File / base64 sesuai backend kamu
-      status: !!form.status,
-      // created_at/updated_at/sync_at ditangani DB/BE, tidak dari form
+  
+  const au = JSON.parse(localStorage.getItem("au") || "{}");
+
+  // siapkan payload toko
+  const imagePayload = await toImagePayload(form.image); // form.image adalah File
+  const payloadToko = {
+    nama_toko: form.nama_toko,
+    nama_pemilik: form.nama_pemilik,
+    tampilan_id: Number(form.tampilan_id) || 0,
+    jenis_toko_id: Number(form.jenis_toko_id) || 0,
+    alamat_toko: lokasi.address || "",
+    no_telp: form.no_telp || null,
+    image: imagePayload, // <-- kirim format yang diharapkan IPC
+    status: !!form.status,
+  };
+
+  try {
+    const resToko = await updateToko(form.id, payloadToko);
+    const updatedToko =
+      resToko?.data?.data || 
+      resToko?.data ||      
+      resToko || null;       
+
+    await updateUser(au?.user?.id, { status: true });
+
+    const freshUser = await getUserById(au?.user?.id);
+
+    const nextAu = {
+      ...au,
+      user: freshUser ? {
+        ...au?.user,
+        ...freshUser,
+      } : au?.user,
+      toko: updatedToko ? {
+        ...au?.toko,
+        ...updatedToko,
+      } : au?.toko,
     };
+    localStorage.setItem("au", JSON.stringify(nextAu));
 
-    console.log("[Toko] submit payload:", payload);
-    // TODO: panggil IPC/API sesuai stack kamu, mis:
-    // window.electron.invoke('toko:create', payload)
-    //   .then(() => ...)
-    //   .catch(console.error);
+    setSuccessMsg("Toko berhasil dibuat!");
+    setFlash("Toko berhasil dibuat!", "success");
+
+    setForm({
+      id: 0,
+      nama_toko: "",
+      nama_pemilik: "",
+      tampilan_id: 0,
+      jenis_toko_id: 0,
+      no_telp: "",
+      image: null,
+      status: true,
+    });
+    setLokasi({
+      address: "",
+      lat: -6.200000,
+      lng: 106.816666,
+    });
+
+    if (navigate) {
+      navigate("/ujicoba");
+    } else if (window?.location) {
+      window.location.href = "/ujicoba";
+    }
+  } catch (error) {
+    setFlash(error?.message || "Gagal membuat toko. Silakan coba lagi.", "error");
+    setLocalError(error?.message || "Gagal membuat toko. Silakan coba lagi.");
   }
+}
 
   // ---------- RENDER VARIAN ----------
   const render = {
@@ -407,6 +519,16 @@ export default function DataTokoForm({ variant = "card" }) {
 
   return (
     <div className="bg-app h-full">
+      {localError && (
+        <Alert type="error" onClose={() => setLocalError(null)}>
+          {localError}
+        </Alert>
+      )}
+      {successMsg && (
+        <Alert type="success" onClose={() => setSuccessMsg(null)}>
+          {successMsg}
+        </Alert>
+      )}
       <div className="max-w-5xl mx-auto px-4 py-8">{render}</div>
     </div>
   );

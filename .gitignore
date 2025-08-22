@@ -23,3 +23,4 @@ dist-ssr
 *.sw?
 data/mikro-kasir.db
 dist-electron/*
+public/uploads/*

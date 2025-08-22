@@ -153,7 +153,7 @@ async function GetDataList(pagination, filter) {
 }
 
 async function GetDataById(id) {
-  const user = await Users.findByPk(id);
+  const user = await Users.findOne({ where: { id } });
   if (!user) {
     throw new Error("User not found");
   }
@@ -171,24 +171,22 @@ async function CreateData(trx, data) {
 
 async function UpdateData(trx, id, data) {
   try {
-    const user = await Users.findByPk(id);
+    const user = await Users.findOne({ where: { id } });
     if (!user) {
       throw new Error("User not found");
     }
 
     await user.update(data, { transaction: trx });
 
-    await trx.commit();
     return user;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
 
 async function DeleteData(trx, id) {
   try {
-    const user = await Users.findByPk(id);
+    const user = await Users.findOne({ where: { id } });
     if (!user) {
       throw new Error("User not found");
     }

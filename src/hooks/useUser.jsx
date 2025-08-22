@@ -1,87 +1,76 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { normalizeRow, serializeFile, isBrowserFile } from "../utils/utils";
+import { normalizeRow } from "../utils/utils";
 import { getAccessToken } from "../utils/jwt";
 
-const tokoIpc = {
+
+const userIpc = {
   getList: (params) => {
-    const token = getAccessToken();
-if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
-    return window.electronAPI.getTokoList(params, token);
+  const token = getAccessToken();
+  if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
+    return window.electronAPI.getUserList(params, token);
   },
   getById: (id) => {
-    const token = getAccessToken();
-    if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
-    return window.electronAPI.getTokoById(id, token);
+  const token = getAccessToken();
+  if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
+    return window.electronAPI.getUserById(id, token);
   },
-  create: (data) => {
-    const token = getAccessToken();
-    if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
-    return window.electronAPI.createToko(data, token);
-  },
+//   create: (data) => {
+//   const token = getAccessToken();
+//   if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
+//     return window.electronAPI.createUser(data, token);
+//   },
   update: (id, data) => {
-    const token = getAccessToken();
-    if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
-    return window.electronAPI.updateToko(id, data, token);
+  const token = getAccessToken();
+  if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
+    return window.electronAPI.updateUser(id, data, token);
   },
   remove: (id) => {
-    const token = getAccessToken();
-    if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
-    return window.electronAPI.deleteToko(id, token);
+  const token = getAccessToken();
+  if (!token) return Promise.resolve({ success: false, error: "Unauthorized" });
+    return window.electronAPI.deleteUser(id, token);
   },
 };
 
 
 
-const toBackend = async (p = {}) => {
-  // image bisa: File | {name,type,dataBase64} | string path | null/undefined
-  let imagePayload = null;
+const toBackend = (p = {}) => ({
+    toko_id: p.toko_id,
+    nama: p.nama,
+    username: p.username,
+    email: p.email,
+    is_valid: p.is_valid,
+    kode: p.kode,
+    no_telp: p.no_telp,
+    password: p.password,
+    alamat: p.alamat,
+    role: p.role,
+    image: p.image,
+    sync_at: p.sync_at,
+    status: p.status,
 
-  if (p.image == null) {
-    imagePayload = null;
-  } else if (isBrowserFile(p.image)) {
-    imagePayload = await serializeFile(p.image);
-  } else if (typeof p.image === "object" && p.image.dataBase64) {
-    // sudah dalam bentuk serializable
-    imagePayload = p.image;
-  } else if (typeof p.image === "string") {
-    // path lama (hasil dari backend), untuk update biasanya dikirim apa adanya
-    imagePayload = p.image;
-  }
-
-  return {
-    nama_toko: p.nama_toko ?? "",
-    nama_pemilik: p.nama_pemilik ?? "",
-    tampilan_id: Number(p.tampilan_id) || 0,
-    jenis_toko_id: Number(p.jenis_toko_id) || 0,
-    alamat_toko: p.alamat_toko ?? "",
-    no_telp: p.no_telp ?? null,
-    image: imagePayload,
-    status: typeof p.status === "boolean" ? p.status : true,
-    created_at: p.created_at ?? null,
-    updated_at: p.updated_at ?? null,
-    sync_at: p.sync_at ?? null,
-
-    // dukungan optional untuk hapus logo saat update:
-    removeImage: p.removeImage === true ? true : undefined,
-  };
-};
+});
 
 
 const fromBackend = (row = {}) => {
   const r = normalizeRow(row);
   return {
     id: r.id,
-    nama_toko: r.nama_toko ?? "",
-    nama_pemilik: r.nama_pemilik ?? "",
-    tampilan_id: Number(r.tampilan_id) || 0,
-    jenis_toko_id: Number(r.jenis_toko_id) || 0,
-    alamat_toko: r.alamat_toko ?? "",
-    no_telp: r.no_telp ?? null,
-    image: r.image ?? null,    // string path relatif dari backend
-    status: typeof r.status === "boolean" ? r.status : true,
+    toko_id: r.toko_id,
+    nama: r.nama,
+    username: r.username,
+    email: r.email,
+    is_valid: r.is_valid,
+    kode: r.kode,
+    no_telp: r.no_telp,
+    // password: r.password,
+    alamat: r.alamat,
+    role: r.role,
+    image: r.image,
+    sync_at: r.sync_at,
+    status: r.status,
     created_at: r.created_at ?? null,
     updated_at: r.updated_at ?? null,
-    sync_at: r.sync_at ?? null,
+     
   };
 };
 
@@ -90,7 +79,7 @@ const DEFAULT_PARAMS = {
   filter: { search: "", status: "", toko_id: "" },
 };
 
-export function useToko(initialParams = DEFAULT_PARAMS) {
+export function useUser(initialParams = DEFAULT_PARAMS) {
   const [items, setItems] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -119,7 +108,7 @@ export function useToko(initialParams = DEFAULT_PARAMS) {
         },
       };
 
-      const res = await tokoLIpc.getList(paramsRef.current);
+      const res = await userIpc.getList(paramsRef.current);
       if (!res?.success) throw new Error(res?.error || "Gagal memuat pajak");
       // Server returns: res.data = { data: [...], pagination: {...} }
       const payload = res.data || {};
@@ -149,9 +138,8 @@ export function useToko(initialParams = DEFAULT_PARAMS) {
 
   const create = useCallback(
     async (payload) => {
-      const body = await toBackend(payload);               // ⬅️ penting
-      const res = await tokoIpc.create(body);
-      if (!res?.success) throw new Error(res?.error || "Gagal membuat toko");
+      const res = await userIpc.create(toBackend(payload));
+      if (!res?.success) throw new Error(res?.error || "Gagal membuat pajak");
       const created = (res.data && (res.data.items || res.data.data)) || null;
       await refresh();
       return created;
@@ -161,10 +149,8 @@ export function useToko(initialParams = DEFAULT_PARAMS) {
 
   const update = useCallback(
     async (id, payload) => {
-      const body = await toBackend(payload);               // ⬅️ penting
-      // sesuai main handler kamu: expect { id, data }
-      const res = await tokoIpc.update(id, body);
-      if (!res?.success) throw new Error(res?.error || "Gagal mengubah toko");
+      const res = await userIpc.update(id, toBackend(payload));
+      if (!res?.success) throw new Error(res?.error || "Gagal mengubah pajak");
       const updated = (res.data && (res.data.items || res.data.data)) || null;
       await refresh();
       return updated;
@@ -174,8 +160,8 @@ export function useToko(initialParams = DEFAULT_PARAMS) {
 
   const remove = useCallback(
     async (id) => {
-      const res = await tokoIpc.remove(id);
-      if (!res?.success) throw new Error(res?.error || "Gagal menghapus toko");
+      const res = await userIpc.remove(id);
+      if (!res?.success) throw new Error(res?.error || "Gagal menghapus pajak");
       const removed = (res.data && (res.data.items || res.data.data)) || null;
       await refresh();
       return removed;
@@ -183,9 +169,8 @@ export function useToko(initialParams = DEFAULT_PARAMS) {
     [refresh]
   );
 
-
   const getById = useCallback(async (id) => {
-    const res = await tokoLIpc.getById(id);
+    const res = await userIpc.getById(id);
     if (!res?.success) throw new Error(res?.error || "Gagal mengambil pajak");
     const raw = (res.data && (res.data.items || res.data.data || res.data.item)) || null;
     return raw ? fromBackend(raw) : null;

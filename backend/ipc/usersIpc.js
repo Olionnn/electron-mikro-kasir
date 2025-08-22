@@ -25,6 +25,8 @@ import {
     UpdateData as UpdateToko,
     DeleteData as DeleteToko,
 } from '../models/toko.js';
+import { requireAuth } from "../middleware/auth.js";
+
 
 var EXP_SECONDS = 60 * 60 * 2; // 2 jam
 
@@ -34,13 +36,17 @@ ipcMain.handle("usersIpc:login", async (event, payload) => {
     const user = await findUserByEmail(email);
     if (!user) return createErrorResponse("User not found");
 
-    if (user.status === false) {
-      return createErrorResponse("Akun nonaktif");
-    }
+    const toko = await GetTokoById(user.toko_id);
+    if (!toko) return createErrorResponse("Toko not found");
+
+
+    // if (user.status === false) {
+    //   return createErrorResponse("Akun nonaktif");
+    // }
+
     // if (Number(user.is_valid) === 0) {
     //   return createErrorResponse("Akun belum divalidasi");
     // }
-
     const ok = await verifyPassword(password, user.password);
     if (!ok) return createErrorResponse("Invalid password");
 
@@ -52,6 +58,14 @@ ipcMain.handle("usersIpc:login", async (event, payload) => {
       accesstoken: token,
       expire_in: EXP_SECONDS,
       user: UsersResponse(user),
+      toko: {
+        id: toko.id,
+        nama_toko: toko.nama_toko,
+        nama_pemilik: toko.nama_pemilik,
+        no_telp: toko.no_telp,
+        alamat_toko: toko.alamat_toko,
+        image: toko.image,
+      },
     };
 
     return createSuccessResponse( "Login successful", {
@@ -104,6 +118,9 @@ ipcMain.handle("usersIpc:register", async (event, payload) => {
         const user = await findUserByEmail(email);
         if (!user) return createErrorResponse("User not found");
 
+        const toko = await GetTokoById(user.toko_id);
+        if (!toko) return createErrorResponse("Toko not found");
+
         const ok = await verifyPassword(password, user.password);
         if (!ok) return createErrorResponse("Invalid password");
 
@@ -115,6 +132,14 @@ ipcMain.handle("usersIpc:register", async (event, payload) => {
           accesstoken: token,
           expire_in: EXP_SECONDS,
           user: UsersResponse(user),
+          toko: {
+            id: toko.id,
+            nama_toko: toko.nama_toko,
+            nama_pemilik: toko.nama_pemilik,
+            no_telp: toko.no_telp,
+            alamat_toko: toko.alamat_toko,
+            image: toko.image,
+          },
         };
 
         return createSuccessResponse("User registered successfully",{
@@ -126,6 +151,117 @@ ipcMain.handle("usersIpc:register", async (event, payload) => {
         return createErrorResponse(err?.message || "Gagal registrasi");
     }
 });
+
+ipcMain.handle("usersIpc:getList", requireAuth(async (event, params) => {
+  try {
+    const { pagination, filter } = params || {};
+    const res = await GetUserList(pagination, filter);
+    return createSuccessResponse("Berhasil memuat daftar user", {
+      items: res.data,
+      pagination: res.pagination,
+    });
+  } catch (error) {
+    console.error('Error getting users list:', error);
+    return createErrorResponse(error, 'getting users list');
+  }
+}));
+
+ipcMain.handle("usersIpc:getById", requireAuth(async (event, { id }) => {
+  try {
+    console.log('Getting user by ID:', id);
+    const user = await GetUserById(id);
+    if (!user) {
+      return createErrorResponse("User not found");
+    }
+    return createSuccessResponse("Berhasil mendapatkan user", {
+      items: UsersResponse(user),
+      pagination: {},
+    });
+  } catch (error) {
+    console.error('Error getting user by ID:', error);
+    return createErrorResponse(error, 'getting user by ID');
+  }
+}));
+
+
+ipcMain.handle("usersIpc:create", requireAuth(async (event, {data}) => {
+  try {
+    const payload = { ...(data || {}) };
+
+    if (payload.image && payload.image.dataBase64) {
+      const relPath = await saveImageAndGetRelPath(payload.image, 'users');
+      payload.image = relPath;
+    } else {
+      payload.image = null;
+    }
+
+    const normalizedPayload = {
+      nama: payload.nama ?? "",
+      email: payload.email ?? "",
+      username: payload.username ?? "",
+      no_telp: payload.no_telp ?? null,
+      alamat: payload.alamat ?? "",
+      role: payload.role || "user",
+      status: payload.status !== false,
+      password: await hashPassword(payload.password),
+    };
+
+    const result = await db.transaction(async (trx) => {
+      return await CreateUser(trx, normalizedPayload);
+    });
+
+    return createSuccessResponse("Berhasil Membuat User", {
+      data: UsersResponse(result),
+      pagination: {},
+    });
+    
+  } catch (error) {
+    console.error('Error creating user:', error);
+    return createErrorResponse(error?.message || "Gagal membuat user");
+  }
+}));
+
+
+ipcMain.handle("usersIpc:update", requireAuth(async (event, { id, data }) => {
+  try {
+    const payload = { ...(data || {}) };
+
+    if (payload.image && payload.image.dataBase64) {
+      const relPath = await saveImageAndGetRelPath(payload.image, 'users');
+      payload.image = relPath;
+    } else {
+      payload.image = null;
+    }
+
+    const userData = await GetUserById(id);
+    if (!userData) {
+      return createErrorResponse("User not found");
+    }
+
+    const normalizedPayload = {
+      nama: payload.nama ?? userData.nama ?? "",
+      email: payload.email ?? userData.email ?? "",
+      username: payload.username ?? userData.username ?? "",
+      no_telp: payload.no_telp ?? userData.no_telp ?? null,
+      alamat: payload.alamat ?? userData.alamat ?? "",
+      role: payload.role ?? userData.role ?? "",
+      status: payload.status ?? userData.status ?? true,
+      image: payload.image ?? userData.image ?? "",
+    };
+
+    const result = await db.transaction(async (trx) => {
+      return await UpdateUser(trx, id, normalizedPayload);
+    });
+
+    return createSuccessResponse("Berhasil Mengupdate User", {
+      data: UsersResponse(result),
+      pagination: {},
+    });
+    
+  } catch (error) {
+    return createErrorResponse(error?.message || "Gagal mengupdate user");
+  }
+}));
 
 
 

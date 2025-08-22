@@ -38,7 +38,7 @@ export function RequireAuth({ redirect = "/" }) {
     if (!userStatus && !isAtCreateToko) {
       hasRedirectedRef.current = true;
       navigate("/create-toko", { replace: true, state: { from: loc } });
-    }
+    } 
   }, [ready, token, tokenExpired, userStatus, isAtCreateToko, isAtRedirect, navigate, loc, redirect]);
 
   // ---- RENDER (jangan blokir /create-toko saat userStatus falsy) ----

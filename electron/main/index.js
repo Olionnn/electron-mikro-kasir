@@ -8,6 +8,7 @@ import initDatabase from '../../backend/ipc/bootstrap.js';
 import '../../backend/ipc/kategoriIpc.js';
 import '../../backend/ipc/usersIpc.js';
 import '../../backend/middleware/auth.js'
+import '../../backend/ipc/tokoIpc.js';
 
 
 const __filename = fileURLToPath(import.meta.url);

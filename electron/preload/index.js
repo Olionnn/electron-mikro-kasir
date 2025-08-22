@@ -270,12 +270,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
   deleteSupplier: (id) => ipcRenderer.invoke("supplierIpc:delete", id),
 
   //toko
-  getTokoList: (params) => ipcRenderer.invoke("tokoIpc:getList", params),
-  getTokoById: (id) => ipcRenderer.invoke("tokoIpc:getById", id),
-  createToko: (data) => ipcRenderer.invoke("tokoIpc:create", data),
-  updateToko: (id, data) => ipcRenderer.invoke("tokoIpc:update", { id, data }),
-  deleteToko: (id) => ipcRenderer.invoke("tokoIpc:delete", id),
-
+  getTokoList: (params, token) => ipcRenderer.invoke("tokoIpc:getList", withAuth(params || {}, token)),
+  getTokoById: (id, token) => ipcRenderer.invoke("tokoIpc:getById", withAuth({ id }, token)),
+  createToko: (data, token) => ipcRenderer.invoke("tokoIpc:create", withAuth({ data }, token)),
+  updateToko: (id, data, token) => ipcRenderer.invoke("tokoIpc:update", withAuth({ id, data }, token)),
+  deleteToko: (id, token) => ipcRenderer.invoke("tokoIpc:delete", withAuth({ id }, token)),
+  
   //transaksidetail
   getTransaksiDetailList: (params) =>
     ipcRenderer.invoke("transaksidetailIpc:getList", params),
@@ -325,7 +325,11 @@ contextBridge.exposeInMainWorld("electronAPI", {
   login: (data) => ipcRenderer.invoke("usersIpc:login", data),
   register: (data) => ipcRenderer.invoke("usersIpc:register", data),
   logout:       (data) => ipcRenderer.invoke('usersIpc:logout', data),
-
+  getUserList: (params, token) => ipcRenderer.invoke("usersIpc:getList", withAuth(params, token)),
+  getUserById: (id, token) => ipcRenderer.invoke("usersIpc:getById", withAuth({ id }, token)),
+  createUser: (data, token) => ipcRenderer.invoke("usersIpc:create", withAuth({ data }, token)),
+  updateUser: (id, data, token) => ipcRenderer.invoke("usersIpc:update", withAuth({ id, data }, token)),
+  deleteUser: (id, token) => ipcRenderer.invoke("usersIpc:delete", withAuth({ id }, token)),
 
   withAuth: (data, token) => withAuth(data, token),
 });

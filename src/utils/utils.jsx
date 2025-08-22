@@ -97,3 +97,21 @@ export function getFlash() {
 export function clearFlash() {
   sessionStorage.removeItem('flash');
 }
+
+
+export function isBrowserFile(v) {
+  // File/Blob detection (sederhana)
+  return v && typeof v === "object" && typeof v.arrayBuffer === "function" && ("name" in v);
+}
+
+export async function serializeFile(file) {
+  if (!isBrowserFile(file)) return null;
+  const buf = await file.arrayBuffer();
+  // NOTE: btoa untuk string 8-bit
+  const base64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+  return {
+    name: file.name || "upload.bin",
+    type: file.type || "application/octet-stream",
+    dataBase64: base64, // tanpa prefix dataURL
+  };
+}

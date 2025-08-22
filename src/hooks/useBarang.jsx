@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { normalizeRow } from "../utils/utils";
 import { getAccessToken } from "../utils/jwt";
-import Alert from "../components/ui/Alert";
 
 const barangIpc = {
   getList: (params) => {

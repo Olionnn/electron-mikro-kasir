@@ -144,10 +144,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('Toko not found');
       }
       await toko.update(data, { transaction: trx });
-      await trx.commit();
       return toko;
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }
@@ -159,10 +157,8 @@ async function GetDataList(pagination, filter) {
         throw new Error('Toko not found');
       }
       await toko.destroy({ transaction: trx });
-      await trx.commit();
       return { message: 'Toko deleted successfully' };
     } catch (error) {
-      await trx.rollback();
       throw error;
     }
   }

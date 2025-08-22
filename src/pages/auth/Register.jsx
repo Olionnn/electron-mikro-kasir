@@ -49,6 +49,7 @@ export default function Register() {
       
       nav("/create-toko");
     } catch (e2) {
+      setFlash(e2?.message || "Gagal registrasi", "error");
       setLocalError(e2?.message || "Gagal registrasi");
     }
   };
