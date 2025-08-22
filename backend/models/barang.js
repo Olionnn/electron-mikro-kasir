@@ -153,10 +153,8 @@ async function GetDataById(id) {
 async function CreateData(trx, data) {
   try {
     const barang = await Barang.create(data, { transaction: trx });
-    await trx.commit();
     return barang;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -169,10 +167,8 @@ async function UpdateData(trx, id, data) {
       throw new Error('Barang not found');
     }
     await barang.update(data, { transaction: trx });
-    await trx.commit();
     return barang;
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
@@ -184,10 +180,8 @@ async function DeleteData(trx, id) {
       throw new Error('Barang not found');
     }
     await barang.destroy({ transaction: trx });
-    await trx.commit();
     return { message: 'Barang deleted successfully' };
   } catch (error) {
-    await trx.rollback();
     throw error;
   }
 }
