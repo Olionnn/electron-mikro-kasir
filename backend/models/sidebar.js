@@ -49,6 +49,9 @@ const Sidebar = db.define('sidebar', {
     tableName: 'sidebar',
     timestamps: false,
 });
+Sidebar.beforeUpdate((inst) => {
+    inst.setDataValue('updated_at',toJakarta(inst.getDataValue('updated_at')));
+});
 
 
 async function GetDataList(pagination, filter) {

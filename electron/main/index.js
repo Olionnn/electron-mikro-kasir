@@ -41,8 +41,6 @@ import '../../backend/ipc/transaksipesananIpc.js';
 
 
 
-
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
