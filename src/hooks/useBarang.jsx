@@ -1,9 +1,7 @@
-// src/hooks/useBarang.jsx
 import { useCallback, useEffect, useRef, useState } from "react";
 import { normalizeRow } from "../utils/utils";
 import { getAccessToken } from "../utils/jwt";
 
-/** ---------------------- IPC Bridge (Electron) ------------------------ */
 const barangIpc = {
   getList: (params) => {
     const token = getAccessToken();
@@ -32,79 +30,51 @@ const barangIpc = {
   },
 };
 
-/** ---------------------- Mapper <-> Backend --------------------------- */
-const toBoolean = (v, def = false) => {
-  if (typeof v === "boolean") return v;
-  if (typeof v === "number") return v !== 0;
-  if (typeof v === "string") return ["true", "1", "ya", "yes"].includes(v.toLowerCase());
-  return def;
-};
-
-const toNumber = (v, def = 0) => {
-  if (v === "" || v == null) return def;
-  const n = Number(v);
-  return Number.isNaN(n) ? def : n;
-};
-
-const toString = (v, def = "") => (v == null ? def : String(v));
-
 const toBackend = (p = {}) => ({
-  toko_id: toNumber(p.toko_id, 0),
-  kategori_id: p.kategori_id == null || p.kategori_id === "" ? null : toNumber(p.kategori_id),
-  nama: toString(p.nama, ""),
-  stok: toNumber(p.stok, 0),
-  kode: toString(p.kode, ""),
-  harga_dasar: p.harga_dasar == null || p.harga_dasar === "" ? null : toNumber(p.harga_dasar),
-  harga_jual: p.harga_jual == null || p.harga_jual === "" ? null : toNumber(p.harga_jual),
-  image: toString(p.image, ""),
-  show_transaksi: toBoolean(p.show_transaksi, true),
-  use_stok: toBoolean(p.use_stok, true),
-  created_by: p.created_by == null || p.created_by === "" ? null : toNumber(p.created_by),
-  updated_by: p.updated_by == null || p.updated_by === "" ? null : toNumber(p.updated_by),
-  sync_at: p.sync_at || null,
-  status: toBoolean(p.status, true),
+  toko_id: p.toko_id ?? "",
+  kategori_id: p.kategori_id ?? true,
+  nama: p.nama ?? 0,
+  stok: p.stok ?? 1,
+  kode: p.kode ?? 1,
+  harga_dasar: p.harga_dasar ?? null,
+  harga_jual: p.harga_jual ?? true,
+  image: p.image ?? true,
+  show_transaksi: p.show_transaksi ?? true,
+  use_stok: p.use_stok ?? true,
+  created_by: p.created_by ?? true,
+  updated_by: p.updated_by ?? true,
+  sync_at: p.sync_at ?? true,
+  status: p.status ?? true,
 });
 
 const fromBackend = (row = {}) => {
   const r = normalizeRow(row);
   return {
     id: r.id,
-    toko_id: r.toko_id ?? null,
-    kategori_id: r.kategori_id ?? null,
-    nama: r.nama ?? "",
-    stok: toNumber(r.stok, 0),
-    kode: r.kode ?? "",
-    harga_dasar: r.harga_dasar == null ? 0 : toNumber(r.harga_dasar, 0),
-    harga_jual: r.harga_jual == null ? 0 : toNumber(r.harga_jual, 0),
-    image: r.image ?? "",
-    show_transaksi: toBoolean(r.show_transaksi, true),
-    use_stok: toBoolean(r.use_stok, true),
-    created_by: r.created_by ?? null,
-    updated_by: r.updated_by ?? null,
-    sync_at: r.sync_at ?? null,
-    status: toBoolean(r.status, true),
-
+    toko_id: r.toko_id ?? "",
+    kategori_id: r.kategori_id ?? true,
+    nama: r.nama ?? 0,
+    stok: r.stok ?? 1,
+    kode: r.kode ?? 1,
+    harga_dasar: r.harga_dasar ?? null,
+    harga_jual: r.harga_jual ?? true,
+    image: r.image ?? true,
+    show_transaksi: r.show_transaksi ?? true,
+    use_stok: r.use_stok ?? true,
+    created_by: r.created_by ?? true,
+    updated_by: r.updated_by ?? true,
+    sync_at: r.sync_at ?? true,
+    status: r.status ?? true,
     created_at: r.created_at ?? null,
     updated_at: r.updated_at ?? null,
   };
 };
 
-/** ---------------------- Default Params ------------------------------- */
 const DEFAULT_PARAMS = {
   pagination: { page: 1, limit: 10 },
-  filter: {
-    search: "",
-    status: "",
-    toko_id: "",
-    kategori_id: "",
-    show_transaksi: "",
-    use_stok: "",
-    stokMin: "",
-    stokMax: "",
-  },
+  filter: { search: "", status: "", toko_id: "" },
 };
 
-/** ---------------------------- Hook ---------------------------------- */
 export function useBarang(initialParams = DEFAULT_PARAMS) {
   const [items, setItems] = useState([]);
   const [pagination, setPagination] = useState({
@@ -121,7 +91,6 @@ export function useBarang(initialParams = DEFAULT_PARAMS) {
     setLoading(true);
     setError(null);
     try {
-      // Merge params (pagination + filter)
       paramsRef.current = {
         ...paramsRef.current,
         ...nextParams,
@@ -135,41 +104,25 @@ export function useBarang(initialParams = DEFAULT_PARAMS) {
         },
       };
 
-      // Bersihkan filter numeric (string kosong -> hapus)
-      const cleanedFilter = { ...paramsRef.current.filter };
-      ["stokMin", "stokMax", "toko_id", "kategori_id"].forEach((k) => {
-        if (cleanedFilter[k] === "") delete cleanedFilter[k];
-      });
-
-      const res = await barangIpc.getList({
-        ...paramsRef.current,
-        filter: cleanedFilter,
-      });
+      const res = await barangIpc.getList(paramsRef.current);
       if (!res?.success) throw new Error(res?.error || "Gagal memuat barang");
-
-      // Server returns flexible shape:
-      // { data: { data:[...], pagination:{...} } } OR { data:[...], pagination:{...} } OR { items:[...] }
       const payload = res.data || {};
       const list = Array.isArray(payload.data)
         ? payload.data
         : Array.isArray(payload.items)
         ? payload.items
-        : Array.isArray(res.items)
-        ? res.items
         : [];
-
-      const pager = payload.pagination || res.pagination || {};
+      const pager = payload.pagination || {};
       const page = pager.page ?? paramsRef.current.pagination.page ?? 1;
       const limit = pager.limit ?? paramsRef.current.pagination.limit ?? 10;
       const total =
-        pager.total ??
-        (typeof pager.totalRows === "number" ? pager.totalRows : list.length);
+        pager.total ?? (typeof pager.totalRows === "number" ? pager.totalRows : list.length);
       const pages = pager.pages ?? Math.max(1, Math.ceil((total || 0) / (limit || 10)));
-
       setItems(list.map(fromBackend));
       setPagination({ page, limit, total, pages });
     } catch (e) {
       setError(e instanceof Error ? e : new Error(String(e)));
+      setAlert({ type: "error", message: "Gagal memuat barang" });
     } finally {
       setLoading(false);
     }
@@ -178,9 +131,13 @@ export function useBarang(initialParams = DEFAULT_PARAMS) {
   const create = useCallback(
     async (payload) => {
       const res = await barangIpc.create(toBackend(payload));
-      if (!res?.success) throw new Error(res?.error || "Gagal membuat barang");
+      if (!res?.success) {
+        setAlert({ type: "error", message: res?.error || "Gagal menambahkan barang" });
+        throw new Error(res?.error || "Gagal menambahkan barang");
+      }
+      const created = (res.data && (res.data.items || res.data.data)) || null;
+      setAlert({ type: "success", message: "Barang berhasil ditambahkan!" });
       await refresh();
-      const created = (res.data && (res.data.item || res.data.data)) || null;
       return created;
     },
     [refresh]
@@ -189,9 +146,13 @@ export function useBarang(initialParams = DEFAULT_PARAMS) {
   const update = useCallback(
     async (id, payload) => {
       const res = await barangIpc.update(id, toBackend(payload));
-      if (!res?.success) throw new Error(res?.error || "Gagal mengubah barang");
+      if (!res?.success) {
+        setAlert({ type: "error", message: res?.error || "Gagal mengubah barang" });
+        throw new Error(res?.error || "Gagal mengubah barang");
+      }
+      const updated = (res.data && (res.data.items || res.data.data)) || null;
+      setAlert({ type: "success", message: "Barang berhasil diubah!" });
       await refresh();
-      const updated = (res.data && (res.data.item || res.data.data)) || null;
       return updated;
     },
     [refresh]
@@ -200,9 +161,13 @@ export function useBarang(initialParams = DEFAULT_PARAMS) {
   const remove = useCallback(
     async (id) => {
       const res = await barangIpc.remove(id);
-      if (!res?.success) throw new Error(res?.error || "Gagal menghapus barang");
+      if (!res?.success) {
+        setAlert({ type: "error", message: res?.error || "Gagal menghapus barang" });
+        throw new Error(res?.error || "Gagal menghapus barang");
+      }
+      const removed = (res.data && (res.data.items || res.data.data)) || null;
+      setAlert({ type: "success", message: "Barang berhasil dihapus!" });
       await refresh();
-      const removed = (res.data && (res.data.item || res.data.data)) || null;
       return removed;
     },
     [refresh]
@@ -211,7 +176,7 @@ export function useBarang(initialParams = DEFAULT_PARAMS) {
   const getById = useCallback(async (id) => {
     const res = await barangIpc.getById(id);
     if (!res?.success) throw new Error(res?.error || "Gagal mengambil barang");
-    const raw = (res.data && (res.data.item || res.data.data)) || res.item || null;
+    const raw = (res.data && (res.data.items || res.data.data || res.data.item)) || null;
     return raw ? fromBackend(raw) : null;
   }, []);
 
@@ -225,12 +190,12 @@ export function useBarang(initialParams = DEFAULT_PARAMS) {
     pagination,
     loading,
     error,
+    alert,
     refresh,
     create,
     update,
     remove,
     getById,
-    setItems, // expose jika butuh manipulasi lokal (jarang)
-    paramsRef,
+    setAlert,
   };
 }

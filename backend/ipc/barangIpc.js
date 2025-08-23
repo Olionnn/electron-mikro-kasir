@@ -13,7 +13,7 @@ import {
 } from "../helpers/response.js";
 import db from "../../config/database.js";
 import { saveImageAndGetRelPath, deletePublicFileIfExists } from '../utils/file.js';
-
+import { requireAuth } from "../middleware/auth.js";
 
 ipcMain.handle(
   "barang:getList",
