@@ -10,6 +10,37 @@ import '../../backend/ipc/usersIpc.js';
 import '../../backend/middleware/auth.js'
 import '../../backend/ipc/tokoIpc.js';
 import '../../backend/ipc/barangIpc.js';
+import '../../backend/ipc/supplierIpc.js';
+import '../../backend/ipc/pelangganIpc.js';
+import '../../backend/ipc/pembeliandetailIpc.js';
+import '../../backend/ipc/aruskeuanganIpc.js';
+import '../../backend/ipc/aruskeuangandetailIpc.js';
+import '../../backend/ipc/barangconfigIpc.js';
+import '../../backend/ipc/baranglogIpc.js';
+import '../../backend/ipc/barangstokIpc.js';
+import '../../backend/ipc/biayaIpc.js';
+import '../../backend/ipc/diskonIpc.js';
+import '../../backend/ipc/bennerIpc.js';
+import '../../backend/ipc/hutanghistorybayarIpc.js';
+import '../../backend/ipc/hutangdetailIpc.js';
+import '../../backend/ipc/hutangIpc.js';
+import '../../backend/ipc/infoIpc.js';
+import '../../backend/ipc/pajakdefaultIpc.js';
+import '../../backend/ipc/pajakIpc.js';
+import '../../backend/ipc/pengaturanstrukIpc.js';
+import '../../backend/ipc/piutangdetailIpc.js';
+import '../../backend/ipc/piutangIpc.js';
+import '../../backend/ipc/transaksiIpc.js';
+import '../../backend/ipc/transaksidetailIpc.js';
+import '../../backend/ipc/stokopnameIpc.js';
+import '../../backend/ipc/stokopnamedetailIpc.js';
+import '../../backend/ipc/sidebaraksesIpc.js';
+import '../../backend/ipc/sidebarIpc.js';
+import '../../backend/ipc/transaksipesanandetailIpc.js';
+import '../../backend/ipc/transaksipesananIpc.js';
+
+
+
 
 
 const __filename = fileURLToPath(import.meta.url);

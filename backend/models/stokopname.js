@@ -44,10 +44,10 @@ const StokOpname = db.define('stok_opname', {
     }
 }, {
     tableName: 'stok_opname',
-    timestamps: Filse,
+    timestamps: false,
 });
 StokOpname.beforeUpdate((inst) => {
-    inst.updated_at = toJakarta(new Date());
+    inst.setDataValue('updated_at',toJakarta(inst.getDataValue('updated_at')));
 });
 
 
@@ -148,3 +148,11 @@ async function GetDataList(pagination, filter) {
 
 
 export default StokOpname;
+export {
+    GetDataList,
+    GetDataById,
+    CreateData,
+    UpdateData,
+    DeleteData,
+  };
+

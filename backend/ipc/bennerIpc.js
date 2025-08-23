@@ -5,7 +5,7 @@ import {
   CreateData, 
   UpdateData, 
   DeleteData 
-} from '../model/benner.js';
+} from '../models/banner.js';
 import { calculatePagination } from '../helpers/paginate.js';
 import { createSuccessResponse, createErrorResponse } from '../helpers/response.js';
 import db from '../../config/database.js';
