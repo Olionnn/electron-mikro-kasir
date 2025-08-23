@@ -168,8 +168,7 @@ async function DeleteData(trx, id) {
     }
     await HutangHistoryBayar.destroy({ transaction: trx });
     return { message: 'HutangHistoryBayar deleted successfully' };
-  } catch (error) {
-    throw error;
+  } catch (error) {     throw error;
   }
 }
 
