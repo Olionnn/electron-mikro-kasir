@@ -188,13 +188,13 @@ async function UpdateData(trx, id, data) {
   }
 }
 
-async function DeleteData(trx, id) {
+async function DeleteData( id) {
   try {
-    const barang = await Barang.findOne({ where: { id } });
-    if (!barang) {
+    const item = await Barang.findOne({ where: { id } });
+    if (!item) {
       throw new Error('Barang not found');
     }
-    await barang.destroy({ transaction: trx });
+    await item.destroy();
     return { message: 'Barang deleted successfully' };
   } catch (error) {
     throw error;

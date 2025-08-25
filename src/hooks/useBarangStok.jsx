@@ -38,14 +38,16 @@ const toBackend = (p = {}) => ({
   barang_id: p.barang_id ?? "",
   harga_dasar: p.harga_dasar ?? 0,
   tanggal_masuk: p.tanggal_masuk ?? "",
-  jumblah_stock: p.jumlah_stock ?? 0,
+  // ✅ perbaikan nama field:
+  jumlah_stock: p.jumlah_stok ?? p.jumlah_stock ?? 0,
   keterangan: p.keterangan ?? "",
   created_by: p.created_by ?? 1,
   updated_by: p.updated_by ?? 1,
   sync_at: p.sync_at ?? null,
   status: p.status ?? true,
-  
 });
+  
+
 
 
 const fromBackend = (row = {}) => {

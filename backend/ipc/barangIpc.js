@@ -152,23 +152,17 @@ ipcMain.handle(
 
 ipcMain.handle("barang:delete", async (event, id) => {
   try {
-
-    const existing = await GetDataById(id);
+    
+    const existing = await GetDataById(id?.id);
     if (!existing) {
       return createErrorResponse("Data tidak ditemukan", "deleting barang");
     }
 
-    const deleted = await db.transaction(async (trx) => {
-      return await DeleteData(trx, id);
-    });
 
-    if (existing.image) {
-      await deletePublicFileIfExists(existing.image);
-    }
-    return createSuccessResponse("Berhasil Menghapus Barang", {
-      data: null,
-      pagination: {},
-    });
+      return await DeleteData( id?.id);
+
+
+      
   } catch (error) {
     return createErrorResponse(error, "deleting barang");
   }
