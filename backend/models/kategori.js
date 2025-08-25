@@ -2,7 +2,6 @@ import { DataTypes, Op, Sequelize } from 'sequelize';
 import db from '../../config/database.js';
 import { toJakarta } from '../helpers/timestamps.js';
 
-
 const Kategori = db.define('kategori', {
   id: {
     type: DataTypes.INTEGER,
@@ -119,6 +118,7 @@ async function GetDataById(id) {
 async function CreateData(trx, data) {
   try {
     const kategori = await Kategori.create(data, { transaction: trx });
+    if (!kategori) throw new Error('Failed to create kategori');
     return kategori;
   } catch (error) {
     throw error;
@@ -127,7 +127,7 @@ async function CreateData(trx, data) {
 
 async function UpdateData(trx, id, data) {
   try {
-    const kategori = await Kategori.findByPk(id);
+    const kategori = await Kategori.findOne({ where: { id } });
     if (!kategori) throw new Error('Kategori not found');
     await kategori.update(data, { transaction: trx });
 
