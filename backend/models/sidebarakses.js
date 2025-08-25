@@ -53,7 +53,7 @@ const SidebarAkses = db.define('sidebar_akses', {
     timestamps: false,
 });
 SidebarAkses.beforeUpdate((inst) => {
-    inst.updated_at = toJakarta(new Date());
+    inst.setDataValue('updated_at',toJakarta(inst.getDataValue('updated_at')));
 });
 
 

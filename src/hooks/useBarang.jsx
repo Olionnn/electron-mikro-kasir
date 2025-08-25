@@ -85,6 +85,7 @@ export function useBarang(initialParams = DEFAULT_PARAMS) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+    const [alert, setAlert] = useState(null);
   const paramsRef = useRef(initialParams);
 
   const refresh = useCallback(async (nextParams = {}) => {

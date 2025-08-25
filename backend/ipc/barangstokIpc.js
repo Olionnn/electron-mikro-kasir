@@ -5,7 +5,7 @@ import {
   CreateData, 
   UpdateData, 
   DeleteData 
-} from '../model/barangstok.js';
+} from '../models/barangstok.js';
 import { calculatePagination } from '../helpers/paginate.js';
 import { createSuccessResponse, createErrorResponse } from '../helpers/response.js';
 import db from '../../config/database.js';

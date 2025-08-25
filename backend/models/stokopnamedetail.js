@@ -78,6 +78,9 @@ const StokOpnameDetail = db.define('stok_opname_detail', {
   tableName: 'stok_opname_detail',
   timestamps: false,
 });
+StokOpnameDetail.beforeUpdate((inst) => {
+    inst.setDataValue('updated_at',toJakarta(inst.getDataValue('updated_at')));
+});
 
 
 
