@@ -121,16 +121,16 @@ ipcMain.handle(
       }
 
       const normalizedPayload = {
-        toko_id: payload.toko_id ?? existing.toko_id ?? null,
-        kategori_id: payload.kategori_id ?? existing.kategori_id ?? null,
-        nama: payload.nama ?? existing.nama ?? "",
-        stok: payload.stok ?? existing.stok ?? 0,
-        kode: payload.kode ?? existing.kode ?? "",
-        harga_dasar: payload.harga_dasar ?? existing.harga_dasar ?? 0,
-        harga_jual: payload.harga_jual ?? existing.harga_jual ?? 0,
-        image: newImagePath ?? existing.image ?? payload.image ?? "",
-        show_transaksi: payload.show_transaksi ?? existing.show_transaksi ?? false,
-        use_stok: payload.use_stok ?? existing.use_stok ?? false,
+        toko_id: data?.toko_id ?? existing.toko_id ?? null,
+        kategori_id: data?.kategori_id ?? existing.kategori_id ?? null,
+        nama: data?.nama ?? existing.nama ?? "",
+        stok: data?.stok ?? existing.stok ?? 0,
+        kode: data?.kode ?? existing.kode ?? "",
+        harga_dasar: data?.harga_dasar ?? existing.harga_dasar ?? 0,
+        harga_jual: data?.harga_jual ?? existing.harga_jual ?? 0,
+        image: newImagePath ?? existing.image ?? data?.image ?? "",
+        show_transaksi: data?.show_transaksi ?? existing.show_transaksi ?? false,
+        use_stok: data?.use_stok ?? existing.use_stok ?? false,
       }
 
     const updated = await db.transaction(async (trx) => {
